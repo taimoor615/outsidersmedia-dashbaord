@@ -1,1 +1,39 @@
-node_modules
+/vendor
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+.env
+.env.production
+.env.backup
+.phpunit.result.cache
+.auth.json
+
+# Homestead configurations
+Homestead.json
+Homestead.yaml
+
+# IDE and System files
+.idea
+.vscode
+.DS_Store
+Thumbs.db
+
+# Logs and Temp files
+npm-debug.log
+yarn-error.log
+/storage/logs/*.log
+
+# Framework Cache & Views
+# (We ignore the files inside, but keep the folders with .gitignore)
+/storage/framework/cache/data/*
+!/storage/framework/cache/data/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/testing/*
+!/storage/framework/testing/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+
+# Vite Build Directory
+/public/build
