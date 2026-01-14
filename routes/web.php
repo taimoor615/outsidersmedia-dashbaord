@@ -2,21 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\PublicClientController;
+use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\ProfileController;
 
 // Redirect root to login
 Route::get('/', function () {
-    // 1. If user is logged in, send them to their dashboard
-    if (auth()->check()) {
-        // You can add logic here to check roles if needed
-        if (auth()->user()->isAdmin()){
-            return redirect()->route('admin.dashboard');
-        }else{
-            return redirect()->route('team.dashboard');
-        }
-        // For now, let's send them to the team dashboard (or admin)
-    }
-
-    // 2. If NOT logged in, send to login
     return redirect()->route('login');
 });
 
@@ -24,10 +17,26 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+
+    // Email Verification
+    Route::get('/verify-email', [VerificationController::class, 'show'])->name('verify.email');
+    Route::post('/verify-email', [VerificationController::class, 'verify'])->name('verify.email.post');
 });
 
 // Logout Route (Authenticated Users)
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+
+// Profile Routes (All authenticated users)
+Route::middleware(['auth'])->prefix('profile')->name('profile.')->group(function () {
+    Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+    Route::put('/update', [ProfileController::class, 'update'])->name('update');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::delete('/image', [ProfileController::class, 'deleteImage'])->name('image.delete');
+});
+
+// Public Client View Route
+Route::get('/view/{token}', [PublicClientController::class, 'viewByToken'])
+    ->name('client.view');
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -35,9 +44,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         return view('admin.dashboard');
     })->name('dashboard');
 
-    // Future admin routes will go here
-    // Route::resource('clients', ClientController::class);
-    // Route::resource('team', TeamController::class);
+    // Team Management
+    Route::resource('team', TeamController::class);
+    Route::post('team/{team}/resend-verification', [TeamController::class, 'resendVerification'])->name('team.resend');
+    Route::post('team/{team}/toggle-status', [TeamController::class, 'toggleStatus'])->name('team.toggle-status');
+
+    // Client Management
+    Route::resource('clients', ClientController::class);
+    Route::post('clients/{client}/toggle-status', [ClientController::class, 'toggleStatus'])->name('clients.toggle-status');
 });
 
 // Team Routes (Both Admin and Team can access)

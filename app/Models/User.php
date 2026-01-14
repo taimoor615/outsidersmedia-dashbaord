@@ -6,17 +6,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -26,31 +22,33 @@ class User extends Authenticatable
         'profile_image',
         'timezone',
         'last_login_at',
+        'verification_token',
+        'email_verified_at',
+        'is_verified',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
             'password' => 'hashed',
+            'is_verified' => 'boolean',
         ];
     }
+
+    // Relationships
+    public function clients(): HasMany
+    {
+        return $this->hasMany(Client::class, 'created_by');
+    }
+
     // Check if user is admin
     public function isAdmin(): bool
     {
@@ -75,10 +73,22 @@ class User extends Authenticatable
         return $this->status === 'active';
     }
 
+    // Check if email is verified
+    public function isVerified(): bool
+    {
+        return $this->is_verified && $this->email_verified_at !== null;
+    }
+
     // Scope for active users
     public function scopeActive($query)
     {
         return $query->where('status', 'active');
+    }
+
+    // Scope for verified users
+    public function scopeVerified($query)
+    {
+        return $query->where('is_verified', true);
     }
 
     // Scope for admins
@@ -93,8 +103,8 @@ class User extends Authenticatable
         return $query->where('role', 'team');
     }
 
-    // Scope for team members
-    public function scopeClient($query)
+    // Scope for clients
+    public function scopeClients($query)
     {
         return $query->where('role', 'client');
     }
@@ -103,5 +113,35 @@ class User extends Authenticatable
     public function updateLastLogin()
     {
         $this->update(['last_login_at' => now()]);
+    }
+
+    // Generate verification token
+    public function generateVerificationToken(): string
+    {
+        $token = Str::random(64);
+        $this->update(['verification_token' => $token]);
+        return $token;
+    }
+
+    // Verify email
+    public function verifyEmail(): void
+    {
+        $this->update([
+            'is_verified' => true,
+            'email_verified_at' => now(),
+            'verification_token' => null,
+            'status' => 'active',
+        ]);
+    }
+
+    // Get profile image URL
+    public function getProfileImageUrlAttribute(): string
+    {
+        if ($this->profile_image && file_exists(public_path($this->profile_image))) {
+            return asset($this->profile_image);
+        }
+
+        // Return default avatar with initials
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF';
     }
 }
