@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\ClientController;
-use App\Http\Controllers\PublicClientController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ProfileController;
 
@@ -34,10 +34,6 @@ Route::middleware(['auth'])->prefix('profile')->name('profile.')->group(function
     Route::delete('/image', [ProfileController::class, 'deleteImage'])->name('image.delete');
 });
 
-// Public Client View Route
-Route::get('/view/{token}', [PublicClientController::class, 'viewByToken'])
-    ->name('client.view');
-
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
@@ -59,7 +55,21 @@ Route::middleware(['auth', 'team'])->prefix('team')->name('team.')->group(functi
     Route::get('/dashboard', function () {
         return view('team.dashboard');
     })->name('dashboard');
+});
 
-    // Future team routes will go here
-    // Route::resource('posts', PostController::class);
+// Post Routes (Both Admin and Team can access)
+Route::middleware(['auth', 'team'])->group(function () {
+    Route::resource('posts', PostController::class);
+    Route::post('posts/{post}/submit-approval', [PostController::class, 'submitForApproval'])->name('posts.submit-approval');
+    Route::post('posts/{post}/approve', [PostController::class, 'approve'])->name('posts.approve');
+    Route::post('posts/{post}/reject', [PostController::class, 'reject'])->name('posts.reject');
+    Route::delete('post-media/{media}', [PostController::class, 'deleteMedia'])->name('post-media.delete');
+});
+
+// Client Portal Routes (Public - no auth required)
+Route::prefix('client')->name('client.')->group(function () {
+    Route::get('/{token}', [ClientPortalController::class, 'show'])->name('view');
+    Route::post('/{token}/feedback', [ClientPortalController::class, 'submitFeedback'])->name('feedback');
+    Route::post('/{token}/approve/{post}', [ClientPortalController::class, 'approvePost'])->name('approve');
+    Route::post('/{token}/reject/{post}', [ClientPortalController::class, 'rejectPost'])->name('reject');
 });

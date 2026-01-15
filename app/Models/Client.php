@@ -99,4 +99,9 @@ class Client extends Model
 
         return $plans[$this->plan_type] ?? $plans['starter'];
     }
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
 }
