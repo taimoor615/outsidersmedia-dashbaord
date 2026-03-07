@@ -91,6 +91,16 @@ class Post extends Model
         return $query->where('status', 'draft');
     }
 
+    public function scopePendingClient($query)
+    {
+        return $query->where('status', 'pending_client');
+    }
+
+    public function scopeChangesRequested($query)
+    {
+        return $query->where('status', 'changes_requested');
+    }
+
     public function scopePendingApproval($query)
     {
         return $query->where('status', 'pending_approval');
@@ -129,18 +139,20 @@ class Post extends Model
 
     public function canEdit(): bool
     {
-        return in_array($this->status, ['draft', 'pending_approval', 'approved']);
+        return in_array($this->status, ['draft', 'pending_client', 'changes_requested', 'pending_approval', 'approved']);
     }
 
     public function canDelete(): bool
     {
-        return in_array($this->status, ['draft', 'pending_approval']);
+        return in_array($this->status, ['draft', 'pending_client', 'changes_requested']);
     }
 
     public function getStatusBadgeAttribute(): string
     {
         return match($this->status) {
             'draft' => 'bg-gray-100 text-gray-800',
+            'pending_client' => 'bg-amber-100 text-amber-800',
+            'changes_requested' => 'bg-orange-100 text-orange-800',
             'pending_approval' => 'bg-yellow-100 text-yellow-800',
             'approved' => 'bg-green-100 text-green-800',
             'rejected' => 'bg-red-100 text-red-800',

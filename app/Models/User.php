@@ -115,6 +115,30 @@ class User extends Authenticatable
         $this->update(['last_login_at' => now()]);
     }
 
+    /**
+     * Check if user can manage clients (admin or team)
+     */
+    public function canManageClients(): bool
+    {
+        return in_array($this->role, ['admin', 'team']);
+    }
+
+    /**
+     * Check if user can manage team members (admin only)
+     */
+    public function canManageTeam(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Get feedback provided by this user
+     */
+    public function feedback()
+    {
+        return $this->hasMany(PostFeedback::class);
+    }
+
     // Generate verification token
     public function generateVerificationToken(): string
     {

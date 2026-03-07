@@ -45,7 +45,7 @@
                 </a>
 
                 <!-- Clients -->
-                <a href="{{ route('admin.clients.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200 {{ request()->routeIs('admin.clients.*') ? 'bg-gray-800 text-white shadow-lg' : '' }}">
+                <a href="{{ route('clients.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200 {{ request()->routeIs('clients.*') ? 'bg-gray-800 text-white shadow-lg' : '' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
@@ -61,7 +61,7 @@
                 </a>
 
                 <!-- Calendar -->
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200">
+                <a href="{{ route('calendar.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200 {{ request()->routeIs('calendar.*') ? 'bg-gray-800 text-white shadow-lg' : '' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
@@ -81,17 +81,19 @@
                     <p class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Content</p>
                 </div>
 
-                <!-- Pending Approval -->
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200">
+                <!-- Pending Approval (Admin only – approve posts here) -->
+                <a href="{{ route('posts.index', ['status' => 'pending_approval']) }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200 {{ request()->get('status') === 'pending_approval' ? 'bg-gray-800 text-white shadow-lg' : '' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <span class="font-medium">Pending Approval</span>
-                    <span class="ml-auto px-2 py-1 bg-yellow-500 text-white text-xs font-bold rounded-full">5</span>
+                    @if(isset($pending_approvals_count) && $pending_approvals_count > 0)
+                    <span class="ml-auto px-2 py-1 bg-yellow-500 text-white text-xs font-bold rounded-full">{{ $pending_approvals_count }}</span>
+                    @endif
                 </a>
 
                 <!-- Scheduled Posts -->
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200">
+                <a href="{{ route('calendar.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                     </svg>
@@ -99,7 +101,7 @@
                 </a>
 
                 <!-- Analytics -->
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200">
+                <a href="{{ route('admin.analytics.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200 {{ request()->routeIs('admin.analytics.*') ? 'bg-gray-800 text-white shadow-lg' : '' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                     </svg>
@@ -137,13 +139,41 @@
                 <!-- Right Side Actions -->
                 <div class="ml-auto flex items-center gap-4">
 
-                    <!-- Notifications -->
-                    <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                        </svg>
-                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                    </button>
+                    <!-- Notifications dropdown -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" @click.away="open = false" class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                            @if(auth()->user()->unreadNotifications->count() > 0)
+                            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                            @endif
+                        </button>
+                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50" style="display: none;">
+                            <div class="px-4 py-2 border-b border-gray-200 flex justify-between items-center">
+                                <span class="font-semibold text-gray-900">Notifications</span>
+                                @if(auth()->user()->unreadNotifications->count() > 0)
+                                <form action="{{ route('notifications.read-all') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="text-xs text-indigo-600 hover:text-indigo-700">Mark all read</button>
+                                </form>
+                                @endif
+                            </div>
+                            @forelse(auth()->user()->unreadNotifications->take(15) as $notification)
+                            <form action="{{ route('notifications.read', $notification->id) }}" method="POST" class="block">
+                                @csrf
+                                <button type="submit" class="w-full flex px-4 py-3 hover:bg-gray-50 border-b border-gray-100 text-left">
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-gray-900">{{ $notification->data['message'] ?? 'Update' }}</p>
+                                        <p class="text-xs text-gray-500 mt-0.5">{{ $notification->created_at->diffForHumans() }}</p>
+                                    </div>
+                                </button>
+                            </form>
+                            @empty
+                            <p class="px-4 py-6 text-sm text-gray-500 text-center">No new notifications</p>
+                            @endforelse
+                        </div>
+                    </div>
 
                     <!-- Profile Dropdown -->
                     <div class="relative" x-data="{ open: false }">

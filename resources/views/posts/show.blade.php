@@ -63,16 +63,21 @@
                 @if($post->post_type === 'carousel')
                 <div class="grid grid-cols-2 gap-4">
                     @foreach($post->media as $media)
-                    <img src="{{ asset('storage/' . $post->media[0]->file_path) }}" alt="Post media" class="w-full h-48 object-cover rounded-lg">
+                    @if($media->isImage())
+                    <img src="{{ $media->url }}" alt="Post media" class="w-full h-48 object-cover rounded-lg">
+                    @else
+                    <video src="{{ $media->url }}" class="w-full h-48 object-cover rounded-lg" muted playsinline></video>
+                    @endif
                     @endforeach
                 </div>
                 @else
                 <div>
-                    @if($post->media->first()->isImage())
-                    <img src="{{ asset('storage/' . $post->media[0]->first()->file_path) }}" alt="Post media" class="w-full h-auto rounded-lg">
+                    @php($firstMedia = $post->media->first())
+                    @if($firstMedia->isImage())
+                    <img src="{{ $firstMedia->url }}" alt="Post media" class="w-full h-auto rounded-lg">
                     @else
                     <video controls class="w-full h-auto rounded-lg">
-                        <source src="{{ asset('storage/' . $post->media->first()->file_path) }}" type="{{ $post->media->first()->mime_type }}">
+                        <source src="{{ $firstMedia->url }}" type="{{ $firstMedia->mime_type }}">
                     </video>
                     @endif
                 </div>
@@ -212,7 +217,7 @@
 
                     <div>
                         <p class="text-gray-500 mb-1">Client</p>
-                        <a href="{{ route('admin.clients.show', $post->client) }}" class="font-medium text-indigo-600 hover:text-indigo-700">
+                        <a href="{{ route('clients.show', $post->client) }}" class="font-medium text-indigo-600 hover:text-indigo-700">
                             {{ $post->client->name }}
                         </a>
                     </div>
@@ -239,7 +244,79 @@
                 <form action="{{ route('posts.submit-approval', $post) }}" method="POST">
                     @csrf
                     <button type="submit" class="w-full px-4 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors">
-                        Submit for Approval
+                        Send to Client for Review
+                    </button>
+                </form>
+                <p class="mt-2 text-xs text-gray-500">Client will approve or request changes. Admin approves and schedules only after client finalizes.</p>
+            </div>
+            @endif
+
+            @if($post->status === 'pending_client')
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Status</h3>
+                <p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                    Waiting for client to approve or request changes. No admin action needed yet.
+                </p>
+            </div>
+            @endif
+
+            @if($post->status === 'changes_requested')
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Actions</h3>
+                <p class="text-sm text-orange-700 bg-orange-50 border border-orange-200 rounded-lg px-4 py-3 mb-3">
+                    Client requested changes. Implement the feedback above, then resubmit to client.
+                </p>
+                <form action="{{ route('posts.resubmit-to-client', $post) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full px-4 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors">
+                        Resubmit to Client
+                    </button>
+                </form>
+            </div>
+            @endif
+
+            @if($post->status === 'pending_approval')
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Admin Actions</h3>
+                @if(auth()->user()->isAdmin())
+                    <div class="space-y-3">
+                        <form action="{{ route('posts.approve', $post) }}" method="POST" class="inline-block w-full">
+                            @csrf
+                            <button type="submit" class="w-full px-4 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-colors">
+                                Approve Post
+                            </button>
+                        </form>
+                        <form action="{{ route('posts.return-to-client', $post) }}" method="POST" class="space-y-2">
+                            @csrf
+                            <textarea name="feedback" rows="2" placeholder="Optional note for team/client..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></textarea>
+                            <button type="submit" class="w-full px-4 py-2 bg-amber-600 text-white font-semibold rounded-xl hover:bg-amber-700 transition-colors">
+                                Return to Client for Review
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                        Client has approved. Pending admin approval and scheduling.
+                    </p>
+                @endif
+            </div>
+            @endif
+
+            @if($post->status === 'approved' && auth()->user()->isAdmin())
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Schedule for Publish</h3>
+                <form action="{{ route('posts.schedule', $post) }}" method="POST" class="space-y-3">
+                    @csrf
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Date &amp; time</label>
+                        <input type="datetime-local" name="scheduled_at" required
+                            min="{{ now()->addMinute()->format('Y-m-d\TH:i') }}"
+                            value="{{ old('scheduled_at', $post->scheduled_at?->format('Y-m-d\TH:i')) }}"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        @error('scheduled_at')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+                    </div>
+                    <button type="submit" class="w-full px-4 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors">
+                        Schedule Post
                     </button>
                 </form>
             </div>

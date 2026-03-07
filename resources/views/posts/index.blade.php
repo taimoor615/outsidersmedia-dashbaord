@@ -38,29 +38,96 @@
     </div>
     @endif
 
-    <!-- Filter Tabs -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-2">
-        <div class="flex gap-2 overflow-x-auto">
-            <a href="{{ route('posts.index') }}" class="px-4 py-2 bg-indigo-100 text-indigo-700 font-semibold rounded-lg whitespace-nowrap">
-                All Posts
-            </a>
-            <a href="{{ route('posts.index', ['status' => 'draft']) }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg whitespace-nowrap">
-                Drafts
-            </a>
-            <a href="{{ route('posts.index', ['status' => 'pending_approval']) }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg whitespace-nowrap">
-                Pending Approval
-            </a>
-            <a href="{{ route('posts.index', ['status' => 'approved']) }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg whitespace-nowrap">
-                Approved
-            </a>
-            <a href="{{ route('posts.index', ['status' => 'scheduled']) }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg whitespace-nowrap">
-                Scheduled
-            </a>
-            <a href="{{ route('posts.index', ['status' => 'published']) }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg whitespace-nowrap">
-                Published
-            </a>
+    <!-- Filters: real-time, no Apply button -->
+    @php
+        $queryParams = array_filter(request()->only(['status', 'client_id', 'date_filter', 'sort_by', 'sort_order', 'search']), fn ($v) => $v !== null && $v !== '');
+        $queryParamsNoStatus = $queryParams; unset($queryParamsNoStatus['status']);
+    @endphp
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200/80 overflow-hidden">
+        <div class="bg-gradient-to-r from-slate-50 to-gray-50/80 px-5 py-4 border-b border-gray-200/60">
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                    Status
+                </span>
+                <a href="{{ route('posts.index', $queryParamsNoStatus) }}"
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ !request('status') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">All</a>
+                <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'draft'])) }}"
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'draft' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Drafts</a>
+                <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'pending_approval'])) }}"
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'pending_approval' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Pending</a>
+                <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'approved'])) }}"
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'approved' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Approved</a>
+                <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'scheduled'])) }}"
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'scheduled' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Scheduled</a>
+                <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'published'])) }}"
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'published' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Published</a>
+            </div>
         </div>
+        <form id="posts-filter-form" method="GET" action="{{ route('posts.index') }}" class="p-5">
+            @if(request('status'))<input type="hidden" name="status" value="{{ request('status') }}">@endif
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Client</label>
+                    <select name="client_id" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                        <option value="">All clients</option>
+                        @foreach($clients as $c)
+                        <option value="{{ $c->id }}" {{ request('client_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Date</label>
+                    <select name="date_filter" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                        <option value="all" {{ request('date_filter', 'all') == 'all' ? 'selected' : '' }}>All time</option>
+                        <option value="last_5_days" {{ request('date_filter') == 'last_5_days' ? 'selected' : '' }}>Last 5 days</option>
+                        <option value="last_week" {{ request('date_filter') == 'last_week' ? 'selected' : '' }}>Last week</option>
+                        <option value="this_month" {{ request('date_filter') == 'this_month' ? 'selected' : '' }}>This month</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Sort by</label>
+                    <select name="sort_by" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                        <option value="created_at" {{ request('sort_by', 'created_at') == 'created_at' ? 'selected' : '' }}>Date created</option>
+                        <option value="scheduled_at" {{ request('sort_by') == 'scheduled_at' ? 'selected' : '' }}>Scheduled</option>
+                        <option value="client" {{ request('sort_by') == 'client' ? 'selected' : '' }}>Client</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Order</label>
+                    <select name="sort_order" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                        <option value="desc" {{ request('sort_order', 'desc') == 'desc' ? 'selected' : '' }}>Newest first</option>
+                        <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Oldest first</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Search</label>
+                    <div class="relative">
+                        <input type="text" name="search" id="posts-search-input" value="{{ request('search') }}" placeholder="Caption or message..."
+                               class="w-full rounded-xl border-gray-300 text-sm py-2.5 pl-10 pr-4 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
+    <script>
+    (function() {
+        var form = document.getElementById('posts-filter-form');
+        if (!form) return;
+        form.querySelectorAll('.posts-filter-select').forEach(function(el) {
+            el.addEventListener('change', function() { form.submit(); });
+        });
+        var searchInput = document.getElementById('posts-search-input');
+        if (searchInput) {
+            var debounce = null;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(debounce);
+                debounce = setTimeout(function() { form.submit(); }, 400);
+            });
+        }
+    })();
+    </script>
 
     <!-- Posts Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -70,10 +137,11 @@
             <!-- Post Media Preview -->
             <div class="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
                 @if($post->media->count() > 0)
-                    @if($post->media->first()->isImage())
-                    <img src="{{ asset('storage/' . $post->media[0]->first()->file_path) }}" alt="Post media" class="w-full h-full object-cover">
+                    @php($firstMedia = $post->media->first())
+                    @if($firstMedia->isImage())
+                    <img src="{{ $firstMedia->url }}" alt="Post media" class="w-full h-full object-cover">
                     @else
-                    <video src="{{ asset('storage/' . $post->media->first()->file_path) }}" class="w-full h-full object-cover"></video>
+                    <video src="{{ $firstMedia->url }}" class="w-full h-full object-cover" muted playsinline></video>
                     @endif
                 @else
                 <div class="flex items-center justify-center h-full">

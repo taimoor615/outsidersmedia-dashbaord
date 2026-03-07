@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(auth()->user()->isAdmin() ? 'layouts.admin' : 'layouts.team')
 
 @section('title', 'Edit Client')
 @section('page-title', 'Edit Client')
@@ -8,7 +8,7 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <div class="mb-8">
-            <a href="{{ route('admin.clients.show', $client) }}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4">
+            <a href="{{ route('clients.show', $client) }}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
@@ -18,7 +18,7 @@
             <p class="mt-2 text-gray-600">Update client information and preferences</p>
         </div>
 
-        <form action="{{ route('admin.clients.update', $client) }}" method="POST" class="space-y-8">
+        <form action="{{ route('clients.update', $client) }}" method="POST" class="space-y-8">
             @csrf
             @method('PUT')
 
@@ -257,19 +257,30 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Plan Type *</label>
                         <div class="grid grid-cols-3 gap-4">
                             @foreach(['starter' => ['posts' => 8, 'price' => 359], 'business' => ['posts' => 12, 'price' => 539], 'scale' => ['posts' => 16, 'price' => 659]] as $plan => $details)
-                            <label class="relative p-4 border-2 rounded-xl cursor-pointer {{ old('plan_type', $client->plan_type) === $plan ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200' }}">
+
+                            <label class="relative cursor-pointer group">
+
                                 <input
                                     type="radio"
                                     name="plan_type"
                                     value="{{ $plan }}"
                                     {{ old('plan_type', $client->plan_type) === $plan ? 'checked' : '' }}
-                                    class="sr-only"
-                                    required
+                                    class="sr-only peer"
                                 >
-                                <div class="text-center">
-                                    <p class="font-bold text-lg capitalize">{{ $plan }}</p>
-                                    <p class="text-2xl font-bold text-gray-900">${{ $details['price'] }}</p>
-                                    <p class="text-sm text-gray-600">{{ $details['posts'] }} posts/mo</p>
+
+                                <div class="p-4 border-2 rounded-xl transition-all duration-200
+                                            border-gray-200 hover:border-indigo-300
+                                            peer-checked:border-indigo-600 peer-checked:bg-indigo-50">
+
+                                    <div class="text-center">
+                                        <p class="font-bold text-lg capitalize text-gray-700 peer-checked:text-indigo-900">{{ $plan }}</p>
+                                        <p class="text-2xl font-bold text-gray-900">${{ $details['price'] }}</p>
+                                        <p class="text-sm text-gray-600">{{ $details['posts'] }} posts/mo</p>
+                                    </div>
+
+                                    <div class="hidden peer-checked:block absolute top-2 right-2 text-indigo-600">
+                                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                    </div>
                                 </div>
                             </label>
                             @endforeach
@@ -318,7 +329,7 @@
                     Update Client
                 </button>
                 <a
-                    href="{{ route('admin.clients.show', $client) }}"
+                    href="{{ route('clients.show', $client) }}"
                     class="flex-1 bg-gray-100 text-gray-700 py-4 px-6 rounded-xl font-semibold hover:bg-gray-200 transition-all text-center"
                 >
                     Cancel

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(auth()->user()->isAdmin() ? 'layouts.admin' : 'layouts.team')
 
 @section('title', 'Client')
 @section('page-title', 'Client')
@@ -13,7 +13,7 @@
                     <h1 class="text-3xl font-bold text-gray-900">Clients</h1>
                     <p class="mt-2 text-gray-600">Manage your client accounts and subscriptions</p>
                 </div>
-                <a href="{{ route('admin.clients.create') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200">
+                <a href="{{ route('clients.create') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
@@ -30,6 +30,74 @@
             <span class="text-sm">{{ session('success') }}</span>
         </div>
         @endif
+
+        <!-- Filters: real-time, advanced UI -->
+        <div class="mb-6 bg-white rounded-2xl shadow-sm border border-gray-200/80 overflow-hidden">
+            <div class="bg-gradient-to-r from-slate-50 to-gray-50/80 px-5 py-3 border-b border-gray-200/60 flex items-center justify-between flex-wrap gap-2">
+                <span class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                    Filter &amp; search
+                </span>
+                @if(request()->hasAny(['search', 'created_by', 'sort_by', 'sort_order']))
+                <a href="{{ route('clients.index') }}" class="text-xs font-medium text-gray-500 hover:text-indigo-600 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Clear all
+                </a>
+                @endif
+            </div>
+            <form id="clients-filter-form" method="GET" action="{{ route('clients.index') }}" class="p-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div class="sm:col-span-2 lg:col-span-1">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Search</label>
+                        <div class="relative">
+                            <input type="text" name="search" id="clients-search-input" value="{{ request('search') }}" placeholder="Name or email..."
+                                   class="w-full rounded-xl border-gray-300 text-sm py-2.5 pl-10 pr-4 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Team member</label>
+                        <select name="created_by" class="clients-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                            <option value="">All</option>
+                            @foreach($teamMembers as $member)
+                            <option value="{{ $member->id }}" {{ request('created_by') == $member->id ? 'selected' : '' }}>{{ $member->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Sort by</label>
+                        <select name="sort_by" class="clients-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                            <option value="created_at" {{ request('sort_by', 'created_at') == 'created_at' ? 'selected' : '' }}>Date created</option>
+                            <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>Name</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Order</label>
+                        <select name="sort_order" class="clients-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                            <option value="desc" {{ request('sort_order', 'desc') == 'desc' ? 'selected' : '' }}>Newest first</option>
+                            <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Oldest first</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script>
+        (function() {
+            var form = document.getElementById('clients-filter-form');
+            if (!form) return;
+            form.querySelectorAll('.clients-filter-select').forEach(function(el) {
+                el.addEventListener('change', function() { form.submit(); });
+            });
+            var searchInput = document.getElementById('clients-search-input');
+            if (searchInput) {
+                var debounce = null;
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(debounce);
+                    debounce = setTimeout(function() { form.submit(); }, 400);
+                });
+            }
+        })();
+        </script>
 
         <!-- Clients Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -116,18 +184,21 @@
                         Client View
                     </a>
                     <div class="flex items-center gap-2">
-                        <a href="{{ route('admin.clients.show', $client) }}" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="View Details">
+                        <a href="{{ route('clients.show', $client) }}" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="View Details">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                             </svg>
                         </a>
-                        <a href="{{ route('admin.clients.edit', $client) }}" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Edit">
+                        <a href="{{ route('clients.edit', $client) }}" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Edit">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                             </svg>
                         </a>
-                        <form action="{{ route('admin.clients.destroy', $client) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this client?')">
+
+                        {{-- Delete button - Only visible to Admins --}}
+                        @if(auth()->user()->isAdmin())
+                        <form action="{{ route('clients.destroy', $client) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this client? This action cannot be undone.')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
@@ -136,6 +207,7 @@
                                 </svg>
                             </button>
                         </form>
+                        @endif
                     </div>
                 </div>
 
@@ -148,7 +220,7 @@
                     </svg>
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">No clients yet</h3>
                     <p class="text-gray-500 mb-6">Start by adding your first client</p>
-                    <a href="{{ route('admin.clients.create') }}" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors">
+                    <a href="{{ route('clients.create') }}" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors">
                         Add New Client
                     </a>
                 </div>

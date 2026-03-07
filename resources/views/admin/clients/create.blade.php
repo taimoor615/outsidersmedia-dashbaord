@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(auth()->user()->isAdmin() ? 'layouts.admin' : 'layouts.team')
 
 @section('title', 'Create Client')
 @section('page-title', 'Create Client')
@@ -8,7 +8,7 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <div class="mb-8">
-            <a href="{{ route('admin.clients.index') }}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4">
+            <a href="{{ route('clients.index') }}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
@@ -18,7 +18,7 @@
             <p class="mt-2 text-gray-600">Tell us about your client to create amazing social media content</p>
         </div>
 
-        <form action="{{ route('admin.clients.store') }}" method="POST" class="space-y-8">
+        <form action="{{ route('clients.store') }}" method="POST" class="space-y-8">
             @csrf
 
             <!-- CLIENT INFORMATION -->
@@ -423,7 +423,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-3">Select Social Networks</label>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        @foreach(['Facebook', 'Instagram', 'LinkedIn', 'Twitter/X', 'TikTok', 'YouTube', 'Google Business'] as $network)
+                        @foreach(['Facebook', 'Instagram', 'TikTok', 'YouTube', 'Google Business'] as $network)
                         <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
                             <input
                                 type="checkbox"
@@ -448,7 +448,7 @@
                     Create Client
                 </button>
                 <a
-                    href="{{ route('admin.clients.index') }}"
+                    href="{{ route('clients.index') }}"
                     class="flex-1 bg-gray-100 text-gray-700 py-4 px-6 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200 text-center text-lg"
                 >
                     Cancel
