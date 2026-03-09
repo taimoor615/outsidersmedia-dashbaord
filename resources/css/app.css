@@ -17,3 +17,8 @@
     /* --tw-ring-color: transparent !important; */
   }
 }
+.logo-wrapper{
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+}
