@@ -3,11 +3,14 @@
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
+                <div class="sidebar-wrapper-img">
+                    <img src="{{ asset('images/dashboard-sidebar-img.png') }}" alt="" srcset="" class="img-fluid">
+                </div>
+                {{-- <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
-                </div>
+                </div> --}}
                 <h1 class="text-xl font-bold text-gray-900">Outsidersmedia</h1>
             </div>
 

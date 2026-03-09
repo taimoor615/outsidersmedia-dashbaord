@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+    <link rel="manifest" href="/images/site.webmanifest" />
+
     <title>@yield('title', 'Dashboard') - Outsidersmedia</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -19,11 +25,14 @@
             <!-- Logo -->
             <div class="flex items-center justify-between h-16 px-6 border-b border-blue-700">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <div class="sidebar-wrapper-img">
+                        <img src="{{ asset('images/dashboard-sidebar-img.png') }}" alt="" srcset="" class="img-fluid">
+                    </div>
+                    {{-- <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
-                    </div>
+                    </div> --}}
                     <span class="text-xl font-bold text-white">Outsidersmedia</span>
                 </div>
                 <button @click="sidebarOpen = false" class="lg:hidden text-blue-300 hover:text-white">
