@@ -13,6 +13,12 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <div class="mb-8">
+            <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-800 mb-4 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                <span class="text-sm font-medium">Back</span>
+            </a>
             <h1 class="text-3xl font-bold text-gray-900">Profile Settings</h1>
             <p class="mt-2 text-gray-600">Manage your account information and preferences</p>
         </div>
