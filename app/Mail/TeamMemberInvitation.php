@@ -15,11 +15,13 @@ class TeamMemberInvitation extends Mailable
 
     public User $user;
     public string $verificationUrl;
+    public string $temporaryPassword;
 
-    public function __construct(User $user, string $verificationUrl)
+    public function __construct(User $user, string $verificationUrl, string $temporaryPassword)
     {
         $this->user = $user;
         $this->verificationUrl = $verificationUrl;
+        $this->temporaryPassword = $temporaryPassword;
     }
 
     public function envelope(): Envelope
@@ -37,6 +39,7 @@ class TeamMemberInvitation extends Mailable
                 'userName' => $this->user->name,
                 'userEmail' => $this->user->email,
                 'verificationUrl' => $this->verificationUrl,
+                'temporaryPassword' => $this->temporaryPassword,
             ],
         );
     }
