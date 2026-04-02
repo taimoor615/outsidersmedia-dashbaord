@@ -36,7 +36,10 @@
 
                             <div style="background-color: #f3f4f6; border-radius: 12px; padding: 20px; margin: 30px 0;">
                                 <p style="margin: 0 0 8px; color: #6b7280; font-size: 14px; font-weight: 600;">Your Login Email:</p>
-                                <p style="margin: 0; color: #111827; font-size: 16px; font-weight: bold;">{{ $userEmail }}</p>
+                                <p style="margin: 0 0 16px; color: #111827; font-size: 16px; font-weight: bold;">{{ $userEmail }}</p>
+                                <p style="margin: 0 0 8px; color: #6b7280; font-size: 14px; font-weight: 600;">Your Temporary Password:</p>
+                                <p style="margin: 0; color: #111827; font-size: 16px; font-weight: bold; letter-spacing: 1px; font-family: monospace;">{{ $temporaryPassword }}</p>
+                                <p style="margin: 8px 0 0; color: #9ca3af; font-size: 12px;">Please change your password after your first login.</p>
                             </div>
 
                             <!-- CTA Button -->

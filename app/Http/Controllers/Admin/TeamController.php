@@ -8,7 +8,6 @@ use App\Mail\TeamMemberInvitation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Validation\Rules\Password;
 
 class TeamController extends Controller
 {
@@ -52,7 +51,7 @@ class TeamController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($temporaryPassword),
             'role' => 'team',
-            'status' => 'inactive', // Will be activated after email verification
+            'status' => 'inactive',
             'timezone' => $validated['timezone'],
             'is_verified' => false,
         ]);
@@ -63,7 +62,7 @@ class TeamController extends Controller
 
         // Send invitation email
         try {
-            Mail::to($user->email)->send(new TeamMemberInvitation($user, $verificationUrl));
+            Mail::to($user->email)->send(new TeamMemberInvitation($user, $verificationUrl, $temporaryPassword));
 
             return redirect()
                 ->route('admin.team.index')
@@ -155,12 +154,11 @@ class TeamController extends Controller
                 ->with('info', "{$team->name} is already verified");
         }
 
-        // Generate new verification token
         $token = $team->generateVerificationToken();
         $verificationUrl = route('verify.email', ['token' => $token]);
 
         try {
-            Mail::to($team->email)->send(new TeamMemberInvitation($team, $verificationUrl));
+            Mail::to($team->email)->send(new TeamMemberInvitation($team, $verificationUrl, ''));
 
             return redirect()
                 ->route('admin.team.index')
