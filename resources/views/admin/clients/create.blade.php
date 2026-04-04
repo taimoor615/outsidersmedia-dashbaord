@@ -33,7 +33,7 @@
                             name="name"
                             value="{{ old('name') }}"
                             placeholder="Enter company name"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('name') border-red-500 @enderror"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent @error('name') border-red-500 @enderror"
                             required
                         >
                         @error('name')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
@@ -46,7 +46,7 @@
                             name="email"
                             value="{{ old('email') }}"
                             placeholder="client@example.com"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('email') border-red-500 @enderror"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent @error('email') border-red-500 @enderror"
                             required
                         >
                         @error('email')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
@@ -59,7 +59,7 @@
                             name="website_url"
                             value="{{ old('website_url') }}"
                             placeholder="https://example.com"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >
                     </div>
 
@@ -70,7 +70,7 @@
                             name="location"
                             value="{{ old('location') }}"
                             placeholder="City, State/Province, Country"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >
                     </div>
 
@@ -80,7 +80,7 @@
                             name="business_description"
                             rows="4"
                             placeholder="Brief overview of their product/service and industry"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >{{ old('business_description') }}</textarea>
                     </div>
 
@@ -90,7 +90,7 @@
                             name="unique_value"
                             rows="3"
                             placeholder="Their unique value, secret sauce, or strengths"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >{{ old('unique_value') }}</textarea>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                             name="target_audience"
                             value="{{ old('target_audience') }}"
                             placeholder="Examples: Millennial moms in the US, HR Directors in tech, etc."
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >
                     </div>
 
@@ -122,7 +122,7 @@
                                     name="social_goals[]"
                                     value="{{ $goal }}"
                                     {{ in_array($goal, old('social_goals', [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                                 >
                                 <span class="ml-3 text-sm text-gray-700">{{ $goal }}</span>
                             </label>
@@ -147,7 +147,7 @@
                                     name="brand_tone[]"
                                     value="{{ $tone }}"
                                     {{ in_array($tone, old('brand_tone', [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                                 >
                                 <span class="ml-3 text-sm text-gray-700">{{ $tone }}</span>
                             </label>
@@ -165,7 +165,7 @@
                                     name="content_types[]"
                                     value="{{ $type }}"
                                     {{ in_array($type, old('content_types', [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                                 >
                                 <span class="ml-3 text-sm text-gray-700">{{ $type }}</span>
                             </label>
@@ -179,7 +179,7 @@
                             name="content_to_avoid"
                             rows="3"
                             placeholder="Any topics or content types to avoid"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >{{ old('content_to_avoid') }}</textarea>
                     </div>
 
@@ -190,7 +190,7 @@
                             name="preferred_cta"
                             value="{{ old('preferred_cta') }}"
                             placeholder="e.g., Book a consult, Shop now, Learn more"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >
                     </div>
 
@@ -201,7 +201,7 @@
                                 name="share_third_party_content"
                                 value="1"
                                 {{ old('share_third_party_content') ? 'checked' : '' }}
-                                class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                             >
                             <span class="ml-3 text-sm text-gray-700">Share information from third-party sources (articles & blogs) that audience might find helpful</span>
                         </label>
@@ -213,7 +213,7 @@
                             name="keywords"
                             rows="2"
                             placeholder="Specific keywords or phrases to include"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >{{ old('keywords') }}</textarea>
                     </div>
 
@@ -223,7 +223,7 @@
                             name="competitors"
                             rows="2"
                             placeholder="List competitors we should research"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >{{ old('competitors') }}</textarea>
                     </div>
                 </div>
@@ -240,7 +240,7 @@
                         name="brand_assets_link"
                         value="{{ old('brand_assets_link') }}"
                         placeholder="https://drive.google.com/..."
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                     >
                     <p class="mt-2 text-sm text-gray-500">Share logos, color palette, brand guidelines, fonts, photos, testimonials, etc.</p>
                 </div>
@@ -255,7 +255,7 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Client's timezone *</label>
                         <select
                             name="timezone"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                             required
                         >
                             <option value="">Select Timezone</option>
@@ -275,7 +275,7 @@
                                     name="posting_days[]"
                                     value="{{ $day }}"
                                     {{ in_array($day, old('posting_days', [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mb-2"
+                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B] mb-2"
                                 >
                                 <span class="text-xs text-gray-700">{{ substr($day, 0, 3) }}</span>
                             </label>
@@ -284,13 +284,13 @@
                     </div>
 
                     <div>
-                        <label class="flex items-center p-4 bg-indigo-50 border border-indigo-200 rounded-lg cursor-pointer">
+                        <label class="flex items-center p-4 bg-orange-50 border border-orange-200 rounded-lg cursor-pointer">
                             <input
                                 type="checkbox"
                                 name="needs_approval"
                                 value="1"
                                 {{ old('needs_approval', true) ? 'checked' : '' }}
-                                class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                             >
                             <span class="ml-3 text-sm font-medium text-gray-900">Require content approval before posting</span>
                         </label>
@@ -303,7 +303,7 @@
                             name="approval_emails"
                             value="{{ old('approval_emails') }}"
                             placeholder="email1@example.com, email2@example.com"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >
                         <p class="mt-2 text-sm text-gray-500">Separate multiple emails with commas</p>
                     </div>
@@ -314,7 +314,7 @@
                             name="additional_notes"
                             rows="4"
                             placeholder="Any seasonal promotions, sensitive topics, services not to promote, partnership dos and don'ts, etc."
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >{{ old('additional_notes') }}</textarea>
                     </div>
                 </div>
@@ -327,7 +327,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
 
                     <!-- Starter Plan -->
-                    <label class="relative flex flex-col p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 transition-all group">
+                    <label class="relative flex flex-col p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#CD571B] transition-all group">
                         <input
                             type="radio"
                             name="plan_type"
@@ -336,7 +336,7 @@
                             class="sr-only peer"
                             required
                         >
-                        <div class="absolute top-4 right-4 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-indigo-600 peer-checked:bg-indigo-600 flex items-center justify-center">
+                        <div class="absolute top-4 right-4 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-[#CD571B] peer-checked:bg-[#CD571B] flex items-center justify-center">
                             <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-2">Starter</h3>
@@ -358,7 +358,7 @@
                     </label>
 
                     <!-- Business Plan -->
-                    <label class="relative flex flex-col p-6 border-2 border-indigo-500 rounded-xl cursor-pointer hover:border-indigo-600 transition-all group bg-indigo-50">
+                    <label class="relative flex flex-col p-6 border-2 border-[#CD571B] rounded-xl cursor-pointer hover:border-[#CD571B] transition-all group bg-orange-50">
                         <input
                             type="radio"
                             name="plan_type"
@@ -366,8 +366,8 @@
                             {{ old('plan_type', 'business') === 'business' ? 'checked' : '' }}
                             class="sr-only peer"
                         >
-                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full">POPULAR</div>
-                        <div class="absolute top-4 right-4 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-indigo-600 peer-checked:bg-indigo-600 flex items-center justify-center">
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-[#CD571B] text-white text-xs font-bold rounded-full">POPULAR</div>
+                        <div class="absolute top-4 right-4 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-[#CD571B] peer-checked:bg-[#CD571B] flex items-center justify-center">
                             <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-2">Business</h3>
@@ -389,7 +389,7 @@
                     </label>
 
                     <!-- Scale Plan -->
-                    <label class="relative flex flex-col p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 transition-all group">
+                    <label class="relative flex flex-col p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#CD571B] transition-all group">
                         <input
                             type="radio"
                             name="plan_type"
@@ -397,7 +397,7 @@
                             {{ old('plan_type') === 'scale' ? 'checked' : '' }}
                             class="sr-only peer"
                         >
-                        <div class="absolute top-4 right-4 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-indigo-600 peer-checked:bg-indigo-600 flex items-center justify-center">
+                        <div class="absolute top-4 right-4 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-[#CD571B] peer-checked:bg-[#CD571B] flex items-center justify-center">
                             <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-2">Scale</h3>
@@ -430,7 +430,7 @@
                                 name="networks[]"
                                 value="{{ $network }}"
                                 {{ in_array($network, old('networks', [])) ? 'checked' : '' }}
-                                class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                             >
                             <span class="ml-3 text-sm text-gray-700">{{ $network }}</span>
                         </label>
@@ -443,7 +443,7 @@
             <div class="flex gap-4">
                 <button
                     type="submit"
-                    class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 text-lg"
+                    class="flex-1 btn-brand"
                 >
                     Create Client
                 </button>

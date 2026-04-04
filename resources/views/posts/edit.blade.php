@@ -63,7 +63,7 @@
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 @foreach($allowedPlatforms as $platform)
-                <label class="relative flex flex-col items-center p-4 border-2 rounded-xl cursor-pointer transition-all" :class="platforms.includes('{{ $platform }}') ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'">
+                <label class="relative flex flex-col items-center p-4 border-2 rounded-xl cursor-pointer transition-all" :class="platforms.includes('{{ $platform }}') ? 'border-[#CD571B] bg-orange-50' : 'border-gray-200'">
                     <input
                         type="checkbox"
                         name="platforms[]"
@@ -72,7 +72,7 @@
                         {{ in_array($platform, $post->platforms ?? []) ? 'checked' : '' }}
                         class="sr-only"
                     >
-                    <span class="text-sm font-semibold capitalize" :class="platforms.includes('{{ $platform }}') ? 'text-indigo-700' : 'text-gray-700'">{{ $platform }}</span>
+                    <span class="text-sm font-semibold capitalize" :class="platforms.includes('{{ $platform }}') ? 'text-[#b54c17]' : 'text-gray-700'">{{ $platform }}</span>
                 </label>
                 @endforeach
             </div>
@@ -139,7 +139,7 @@
                     name="media[]"
                     multiple
                     accept="image/*"
-                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-[#b54c17] hover:file:bg-indigo-100"
                 >
                 <p class="mt-2 text-sm text-gray-500">You can upload additional image files</p>
             </div>
@@ -157,7 +157,7 @@
                     <textarea
                         name="facebook_message"
                         rows="4"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                     >{{ old('facebook_message', $post->facebook_message) }}</textarea>
                 </div>
 
@@ -166,7 +166,7 @@
                     <textarea
                         name="instagram_message"
                         rows="4"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                     >{{ old('instagram_message', $post->instagram_message) }}</textarea>
                 </div>
 
@@ -175,7 +175,7 @@
                     <textarea
                         name="tiktok_message"
                         rows="4"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                     >{{ old('tiktok_message', $post->tiktok_message) }}</textarea>
                 </div>
 
@@ -184,7 +184,7 @@
                     <textarea
                         name="youtube_message"
                         rows="4"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                     >{{ old('youtube_message', $post->youtube_message) }}</textarea>
                 </div>
             </div>
@@ -351,7 +351,7 @@
                     type="datetime-local"
                     name="scheduled_at"
                     value="{{ old('scheduled_at', $post->scheduled_at?->format('Y-m-d\TH:i')) }}"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                 >
             </div>
         </div>
@@ -360,7 +360,7 @@
         <div class="flex gap-4">
             <button
                 type="submit"
-                class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-all"
+                class="flex-1 btn-brand"
             >
                 Update Post
             </button>

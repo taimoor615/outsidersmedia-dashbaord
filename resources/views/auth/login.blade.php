@@ -19,7 +19,7 @@
             <div class="logo-wrapper">
                 <img src="{{ asset('images/logo-img.png') }}" alt="" srcset="" class="img-fluid">
             </div>
-            {{-- <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl shadow-lg mb-4">
+            {{-- <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#CD571B] to-[#EC921A] rounded-2xl shadow-lg mb-4">
                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
@@ -69,7 +69,7 @@
                             id="email"
                             name="email"
                             value="{{ old('email') }}"
-                            class="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 @error('email') border-red-500 @enderror"
+                            class="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all duration-200 @error('email') border-red-500 @enderror"
                             placeholder="admin@Outsidersmedia.com"
                             required
                             autofocus
@@ -98,7 +98,7 @@
                             type="password"
                             id="password"
                             name="password"
-                            class="block w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 @error('password') border-red-500 @enderror"
+                            class="block w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all duration-200 @error('password') border-red-500 @enderror"
                             placeholder="••••••••"
                             required
                         >
@@ -132,19 +132,19 @@
                         <input
                             type="checkbox"
                             name="remember"
-                            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer"
+                            class="h-4 w-4 text-[#CD571B] focus:ring-[#CD571B] border-gray-300 rounded cursor-pointer"
                         >
                         <span class="ml-2 text-sm text-gray-700">Remember me</span>
                     </label>
-                    {{-- <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+                    <a href="{{ route('password.forgot') }}" class="text-sm font-medium hover:underline transition-colors" style="color:#CD571B;">
                         Forgot password?
-                    </a> --}}
+                    </a>
                 </div>
 
                 <!-- Submit Button -->
                 <button
                     type="submit"
-                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform hover:-translate-y-0.5"
+                    class="w-full btn-brand py-3 px-4 rounded-xl font-semibold shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200"
                 >
                     Sign In
                 </button>
@@ -154,7 +154,7 @@
         <!-- Footer -->
         <div class="text-center mt-8">
             <p class="text-sm text-gray-600">
-                © 2025 Outsidersmedia. All rights reserved.
+                © 2026 Outsidersmedia. All rights reserved.
             </p>
         </div>
     </div>

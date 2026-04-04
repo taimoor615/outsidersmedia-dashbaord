@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\PostController;
@@ -34,6 +35,12 @@ Route::middleware('guest')->group(function () {
     // Email Verification
     Route::get('/verify-email', [VerificationController::class, 'show'])->name('verify.email');
     Route::post('/verify-email', [VerificationController::class, 'verify'])->name('verify.email.post');
+
+    // Forgot / Reset Password (team members only)
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotForm'])->name('password.forgot');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.forgot.post');
+    Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset.form');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.reset.post');
 });
 
 // Logout Route (Authenticated Users)
@@ -102,6 +109,7 @@ Route::middleware(['auth', 'team'])->group(function () {
 Route::prefix('client')->name('client.')->group(function () {
     Route::get('/{token}', [ClientPortalController::class, 'show'])->name('view');
     Route::post('/{token}/feedback', [ClientPortalController::class, 'submitFeedback'])->name('feedback');
+    Route::post('/{token}/note', [ClientPortalController::class, 'storeNote'])->name('note');
     Route::post('/{token}/approve/{post}', [ClientPortalController::class, 'approvePost'])->name('approve');
     Route::post('/{token}/reject/{post}', [ClientPortalController::class, 'rejectPost'])->name('reject');
 });
