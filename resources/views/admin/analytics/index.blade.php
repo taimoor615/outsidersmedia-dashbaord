@@ -23,7 +23,7 @@
                     <p class="mt-1 text-3xl font-bold text-gray-900">{{ number_format($totalPosts) }}</p>
                 </div>
                 <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
-                    <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                    <svg class="w-6 h-6 text-[#CD571B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
                         @forelse($postsPerClient as $row)
                         <tr class="hover:bg-gray-50/50">
                             <td class="px-6 py-3">
-                                <a href="{{ route('clients.show', $row['client']) }}" class="font-medium text-indigo-600 hover:text-indigo-700">{{ $row['client']->name }}</a>
+                                <a href="{{ route('clients.show', $row['client']) }}" class="font-medium text-[#CD571B] hover:text-[#b54c17]">{{ $row['client']->name }}</a>
                             </td>
                             <td class="px-6 py-3 text-right font-semibold text-gray-900">{{ $row['total'] }}</td>
                             <td class="px-6 py-3 text-right text-green-600 font-medium">{{ $row['published'] }}</td>
@@ -178,7 +178,7 @@
                 @forelse($platformUsage as $p)
                 <div class="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
                     <span class="text-sm font-medium text-gray-700">{{ $p['name'] }}</span>
-                    <span class="font-bold text-indigo-600">{{ $p['count'] }}</span>
+                    <span class="font-bold text-[#CD571B]">{{ $p['count'] }}</span>
                 </div>
                 @empty
                 <p class="text-gray-500 text-sm py-4">No data yet</p>
@@ -224,7 +224,7 @@
                 @forelse($postsByCreator as $row)
                 <div class="flex justify-between items-center py-3 border-b border-gray-50 last:border-0">
                     <span class="font-medium text-gray-800">{{ $row['name'] }}</span>
-                    <span class="font-bold text-indigo-600">{{ $row['total'] }}</span>
+                    <span class="font-bold text-[#CD571B]">{{ $row['total'] }}</span>
                 </div>
                 @empty
                 <p class="text-gray-500 text-sm py-4">No data yet</p>
@@ -263,7 +263,7 @@
                 <h2 class="text-lg font-bold text-gray-900">Recent Feedback</h2>
                 <p class="text-sm text-gray-500 mt-0.5">Latest 10 feedback messages</p>
             </div>
-            <a href="{{ route('posts.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-700">View all posts</a>
+            <a href="{{ route('posts.index') }}" class="text-sm font-medium text-[#CD571B] hover:text-[#b54c17]">View all posts</a>
         </div>
         <div class="divide-y divide-gray-100 max-h-96 overflow-y-auto">
             @forelse($recentFeedback as $fb)
@@ -272,7 +272,7 @@
                     <div class="flex-1 min-w-0">
                         <p class="text-sm text-gray-900">{{ Str::limit($fb->feedback, 120) }}</p>
                         <p class="mt-1 text-xs text-gray-500">
-                            <a href="{{ route('posts.show', $fb->post) }}" class="text-indigo-600 hover:text-indigo-700 font-medium">{{ $fb->post->client->name }}</a>
+                            <a href="{{ route('posts.show', $fb->post) }}" class="text-[#CD571B] hover:text-[#b54c17] font-medium">{{ $fb->post->client->name }}</a>
                             · {{ $fb->created_at->diffForHumans() }}
                             @if($fb->action)
                             · <span class="font-medium">{{ ucfirst(str_replace('_', ' ', $fb->action)) }}</span>

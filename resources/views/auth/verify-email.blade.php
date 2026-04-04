@@ -74,7 +74,7 @@
                             type="password"
                             id="password"
                             name="password"
-                            class="block w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 @error('password') border-red-500 @enderror"
+                            class="block w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all duration-200 @error('password') border-red-500 @enderror"
                             placeholder="Minimum 8 characters"
                             required
                             autofocus
@@ -112,7 +112,7 @@
                             type="password"
                             id="password_confirmation"
                             name="password_confirmation"
-                            class="block w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                            class="block w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all duration-200"
                             placeholder="Re-enter your password"
                             required
                         >
@@ -130,7 +130,7 @@
 
                 <button
                     type="submit"
-                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform hover:-translate-y-0.5"
+                    class="w-full btn-brand py-3 px-4 rounded-xl font-semibold shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200"
                 >
                     Activate Account
                 </button>
@@ -140,7 +140,7 @@
 
         <!-- Footer -->
         <div class="text-center mt-8">
-            <p class="text-sm text-gray-600">© 2025 Outsidersmedia. All rights reserved.</p>
+            <p class="text-sm text-gray-600">© 2026 Outsidersmedia. All rights reserved.</p>
         </div>
 
     </div>

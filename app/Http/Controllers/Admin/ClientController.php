@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ClientWelcome;
+use App\Mail\NewClientNotification;
 use App\Models\Client;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ClientController extends Controller
 {
@@ -103,6 +106,24 @@ class ClientController extends Controller
         $validated['needs_approval'] = $request->has('needs_approval');
 
         $client = Client::create($validated);
+
+        // Send welcome email to client
+        try {
+            Mail::to($client->email)->send(new ClientWelcome($client));
+        } catch (\Exception $e) {
+            // Non-fatal: log but don't block the redirect
+            \Log::error('Client welcome email failed: ' . $e->getMessage());
+        }
+
+        // Notify all admins
+        try {
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new NewClientNotification($client, auth()->user()));
+            }
+        } catch (\Exception $e) {
+            \Log::error('Admin new-client notification email failed: ' . $e->getMessage());
+        }
 
         return redirect()
             ->route('clients.show', $client)

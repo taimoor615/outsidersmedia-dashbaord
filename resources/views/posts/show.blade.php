@@ -21,7 +21,7 @@
 
         <div class="flex items-center gap-3">
             @if($post->canEdit())
-            <a href="{{ route('posts.edit', $post) }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+            <a href="{{ route('posts.edit', $post) }}" class="px-4 py-2 bg-[#CD571B] text-white rounded-lg hover:bg-[#b54c17] transition-colors">
                 <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                 </svg>
@@ -133,7 +133,7 @@
                 @if($post->webpage_url)
                 <div class="mt-4 p-4 bg-gray-100 rounded-lg">
                     <p class="text-sm text-gray-600 mb-1">Webpage URL:</p>
-                    <a href="{{ $post->webpage_url }}" target="_blank" class="text-indigo-600 hover:text-indigo-700 text-sm break-all">
+                    <a href="{{ $post->webpage_url }}" target="_blank" class="text-[#CD571B] hover:text-[#b54c17] text-sm break-all">
                         {{ $post->webpage_url }}
                     </a>
                 </div>
@@ -217,7 +217,7 @@
 
                     <div>
                         <p class="text-gray-500 mb-1">Client</p>
-                        <a href="{{ route('clients.show', $post->client) }}" class="font-medium text-indigo-600 hover:text-indigo-700">
+                        <a href="{{ route('clients.show', $post->client) }}" class="font-medium text-[#CD571B] hover:text-[#b54c17]">
                             {{ $post->client->name }}
                         </a>
                     </div>
@@ -243,7 +243,7 @@
                 <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Actions</h3>
                 <form action="{{ route('posts.submit-approval', $post) }}" method="POST">
                     @csrf
-                    <button type="submit" class="w-full px-4 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors">
+                    <button type="submit" class="w-full px-4 py-3 bg-[#CD571B] text-white font-semibold rounded-xl hover:bg-[#b54c17] transition-colors">
                         Send to Client for Review
                     </button>
                 </form>
@@ -268,7 +268,7 @@
                 </p>
                 <form action="{{ route('posts.resubmit-to-client', $post) }}" method="POST">
                     @csrf
-                    <button type="submit" class="w-full px-4 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors">
+                    <button type="submit" class="w-full px-4 py-3 bg-[#CD571B] text-white font-semibold rounded-xl hover:bg-[#b54c17] transition-colors">
                         Resubmit to Client
                     </button>
                 </form>

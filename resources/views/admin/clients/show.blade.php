@@ -28,7 +28,7 @@
                         </svg>
                         Edit Client
                     </a>
-                    <a href="{{ $client->share_url }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                    <a href="{{ $client->share_url }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#CD571B] text-white rounded-lg hover:bg-[#b54c17] transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                         </svg>
@@ -68,7 +68,7 @@
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-600">Approval</span>
-                            <span class="text-sm font-medium {{ $client->needs_approval ? 'text-indigo-600' : 'text-gray-900' }}">
+                            <span class="text-sm font-medium {{ $client->needs_approval ? 'text-[#CD571B]' : 'text-gray-900' }}">
                                 {{ $client->needs_approval ? 'Required' : 'Not Required' }}
                             </span>
                         </div>
@@ -76,7 +76,7 @@
                 </div>
 
                 <!-- Plan Card -->
-                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
+                <div class="bg-gradient-to-br from-indigo-500 to-[#EC921A] rounded-xl shadow-lg p-6 text-white">
                     <h3 class="text-sm font-semibold uppercase tracking-wide mb-4 opacity-90">Current Plan</h3>
                     <p class="text-3xl font-bold mb-2 capitalize">{{ $client->plan_type }}</p>
                     <p class="text-lg opacity-90 mb-4">${{ $client->plan_details['price'] }}/month</p>
@@ -97,7 +97,7 @@
                     <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Contact Information</h3>
                     <div class="space-y-3">
                         @if($client->website_url)
-                        <a href="{{ $client->website_url }}" target="_blank" class="flex items-center gap-3 text-sm text-gray-700 hover:text-indigo-600 transition-colors">
+                        <a href="{{ $client->website_url }}" target="_blank" class="flex items-center gap-3 text-sm text-gray-700 hover:text-[#CD571B] transition-colors">
                             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
                             </svg>
@@ -206,7 +206,7 @@
                         <h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Content Priorities</h4>
                         <div class="flex flex-wrap gap-2">
                             @foreach($client->content_types as $type)
-                            <span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-sm rounded-lg border border-indigo-200">{{ $type }}</span>
+                            <span class="px-3 py-1 bg-orange-50 text-[#b54c17] text-sm rounded-lg border border-orange-200">{{ $type }}</span>
                             @endforeach
                         </div>
                     </div>
@@ -246,7 +246,7 @@
                         >
                         <button
                             onclick="copyToClipboard('{{ $client->share_url }}')"
-                            class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                            class="px-4 py-2 bg-[#CD571B] text-white rounded-lg hover:bg-[#b54c17] transition-colors"
                         >
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>

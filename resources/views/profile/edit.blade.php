@@ -49,7 +49,7 @@
                             <input type="hidden" name="email" value="{{ $user->email }}">
                             <input type="hidden" name="timezone" value="{{ $user->timezone }}">
 
-                            <label for="profile_image" class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                            <label for="profile_image" class="cursor-pointer inline-flex items-center px-4 py-2 bg-[#CD571B] text-white text-sm font-medium rounded-lg hover:bg-[#b54c17] transition-colors">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
@@ -90,7 +90,7 @@
                                     id="name"
                                     name="name"
                                     value="{{ old('name', $user->name) }}"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all @error('name') border-red-500 @enderror"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all @error('name') border-red-500 @enderror"
                                     required
                                 >
                                 @error('name')
@@ -105,7 +105,7 @@
                                     id="email"
                                     name="email"
                                     value="{{ old('email', $user->email) }}"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all @error('email') border-red-500 @enderror"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all @error('email') border-red-500 @enderror"
                                     required
                                 >
                                 @error('email')
@@ -118,7 +118,7 @@
                                 <select
                                     id="timezone"
                                     name="timezone"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all"
                                     required
                                 >
                                     @foreach($timezones as $tz)
@@ -131,7 +131,7 @@
                         <div class="mt-6">
                             <button
                                 type="submit"
-                                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-all"
+                                class="w-full btn-brand py-3 px-4 rounded-xl font-semibold shadow-lg transition-all"
                             >
                                 Save Changes
                             </button>
@@ -154,7 +154,7 @@
                                     type="password"
                                     id="current_password"
                                     name="current_password"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all @error('current_password') border-red-500 @enderror"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all @error('current_password') border-red-500 @enderror"
                                     required
                                 >
                                 @error('current_password')
@@ -168,7 +168,7 @@
                                     type="password"
                                     id="password"
                                     name="password"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all @error('password') border-red-500 @enderror"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all @error('password') border-red-500 @enderror"
                                     required
                                 >
                                 @error('password')
@@ -183,7 +183,7 @@
                                     type="password"
                                     id="password_confirmation"
                                     name="password_confirmation"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all"
                                     required
                                 >
                             </div>

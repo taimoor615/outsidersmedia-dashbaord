@@ -33,7 +33,7 @@
                             type="text"
                             name="name"
                             value="{{ old('name', $client->name) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('name') border-red-500 @enderror"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent @error('name') border-red-500 @enderror"
                             required
                         >
                         @error('name')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
@@ -45,7 +45,7 @@
                             type="email"
                             name="email"
                             value="{{ old('email', $client->email) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('email') border-red-500 @enderror"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent @error('email') border-red-500 @enderror"
                             required
                         >
                         @error('email')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
@@ -58,7 +58,7 @@
                                 type="url"
                                 name="website_url"
                                 value="{{ old('website_url', $client->website_url) }}"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                             >
                         </div>
 
@@ -68,7 +68,7 @@
                                 type="text"
                                 name="location"
                                 value="{{ old('location', $client->location) }}"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                             >
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                         <textarea
                             name="business_description"
                             rows="4"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >{{ old('business_description', $client->business_description) }}</textarea>
                     </div>
 
@@ -87,7 +87,7 @@
                         <textarea
                             name="unique_value"
                             rows="3"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >{{ old('unique_value', $client->unique_value) }}</textarea>
                     </div>
 
@@ -97,7 +97,7 @@
                             type="text"
                             name="target_audience"
                             value="{{ old('target_audience', $client->target_audience) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                                     name="social_goals[]"
                                     value="{{ $goal }}"
                                     {{ in_array($goal, old('social_goals', $client->social_goals ?? [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                                 >
                                 <span class="ml-3 text-sm text-gray-700">{{ $goal }}</span>
                             </label>
@@ -136,7 +136,7 @@
                                     name="brand_tone[]"
                                     value="{{ $tone }}"
                                     {{ in_array($tone, old('brand_tone', $client->brand_tone ?? [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                                 >
                                 <span class="ml-3 text-sm text-gray-700">{{ $tone }}</span>
                             </label>
@@ -154,7 +154,7 @@
                                     name="content_types[]"
                                     value="{{ $type }}"
                                     {{ in_array($type, old('content_types', $client->content_types ?? [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                                 >
                                 <span class="ml-3 text-sm text-gray-700">{{ $type }}</span>
                             </label>
@@ -168,7 +168,7 @@
                             type="text"
                             name="preferred_cta"
                             value="{{ old('preferred_cta', $client->preferred_cta) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >
                     </div>
 
@@ -179,7 +179,7 @@
                                 name="share_third_party_content"
                                 value="1"
                                 {{ old('share_third_party_content', $client->share_third_party_content) ? 'checked' : '' }}
-                                class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                             >
                             <span class="ml-3 text-sm text-gray-700">Share third-party content</span>
                         </label>
@@ -196,7 +196,7 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Timezone *</label>
                         <select
                             name="timezone"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                             required
                         >
                             @foreach($timezones as $tz)
@@ -215,7 +215,7 @@
                                     name="posting_days[]"
                                     value="{{ $day }}"
                                     {{ in_array($day, old('posting_days', $client->posting_days ?? [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mb-2"
+                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B] mb-2"
                                 >
                                 <span class="text-xs text-gray-700">{{ substr($day, 0, 3) }}</span>
                             </label>
@@ -224,13 +224,13 @@
                     </div>
 
                     <div>
-                        <label class="flex items-center p-4 bg-indigo-50 border border-indigo-200 rounded-lg cursor-pointer">
+                        <label class="flex items-center p-4 bg-orange-50 border border-orange-200 rounded-lg cursor-pointer">
                             <input
                                 type="checkbox"
                                 name="needs_approval"
                                 value="1"
                                 {{ old('needs_approval', $client->needs_approval) ? 'checked' : '' }}
-                                class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                             >
                             <span class="ml-3 text-sm font-medium text-gray-900">Require approval before posting</span>
                         </label>
@@ -242,7 +242,7 @@
                             type="text"
                             name="approval_emails"
                             value="{{ old('approval_emails', $client->approval_emails) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                         >
                     </div>
                 </div>
@@ -270,15 +270,15 @@
 
                                 <div class="p-4 border-2 rounded-xl transition-all duration-200
                                             border-gray-200 hover:border-indigo-300
-                                            peer-checked:border-indigo-600 peer-checked:bg-indigo-50">
+                                            peer-checked:border-[#CD571B] peer-checked:bg-orange-50">
 
                                     <div class="text-center">
-                                        <p class="font-bold text-lg capitalize text-gray-700 peer-checked:text-indigo-900">{{ $plan }}</p>
+                                        <p class="font-bold text-lg capitalize text-gray-700 peer-checked:text-[#7a2e0a]">{{ $plan }}</p>
                                         <p class="text-2xl font-bold text-gray-900">${{ $details['price'] }}</p>
                                         <p class="text-sm text-gray-600">{{ $details['posts'] }} posts/mo</p>
                                     </div>
 
-                                    <div class="hidden peer-checked:block absolute top-2 right-2 text-indigo-600">
+                                    <div class="hidden peer-checked:block absolute top-2 right-2 text-[#CD571B]">
                                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                                     </div>
                                 </div>
@@ -297,7 +297,7 @@
                                     name="networks[]"
                                     value="{{ $network }}"
                                     {{ in_array($network, old('networks', $client->networks ?? [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                                 >
                                 <span class="ml-3 text-sm text-gray-700">{{ $network }}</span>
                             </label>
@@ -309,7 +309,7 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Account Status *</label>
                         <select
                             name="status"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
                             required
                         >
                             <option value="active" {{ old('status', $client->status) === 'active' ? 'selected' : '' }}>Active</option>
@@ -324,7 +324,7 @@
             <div class="flex gap-4">
                 <button
                     type="submit"
-                    class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-all"
+                    class="flex-1 btn-brand"
                 >
                     Update Client
                 </button>

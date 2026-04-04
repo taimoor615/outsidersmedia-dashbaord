@@ -14,7 +14,7 @@
                     <h1 class="text-3xl font-bold text-gray-900">Team Management</h1>
                     <p class="mt-2 text-gray-600">Manage your team members and their access</p>
                 </div>
-                <a href="{{ route('admin.team.create') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200">
+                <a href="{{ route('admin.team.create') }}" class="inline-flex items-center px-6 py-3 btn-brand">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
@@ -162,7 +162,7 @@
                                         <p class="text-gray-900 font-semibold text-lg">No team members yet</p>
                                         <p class="text-gray-500 text-sm mt-1">Get started by adding your first team member</p>
                                     </div>
-                                    <a href="{{ route('admin.team.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                                    <a href="{{ route('admin.team.create') }}" class="mt-4 inline-flex items-center btn-brand">
                                         Add Team Member
                                     </a>
                                 </div>
