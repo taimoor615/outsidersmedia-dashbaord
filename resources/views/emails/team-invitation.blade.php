@@ -13,13 +13,11 @@
 
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 40px 40px 20px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px 16px 0 0;">
-                            <div style="width: 64px; height: 64px; background-color: #ffffff; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-                                <svg style="width: 32px; height: 32px; color: #667eea;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                                </svg>
+                        <td style="padding: 32px 40px 24px; text-align: center; background: linear-gradient(135deg, #CD571B 0%, #EC921A 100%); border-radius: 16px 16px 0 0;">
+                            <div style="margin-bottom: 14px;">
+                                <img src="{{ config('app.url') }}/images/logo-img.png" alt="Outsidersmedia" style="max-height:60px; max-width:220px; object-fit:contain;">
                             </div>
-                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">Welcome to Outsidersmedia!</h1>
+                            <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: bold;">Welcome to Outsidersmedia!</h1>
                         </td>
                     </tr>
 
@@ -46,7 +44,7 @@
                             <table role="presentation" style="width: 100%; margin: 30px 0;">
                                 <tr>
                                     <td style="text-align: center;">
-                                        <a href="{{ $verificationUrl }}" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);">
+                                        <a href="{{ $verificationUrl }}" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #CD571B 0%, #EC921A 100%); color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px rgba(205,87,27,0.3);">
                                             Activate My Account
                                         </a>
                                     </td>
@@ -75,7 +73,7 @@
                     <tr>
                         <td style="padding: 30px 40px; background-color: #f9fafb; border-radius: 0 0 16px 16px; text-align: center;">
                             <p style="margin: 0 0 10px; color: #9ca3af; font-size: 14px;">
-                                © 2025 Outsidersmedia. All rights reserved.
+                                © 2026 Outsidersmedia. All rights reserved.
                             </p>
                             <p style="margin: 0; color: #9ca3af; font-size: 12px;">
                                 This is an automated email. Please do not reply.

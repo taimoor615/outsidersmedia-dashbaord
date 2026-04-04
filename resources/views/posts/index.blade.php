@@ -12,7 +12,7 @@
             <h1 class="text-3xl font-bold text-gray-900">Posts</h1>
             <p class="mt-2 text-gray-600">Manage your social media content</p>
         </div>
-        <a href="{{ route('posts.create') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-all">
+        <a href="{{ route('posts.create') }}" class="inline-flex items-center px-6 py-3 btn-brand">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -47,21 +47,21 @@
         <div class="bg-gradient-to-r from-slate-50 to-gray-50/80 px-5 py-4 border-b border-gray-200/60">
             <div class="flex flex-wrap items-center gap-3">
                 <span class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
-                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                    <svg class="w-4 h-4 text-[#CD571B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
                     Status
                 </span>
                 <a href="{{ route('posts.index', $queryParamsNoStatus) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ !request('status') ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">All</a>
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ !request('status') ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">All</a>
                 <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'draft'])) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'draft' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Drafts</a>
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'draft' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Drafts</a>
                 <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'pending_approval'])) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'pending_approval' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Pending</a>
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'pending_approval' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Pending</a>
                 <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'approved'])) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'approved' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Approved</a>
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'approved' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Approved</a>
                 <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'scheduled'])) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'scheduled' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Scheduled</a>
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'scheduled' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Scheduled</a>
                 <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'published'])) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'published' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Published</a>
+                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'published' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Published</a>
             </div>
         </div>
         <form id="posts-filter-form" method="GET" action="{{ route('posts.index') }}" class="p-5">
@@ -69,7 +69,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Client</label>
-                    <select name="client_id" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                    <select name="client_id" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B] bg-gray-50/50">
                         <option value="">All clients</option>
                         @foreach($clients as $c)
                         <option value="{{ $c->id }}" {{ request('client_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
@@ -78,7 +78,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Date</label>
-                    <select name="date_filter" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                    <select name="date_filter" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B] bg-gray-50/50">
                         <option value="all" {{ request('date_filter', 'all') == 'all' ? 'selected' : '' }}>All time</option>
                         <option value="last_5_days" {{ request('date_filter') == 'last_5_days' ? 'selected' : '' }}>Last 5 days</option>
                         <option value="last_week" {{ request('date_filter') == 'last_week' ? 'selected' : '' }}>Last week</option>
@@ -87,7 +87,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Sort by</label>
-                    <select name="sort_by" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                    <select name="sort_by" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B] bg-gray-50/50">
                         <option value="created_at" {{ request('sort_by', 'created_at') == 'created_at' ? 'selected' : '' }}>Date created</option>
                         <option value="scheduled_at" {{ request('sort_by') == 'scheduled_at' ? 'selected' : '' }}>Scheduled</option>
                         <option value="client" {{ request('sort_by') == 'client' ? 'selected' : '' }}>Client</option>
@@ -95,7 +95,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Order</label>
-                    <select name="sort_order" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                    <select name="sort_order" class="posts-filter-select w-full rounded-xl border-gray-300 text-sm py-2.5 focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B] bg-gray-50/50">
                         <option value="desc" {{ request('sort_order', 'desc') == 'desc' ? 'selected' : '' }}>Newest first</option>
                         <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Oldest first</option>
                     </select>
@@ -104,7 +104,7 @@
                     <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Search</label>
                     <div class="relative">
                         <input type="text" name="search" id="posts-search-input" value="{{ request('search') }}" placeholder="Caption or message..."
-                               class="w-full rounded-xl border-gray-300 text-sm py-2.5 pl-10 pr-4 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 bg-gray-50/50">
+                               class="w-full rounded-xl border-gray-300 text-sm py-2.5 pl-10 pr-4 focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B] bg-gray-50/50">
                         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
                 </div>
@@ -172,7 +172,7 @@
             <div class="p-6">
                 <!-- Client Name -->
                 <div class="flex items-center gap-2 mb-3">
-                    <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-[#EC921A] rounded-full flex items-center justify-center text-white text-xs font-bold">
                         {{ substr($post->client->name, 0, 2) }}
                     </div>
                     <div>
@@ -231,7 +231,7 @@
                     </a>
 
                     @if($post->canEdit())
-                    <a href="{{ route('posts.edit', $post) }}" class="flex-1 px-4 py-2 bg-indigo-100 text-indigo-700 text-sm font-medium rounded-lg hover:bg-indigo-200 transition-colors text-center">
+                    <a href="{{ route('posts.edit', $post) }}" class="flex-1 px-4 py-2 bg-indigo-100 text-[#b54c17] text-sm font-medium rounded-lg hover:bg-indigo-200 transition-colors text-center">
                         Edit
                     </a>
                     @endif
@@ -256,7 +256,7 @@
                 </svg>
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">No posts yet</h3>
                 <p class="text-gray-500 mb-6">Create your first post to get started</p>
-                <a href="{{ route('posts.create') }}" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors">
+                <a href="{{ route('posts.create') }}" class="inline-flex items-center btn-brand">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>

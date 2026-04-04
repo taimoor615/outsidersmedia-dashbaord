@@ -27,7 +27,7 @@
                     <div class="sidebar-wrapper-img">
                         <img src="{{ asset('images/dashboard-sidebar-img.png') }}" alt="" srcset="" class="img-fluid">
                     </div>
-                    {{-- <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                    {{-- <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-[#EC921A] rounded-xl flex items-center justify-center shadow-lg">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
@@ -120,7 +120,7 @@
             <!-- User Profile in Sidebar -->
             <div class="border-t border-gray-700 p-4">
                 <div class="flex items-center gap-3 px-4 py-3 bg-gray-800 rounded-xl">
-                    <img src="{{ auth()->user()->profile_image_url }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full border-2 border-indigo-500">
+                    <img src="{{ auth()->user()->profile_image_url }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full border-2 style="border-color:#EC921A"">
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-semibold text-white truncate">{{ auth()->user()->name }}</p>
                         <p class="text-xs text-gray-400 truncate">{{ auth()->user()->email }}</p>
@@ -163,7 +163,7 @@
                                 @if(auth()->user()->unreadNotifications->count() > 0)
                                 <form action="{{ route('notifications.read-all') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="text-xs text-indigo-600 hover:text-indigo-700">Mark all read</button>
+                                    <button type="submit" class="text-xs text-[#CD571B] hover:text-[#b54c17]">Mark all read</button>
                                 </form>
                                 @endif
                             </div>

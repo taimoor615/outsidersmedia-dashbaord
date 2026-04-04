@@ -30,7 +30,7 @@
                         id="name"
                         name="name"
                         value="{{ old('name', $team->name) }}"
-                        class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all @error('name') border-red-500 @enderror"
+                        class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all @error('name') border-red-500 @enderror"
                         required
                     >
                     @error('name')
@@ -45,7 +45,7 @@
                         id="email"
                         name="email"
                         value="{{ old('email', $team->email) }}"
-                        class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all @error('email') border-red-500 @enderror"
+                        class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all @error('email') border-red-500 @enderror"
                         required
                     >
                     @error('email')
@@ -58,7 +58,7 @@
                     <select
                         id="timezone"
                         name="timezone"
-                        class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all"
                         required
                     >
                         @foreach($timezones as $tz)
@@ -72,7 +72,7 @@
                     <select
                         id="status"
                         name="status"
-                        class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent transition-all"
                         required
                     >
                         <option value="active" {{ old('status', $team->status) === 'active' ? 'selected' : '' }}>Active</option>
@@ -84,7 +84,7 @@
                 <div class="flex gap-3">
                     <button
                         type="submit"
-                        class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-all"
+                        class="flex-1 btn-brand"
                     >
                         Update Team Member
                     </button>

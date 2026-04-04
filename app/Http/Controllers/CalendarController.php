@@ -29,9 +29,6 @@ class CalendarController extends Controller
             ->whereIn('status', ['scheduled', 'published'])
             ->whereNotNull('scheduled_at');
 
-        if (!auth()->user()->isAdmin()) {
-            $query->where('created_by', auth()->id());
-        }
 
         if ($start) {
             $query->where('scheduled_at', '>=', $start);
@@ -68,8 +65,8 @@ class CalendarController extends Controller
     private function colorForStatus(string $status): string
     {
         return match ($status) {
-            'scheduled' => '#2563eb',
-            'published' => '#7c3aed',
+            'scheduled' => '#CD571B',
+            'published' => '#EC921A',
             'approved' => '#059669',
             default => '#6b7280',
         };

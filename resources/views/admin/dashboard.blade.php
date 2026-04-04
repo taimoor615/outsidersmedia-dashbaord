@@ -7,11 +7,11 @@
 <div class="space-y-6">
 
     <!-- Welcome Section -->
-    <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 rounded-2xl shadow-xl p-8 text-white">
+    <div class="rounded-2xl shadow-xl p-8 text-white" style="background:linear-gradient(135deg,#CD571B 0%,#EC921A 100%)">
         <div class="flex items-center justify-between">
             <div>
                 <h1 class="text-3xl font-bold mb-2">Welcome back, {{ auth()->user()->name }}! 👋</h1>
-                <p class="text-indigo-100 text-lg">Here's what's happening with your social media management today.</p>
+                <p class="text-orange-100 text-lg">Here's what's happening with your social media management today.</p>
             </div>
             <div class="hidden lg:block">
                 <div class="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center">
@@ -101,7 +101,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-gray-900">Analytics</h2>
-            <a href="{{ route('admin.analytics.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-700">View full analytics →</a>
+            <a href="{{ route('admin.analytics.index') }}" class="text-sm font-medium text-[#CD571B] hover:text-[#b54c17]">View full analytics →</a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
@@ -110,7 +110,7 @@
                     @forelse($postsPerClient as $row)
                     <div class="flex justify-between items-center text-sm">
                         <span class="text-gray-900 font-medium truncate mr-2">{{ $row['client_name'] }}</span>
-                        <span class="text-indigo-600 font-bold">{{ $row['total'] }}</span>
+                        <span class="text-[#CD571B] font-bold">{{ $row['total'] }}</span>
                     </div>
                     @empty
                     <p class="text-gray-500 text-sm">No posts yet</p>
@@ -156,7 +156,7 @@
                 <div class="p-6 border-b border-gray-200">
                     <div class="flex items-center justify-between">
                         <h2 class="text-lg font-bold text-gray-900">Recent Client Feedback</h2>
-                        <a href="{{ route('posts.index', ['status' => 'pending_approval']) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">View All</a>
+                        <a href="{{ route('posts.index', ['status' => 'pending_approval']) }}" class="text-sm text-[#CD571B] hover:text-[#b54c17] font-medium">View All</a>
                     </div>
                 </div>
                 <div class="divide-y divide-gray-200">
@@ -164,7 +164,7 @@
                     @forelse($recentFeedback as $feedback)
                     <div class="p-6 hover:bg-gray-50 transition-colors">
                         <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                            <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-[#EC921A] rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
                                 {{ substr($feedback->post->client->name, 0, 2) }}
                             </div>
                             <div class="flex-1">
@@ -182,7 +182,7 @@
                                     @endif
                                 </div>
                                 <p class="text-gray-700 text-sm">{{ Str::limit($feedback->feedback, 150) }}</p>
-                                <a href="{{ route('posts.show', $feedback->post) }}" class="text-sm text-indigo-600 hover:text-indigo-700 mt-2 inline-block">View Post →</a>
+                                <a href="{{ route('posts.show', $feedback->post) }}" class="text-sm text-[#CD571B] hover:text-[#b54c17] mt-2 inline-block">View Post →</a>
                             </div>
                         </div>
                     </div>
@@ -203,7 +203,7 @@
                 <div class="p-6 border-b border-gray-200">
                     <div class="flex items-center justify-between">
                         <h2 class="text-lg font-bold text-gray-900">Upcoming Scheduled Posts</h2>
-                        <a href="{{ route('posts.index', ['status' => 'scheduled']) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">View Calendar</a>
+                        <a href="{{ route('posts.index', ['status' => 'scheduled']) }}" class="text-sm text-[#CD571B] hover:text-[#b54c17] font-medium">View Calendar</a>
                     </div>
                 </div>
                 <div class="divide-y divide-gray-200">
@@ -263,7 +263,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h2 class="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
                 <div class="space-y-3">
-                    <a href="{{ route('clients.create') }}" class="flex items-center gap-3 p-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-colors">
+                    <a href="{{ route('clients.create') }}" class="flex items-center gap-3 p-3 bg-orange-50 hover:bg-indigo-100 text-[#b54c17] rounded-lg transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -290,7 +290,7 @@
                 <h2 class="text-lg font-bold text-gray-900 mb-4">Recent Notes</h2>
                 <div class="space-y-4">
                     @foreach($recentNotes->take(3) as $note)
-                    <div class="border-l-4 border-indigo-500 pl-4 py-2">
+                    <div class="border-l-4 border-[#CD571B] pl-4 py-2">
                         <p class="text-sm text-gray-700 mb-1">{{ Str::limit($note->feedback, 80) }}</p>
                         <p class="text-xs text-gray-500">{{ $note->post->client->name }} • {{ $note->created_at->diffForHumans() }}</p>
                     </div>

@@ -75,12 +75,25 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // All scheduled posts for calendar (including admin-created)
+        $calendarPosts = Post::with(['client'])
+            ->whereNotNull('scheduled_at')
+            ->where('status', 'scheduled')
+            ->get()
+            ->map(fn($p) => [
+                'date'   => $p->scheduled_at->format('Y-m-d'),
+                'title'  => $p->facebook_message ?: $p->instagram_message ?: 'Post',
+                'client' => $p->client->name ?? '',
+                'status' => $p->status,
+            ]);
+
         return view('team.dashboard', compact(
             'stats',
             'postsNeedingAction',
             'recentClientFeedback',
             'upcomingPosts',
-            'recentPosts'
+            'recentPosts',
+            'calendarPosts'
         ));
     }
 }

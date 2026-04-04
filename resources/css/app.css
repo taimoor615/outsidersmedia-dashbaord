@@ -26,3 +26,33 @@
     width: 100%;
     max-width: 50px;
 }
+
+/* ── Brand color utilities (no Tailwind compile needed) ── */
+.btn-brand {
+    background: linear-gradient(135deg, #CD571B 0%, #EC921A 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 14px 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+.btn-brand:hover {
+    background: linear-gradient(135deg, #b54c17 0%, #d48216 100%);
+    box-shadow: 0 10px 20px rgba(205,87,27,0.25);
+    transform: translateY(-1px);
+}
+.text-brand { color: #CD571B !important; }
+.border-brand { border-color: #CD571B !important; }
+.bg-brand { background-color: #CD571B !important; }
+.bg-brand-gradient { background: linear-gradient(135deg, #CD571B 0%, #EC921A 100%) !important; }
+.sidebar-brand {
+    background: linear-gradient(to bottom, #1a0a04, #3d1509, #1a0a04);
+}
+.sidebar-brand-border { border-color: rgba(205,87,27,0.3); }
+.sidebar-brand-active { background: rgba(205,87,27,0.25) !important; }
+.sidebar-brand-text { color: #f5c9a8; }
+.sidebar-brand-text:hover { color: #ffffff; }
+.focus-brand:focus { outline: none; box-shadow: 0 0 0 3px rgba(205,87,27,0.3); }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\ClientNote;
 use App\Models\Post;
 use App\Models\PostFeedback;
 use App\Models\User;
@@ -24,6 +25,23 @@ class ClientPortalController extends Controller
             ->get();
 
         return view('client.portal', compact('client', 'posts'));
+    }
+
+    /**
+     * Store a general note from the client
+     */
+    public function storeNote(Request $request, $token)
+    {
+        $client = Client::where('share_token', $token)->firstOrFail();
+
+        $request->validate(['note' => 'required|string|max:2000']);
+
+        ClientNote::create([
+            'client_id' => $client->id,
+            'note'      => $request->note,
+        ]);
+
+        return back()->with('success', 'Your note has been sent to the team!');
     }
 
     /**
