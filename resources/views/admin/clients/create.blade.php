@@ -265,23 +265,60 @@
                         </select>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">Posting days * (Select days)</label>
-                        <div class="grid grid-cols-7 gap-2">
+                    <div x-data="postingDays({{ json_encode(old('posting_days', [])) }}, {{ json_encode(old('posting_times', [])) }})">
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Posting days &amp; times (Select days and set time windows)</label>
+                        <div class="space-y-2">
                             @foreach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day)
-                            <label class="flex flex-col items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors text-center">
-                                <input
-                                    type="checkbox"
-                                    name="posting_days[]"
-                                    value="{{ $day }}"
-                                    {{ in_array($day, old('posting_days', [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B] mb-2"
-                                >
-                                <span class="text-xs text-gray-700">{{ substr($day, 0, 3) }}</span>
-                            </label>
+                            <div class="border border-gray-200 rounded-xl overflow-hidden">
+                                <label class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        name="posting_days[]"
+                                        value="{{ $day }}"
+                                        {{ in_array($day, old('posting_days', [])) ? 'checked' : '' }}
+                                        x-model="selected"
+                                        @change="toggle('{{ $day }}')"
+                                        class="w-4 h-4 border-gray-300 rounded focus:ring-[#CD571B]"
+                                        style="accent-color:#CD571B;"
+                                    >
+                                    <span class="font-medium text-sm text-gray-800">{{ $day }}</span>
+                                </label>
+                                <div x-show="days['{{ $day }}']" x-cloak class="px-4 pb-3 flex items-center gap-4 bg-orange-50 border-t border-orange-100">
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-xs font-semibold text-gray-600">Start</label>
+                                        <input type="time" name="posting_times[{{ $day }}][start]"
+                                            :value="times['{{ $day }}'] && times['{{ $day }}'].start ? times['{{ $day }}'].start : '09:00'"
+                                            class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                                            style="--tw-ring-color:#CD571B;">
+                                    </div>
+                                    <span class="text-gray-400 text-sm">—</span>
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-xs font-semibold text-gray-600">End</label>
+                                        <input type="time" name="posting_times[{{ $day }}][end]"
+                                            :value="times['{{ $day }}'] && times['{{ $day }}'].end ? times['{{ $day }}'].end : '17:00'"
+                                            class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                                            style="--tw-ring-color:#CD571B;">
+                                    </div>
+                                </div>
+                            </div>
                             @endforeach
                         </div>
                     </div>
+                    @push('scripts')
+                    <script>
+                    function postingDays(selectedDays, savedTimes) {
+                        const allDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+                        const daysState = {};
+                        allDays.forEach(d => daysState[d] = selectedDays.includes(d));
+                        return {
+                            selected: selectedDays,
+                            days: daysState,
+                            times: savedTimes || {},
+                            toggle(day) { this.days[day] = this.selected.includes(day); }
+                        };
+                    }
+                    </script>
+                    @endpush
 
                     <div>
                         <label class="flex items-center p-4 bg-orange-50 border border-orange-200 rounded-lg cursor-pointer">
@@ -339,8 +376,7 @@
                         <div class="absolute top-4 right-4 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-[#CD571B] peer-checked:bg-[#CD571B] flex items-center justify-center">
                             <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">Starter</h3>
-                        <p class="text-3xl font-bold text-gray-900 mb-4">$359<span class="text-base font-normal text-gray-500">/month</span></p>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Starter</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
                             <li class="flex items-center">
                                 <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
@@ -370,8 +406,7 @@
                         <div class="absolute top-4 right-4 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-[#CD571B] peer-checked:bg-[#CD571B] flex items-center justify-center">
                             <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">Business</h3>
-                        <p class="text-3xl font-bold text-gray-900 mb-4">$539<span class="text-base font-normal text-gray-500">/month</span></p>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Business</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
                             <li class="flex items-center">
                                 <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
@@ -400,8 +435,7 @@
                         <div class="absolute top-4 right-4 w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-[#CD571B] peer-checked:bg-[#CD571B] flex items-center justify-center">
                             <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">Scale</h3>
-                        <p class="text-3xl font-bold text-gray-900 mb-4">$659<span class="text-base font-normal text-gray-500">/month</span></p>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Scale</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
                             <li class="flex items-center">
                                 <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
@@ -420,20 +454,40 @@
                 </div>
 
                 <!-- Network Selection -->
-                <div>
+                <div x-data="{
+                    selected: {{ json_encode(old('networks', [])) }},
+                    toggle(net, checked) {
+                        if (checked && !this.selected.includes(net)) { this.selected.push(net); }
+                        else { this.selected = this.selected.filter(s => s !== net); }
+                    }
+                }">
                     <label class="block text-sm font-semibold text-gray-700 mb-3">Select Social Networks</label>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="space-y-2">
                         @foreach(['Facebook', 'Instagram', 'TikTok', 'YouTube', 'Google Business'] as $network)
-                        <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-                            <input
-                                type="checkbox"
-                                name="networks[]"
-                                value="{{ $network }}"
-                                {{ in_array($network, old('networks', [])) ? 'checked' : '' }}
-                                class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
-                            >
-                            <span class="ml-3 text-sm text-gray-700">{{ $network }}</span>
-                        </label>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden">
+                            <label class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer transition-colors">
+                                <input
+                                    type="checkbox"
+                                    name="networks[]"
+                                    value="{{ $network }}"
+                                    {{ in_array($network, old('networks', [])) ? 'checked' : '' }}
+                                    @change="toggle('{{ $network }}', $event.target.checked)"
+                                    class="w-4 h-4 border-gray-300 rounded focus:ring-[#CD571B]"
+                                    style="accent-color:#CD571B;"
+                                >
+                                <span class="font-medium text-sm text-gray-800">{{ $network }}</span>
+                            </label>
+                            <div x-show="selected.includes('{{ $network }}')" x-cloak class="px-4 pb-3 bg-orange-50 border-t border-orange-100">
+                                <label class="text-xs font-semibold text-gray-600 block mb-1">Profile URL</label>
+                                <input
+                                    type="url"
+                                    name="network_links[{{ $network }}]"
+                                    value="{{ old('network_links.'.$network) }}"
+                                    placeholder="https://..."
+                                    class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
+                                >
+                            </div>
+                        </div>
                         @endforeach
                     </div>
                 </div>

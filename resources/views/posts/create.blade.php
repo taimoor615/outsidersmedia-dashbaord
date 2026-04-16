@@ -71,8 +71,13 @@
         </div>
 
         <!-- Platform Selection (only platforms selected for this client when creating) -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 @error('platforms') border-red-400 @enderror">
             <h2 class="text-xl font-bold text-gray-900 mb-6">Select Platforms *</h2>
+            @error('platforms')
+            <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium">
+                Please select at least one platform. Make sure the selected client has social networks configured.
+            </div>
+            @enderror
             <p class="text-sm text-gray-500 mb-4">Only platforms chosen for this client are shown. Select a client first.</p>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -136,45 +141,76 @@
             <!-- Standard Post -->
             <div x-show="postType === 'standard'">
                 <label class="block text-sm font-semibold text-gray-700 mb-3">Upload Image</label>
-                <input
-                    type="file"
-                    name="media[]"
-                    accept="image/*"
-                    :disabled="postType !== 'standard'"
-                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-[#b54c17] hover:file:bg-indigo-100 cursor-pointer"
-                >
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-[#CD571B] transition-colors cursor-pointer" onclick="document.getElementById('stdFileInput').click()">
+                    <input
+                        id="stdFileInput"
+                        type="file"
+                        name="media[]"
+                        accept="image/*"
+                        :disabled="postType !== 'standard'"
+                        class="hidden"
+                        onchange="previewFile(this, 'stdPreview')"
+                    >
+                    <div id="stdPreview" class="mb-3 hidden">
+                        <img id="stdPreviewImg" src="" alt="Preview" class="w-full max-h-64 object-contain rounded-lg">
+                    </div>
+                    <div class="flex flex-col items-center justify-center py-4 text-gray-400" id="stdPlaceholder">
+                        <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <p class="text-sm font-medium" style="color:#CD571B;">Click to upload image</p>
+                        <p class="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 10MB</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Carousel Post -->
             <div x-show="postType === 'carousel'">
                 <label class="block text-sm font-semibold text-gray-700 mb-3">Upload 4 Images for Carousel</label>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <template x-for="i in 4" :key="i">
-                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-purple-500 transition-colors">
-                            <input
-                                type="file"
-                                name="media[]"
-                                accept="image/*"
-                                :disabled="postType !== 'carousel'"
-                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
-                            >
-                            <p class="mt-2 text-xs text-gray-500" x-text="'Image ' + i"></p>
+                    @foreach([1,2,3,4] as $i)
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-[#CD571B] transition-colors cursor-pointer" onclick="document.getElementById('carFile{{ $i }}').click()">
+                        <input
+                            id="carFile{{ $i }}"
+                            type="file"
+                            name="media[]"
+                            accept="image/*"
+                            :disabled="postType !== 'carousel'"
+                            class="hidden"
+                            onchange="previewFile(this, 'carPreview{{ $i }}')"
+                        >
+                        <div id="carPreview{{ $i }}" class="mb-2 hidden">
+                            <img id="carPreviewImg{{ $i }}" src="" alt="Preview" class="w-full h-32 object-cover rounded-lg">
                         </div>
-                    </template>
+                        <div class="flex flex-col items-center justify-center py-3 text-gray-400" id="carPlaceholder{{ $i }}">
+                            <svg class="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+                            <p class="text-xs font-medium" style="color:#CD571B;">Image {{ $i }}</p>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
             </div>
 
             <!-- Video Post -->
             <div x-show="postType === 'video'">
                 <label class="block text-sm font-semibold text-gray-700 mb-3">Upload Video</label>
-                <input
-                    type="file"
-                    name="media[]"
-                    accept="video/*"
-                    :disabled="postType !== 'video'"
-                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer"
-                >
-                <p class="mt-3 text-sm text-gray-500">Supported: MP4, MOV. Max 100MB</p>
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-[#CD571B] transition-colors cursor-pointer" onclick="document.getElementById('vidFileInput').click()">
+                    <input
+                        id="vidFileInput"
+                        type="file"
+                        name="media[]"
+                        accept="video/*"
+                        :disabled="postType !== 'video'"
+                        class="hidden"
+                        onchange="previewVideo(this)"
+                    >
+                    <div id="vidPreview" class="mb-3 hidden">
+                        <video id="vidPreviewEl" controls class="w-full max-h-64 rounded-lg"></video>
+                    </div>
+                    <div class="flex flex-col items-center justify-center py-4 text-gray-400" id="vidPlaceholder">
+                        <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.069A1 1 0 0121 8.878v6.244a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        <p class="text-sm font-medium" style="color:#CD571B;">Click to upload video</p>
+                        <p class="text-xs text-gray-400 mt-1">MP4, MOV — Max 100MB</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Webpage URL -->
@@ -515,6 +551,32 @@
 </div>
 
 <script>
+function previewFile(input, previewId) {
+    const file = input.files[0];
+    if (!file) return;
+    const preview = document.getElementById(previewId);
+    const img = document.getElementById(previewId.replace('Preview', 'PreviewImg'));
+    const placeholder = document.getElementById(previewId.replace('Preview', 'Placeholder'));
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        img.src = e.target.result;
+        preview.classList.remove('hidden');
+        if (placeholder) placeholder.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+function previewVideo(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const video = document.getElementById('vidPreviewEl');
+    const preview = document.getElementById('vidPreview');
+    const placeholder = document.getElementById('vidPlaceholder');
+    video.src = URL.createObjectURL(file);
+    preview.classList.remove('hidden');
+    placeholder.classList.add('hidden');
+}
+
 function postForm(clientNetworks = {}) {
     return {
         clientNetworks: clientNetworks,

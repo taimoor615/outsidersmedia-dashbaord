@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,7 +15,8 @@ class CalendarController extends Controller
      */
     public function index()
     {
-        return view('calendar.index');
+        $clients = Client::orderBy('name')->get(['id', 'name']);
+        return view('calendar.index', compact('clients'));
     }
 
     /**
@@ -29,6 +31,10 @@ class CalendarController extends Controller
             ->whereIn('status', ['scheduled', 'published'])
             ->whereNotNull('scheduled_at');
 
+
+        if ($request->filled('client_id')) {
+            $query->where('client_id', $request->client_id);
+        }
 
         if ($start) {
             $query->where('scheduled_at', '>=', $start);

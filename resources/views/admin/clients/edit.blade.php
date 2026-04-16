@@ -205,23 +205,57 @@
                         </select>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">Posting Days</label>
-                        <div class="grid grid-cols-7 gap-2">
+                    <div x-data="postingDays({{ json_encode(old('posting_days', $client->posting_days ?? [])) }}, {{ json_encode(old('posting_times', $client->posting_times ?? [])) }})">
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Posting days &amp; times</label>
+                        <div class="space-y-2">
                             @foreach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day)
-                            <label class="flex flex-col items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer text-center">
-                                <input
-                                    type="checkbox"
-                                    name="posting_days[]"
-                                    value="{{ $day }}"
-                                    {{ in_array($day, old('posting_days', $client->posting_days ?? [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B] mb-2"
-                                >
-                                <span class="text-xs text-gray-700">{{ substr($day, 0, 3) }}</span>
-                            </label>
+                            <div class="border border-gray-200 rounded-xl overflow-hidden">
+                                <label class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        name="posting_days[]"
+                                        value="{{ $day }}"
+                                        x-model="selected"
+                                        @change="toggle('{{ $day }}')"
+                                        class="w-4 h-4 border-gray-300 rounded"
+                                        style="accent-color:#CD571B;"
+                                    >
+                                    <span class="font-medium text-sm text-gray-800">{{ $day }}</span>
+                                </label>
+                                <div x-show="days['{{ $day }}']" x-cloak class="px-4 pb-3 flex items-center gap-4 bg-orange-50 border-t border-orange-100">
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-xs font-semibold text-gray-600">Start</label>
+                                        <input type="time" name="posting_times[{{ $day }}][start]"
+                                            :value="times['{{ $day }}'] && times['{{ $day }}'].start ? times['{{ $day }}'].start : '09:00'"
+                                            class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg">
+                                    </div>
+                                    <span class="text-gray-400">—</span>
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-xs font-semibold text-gray-600">End</label>
+                                        <input type="time" name="posting_times[{{ $day }}][end]"
+                                            :value="times['{{ $day }}'] && times['{{ $day }}'].end ? times['{{ $day }}'].end : '17:00'"
+                                            class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg">
+                                    </div>
+                                </div>
+                            </div>
                             @endforeach
                         </div>
                     </div>
+                    @push('scripts')
+                    <script>
+                    function postingDays(selectedDays, savedTimes) {
+                        const allDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+                        const daysState = {};
+                        allDays.forEach(d => daysState[d] = selectedDays.includes(d));
+                        return {
+                            selected: selectedDays,
+                            days: daysState,
+                            times: savedTimes || {},
+                            toggle(day) { this.days[day] = this.selected.includes(day); }
+                        };
+                    }
+                    </script>
+                    @endpush
 
                     <div>
                         <label class="flex items-center p-4 bg-orange-50 border border-orange-200 rounded-lg cursor-pointer">
@@ -248,59 +282,48 @@
                 </div>
             </div>
 
-            <!-- PLAN & STATUS -->
+            <!-- NETWORKS & STATUS -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-                <h2 class="text-xl font-bold text-gray-900 mb-6">Plan & Status</h2>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">Social Networks & Status</h2>
+
+                {{-- Keep plan_type so validation passes without changing it --}}
+                <input type="hidden" name="plan_type" value="{{ $client->plan_type }}">
 
                 <div class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">Plan Type *</label>
-                        <div class="grid grid-cols-3 gap-4">
-                            @foreach(['starter' => ['posts' => 8, 'price' => 359], 'business' => ['posts' => 12, 'price' => 539], 'scale' => ['posts' => 16, 'price' => 659]] as $plan => $details)
-
-                            <label class="relative cursor-pointer group">
-
-                                <input
-                                    type="radio"
-                                    name="plan_type"
-                                    value="{{ $plan }}"
-                                    {{ old('plan_type', $client->plan_type) === $plan ? 'checked' : '' }}
-                                    class="sr-only peer"
-                                >
-
-                                <div class="p-4 border-2 rounded-xl transition-all duration-200
-                                            border-gray-200 hover:border-indigo-300
-                                            peer-checked:border-[#CD571B] peer-checked:bg-orange-50">
-
-                                    <div class="text-center">
-                                        <p class="font-bold text-lg capitalize text-gray-700 peer-checked:text-[#7a2e0a]">{{ $plan }}</p>
-                                        <p class="text-2xl font-bold text-gray-900">${{ $details['price'] }}</p>
-                                        <p class="text-sm text-gray-600">{{ $details['posts'] }} posts/mo</p>
-                                    </div>
-
-                                    <div class="hidden peer-checked:block absolute top-2 right-2 text-[#CD571B]">
-                                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-                                    </div>
-                                </div>
-                            </label>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <div>
+                    <div x-data="{
+                        selected: {{ json_encode(old('networks', $client->networks ?? [])) }},
+                        toggle(net, checked) {
+                            if (checked && !this.selected.includes(net)) { this.selected.push(net); }
+                            else { this.selected = this.selected.filter(s => s !== net); }
+                        }
+                    }">
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Social Networks</label>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="space-y-2">
                             @foreach(['Facebook', 'Instagram', 'LinkedIn', 'Twitter/X', 'TikTok', 'YouTube', 'Google Business'] as $network)
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    name="networks[]"
-                                    value="{{ $network }}"
-                                    {{ in_array($network, old('networks', $client->networks ?? [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
-                                >
-                                <span class="ml-3 text-sm text-gray-700">{{ $network }}</span>
-                            </label>
+                            <div class="border border-gray-200 rounded-xl overflow-hidden">
+                                <label class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        name="networks[]"
+                                        value="{{ $network }}"
+                                        {{ in_array($network, old('networks', $client->networks ?? [])) ? 'checked' : '' }}
+                                        @change="toggle('{{ $network }}', $event.target.checked)"
+                                        class="w-4 h-4 border-gray-300 rounded focus:ring-[#CD571B]"
+                                        style="accent-color:#CD571B;"
+                                    >
+                                    <span class="font-medium text-sm text-gray-800">{{ $network }}</span>
+                                </label>
+                                <div x-show="selected.includes('{{ $network }}')" x-cloak class="px-4 pb-3 bg-orange-50 border-t border-orange-100">
+                                    <label class="text-xs font-semibold text-gray-600 block mb-1">Profile URL</label>
+                                    <input
+                                        type="url"
+                                        name="network_links[{{ $network }}]"
+                                        value="{{ old('network_links.'.$network, $client->network_links[$network] ?? '') }}"
+                                        placeholder="https://..."
+                                        class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
+                                    >
+                                </div>
+                            </div>
                             @endforeach
                         </div>
                     </div>

@@ -14,8 +14,8 @@ class NewClientNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public Client $client;
-    public User $createdBy;
+    protected Client $client;
+    protected User $createdBy;
 
     public function __construct(Client $client, User $createdBy)
     {

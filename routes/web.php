@@ -112,4 +112,5 @@ Route::prefix('client')->name('client.')->group(function () {
     Route::post('/{token}/note', [ClientPortalController::class, 'storeNote'])->name('note');
     Route::post('/{token}/approve/{post}', [ClientPortalController::class, 'approvePost'])->name('approve');
     Route::post('/{token}/reject/{post}', [ClientPortalController::class, 'rejectPost'])->name('reject');
+    Route::post('/{token}/update-post/{post}', [ClientPortalController::class, 'updatePost'])->name('update-post');
 });
