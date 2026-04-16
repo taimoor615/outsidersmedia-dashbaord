@@ -11,6 +11,13 @@
     <link rel="manifest" href="/images/site.webmanifest" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        .admin-nav { scrollbar-width: thin; scrollbar-color: #374151 transparent; }
+        .admin-nav::-webkit-scrollbar { width: 4px; }
+        .admin-nav::-webkit-scrollbar-track { background: transparent; margin: 12px 0; }
+        .admin-nav::-webkit-scrollbar-thumb { background: #374151; border-radius: 20px; transition: background 0.2s; }
+        .admin-nav::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
 </head>
 <body class="bg-gray-50">
 
@@ -42,7 +49,8 @@
             </div>
 
             <!-- Navigation -->
-            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto min-h-0">
+            <div class="flex-1 min-h-0 relative">
+                <nav class="admin-nav h-full px-4 py-6 space-y-2 overflow-y-auto pb-10">
 
                 <!-- Dashboard -->
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-800 text-white shadow-lg' : '' }}">
@@ -108,6 +116,14 @@
                     <span class="font-medium">Scheduled</span>
                 </a>
 
+                <!-- Client Notes -->
+                <a href="{{ route('client-notes.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200 {{ request()->routeIs('client-notes.*') ? 'bg-gray-800 text-white shadow-lg' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                    </svg>
+                    <span class="font-medium">Client Notes</span>
+                </a>
+
                 <!-- Analytics -->
                 <a href="{{ route('admin.analytics.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-all duration-200 {{ request()->routeIs('admin.analytics.*') ? 'bg-gray-800 text-white shadow-lg' : '' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,6 +132,9 @@
                     <span class="font-medium">Analytics</span>
                 </a>
             </nav>
+            <!-- Fade overlay at bottom of nav -->
+            <div class="absolute bottom-0 left-0 right-0 h-10 pointer-events-none" style="background: linear-gradient(to bottom, transparent, #111827);"></div>
+            </div>
 
             <!-- User Profile in Sidebar -->
             <div class="border-t border-gray-700 p-4">

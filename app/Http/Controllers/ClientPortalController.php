@@ -37,8 +37,10 @@ class ClientPortalController extends Controller
         $request->validate(['note' => 'required|string|max:2000']);
 
         ClientNote::create([
-            'client_id' => $client->id,
-            'note'      => $request->note,
+            'client_id'   => $client->id,
+            'added_by'    => null,
+            'author_name' => $client->name,
+            'note'        => $request->note,
         ]);
 
         return back()->with('success', 'Your note has been sent to the team!');
