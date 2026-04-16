@@ -84,12 +84,15 @@ class ClientController extends Controller
             'competitors' => 'nullable|string',
             'brand_assets_link' => 'nullable|url',
             'timezone' => 'required|string',
-            'posting_days' => 'nullable|array',
+            'posting_days'  => 'nullable|array',
+            'posting_times' => 'nullable|array',
             'needs_approval' => 'nullable|boolean',
             'approval_emails' => 'nullable|string',
             'additional_notes' => 'nullable|string',
             'plan_type' => 'required|in:starter,business,scale',
             'networks' => 'nullable|array',
+            'network_links' => 'nullable|array',
+            'network_links.*' => 'nullable|url',
         ]);
 
         // Set posts per month based on plan
@@ -99,6 +102,11 @@ class ClientController extends Controller
             'scale' => 16,
         ];
         $validated['posts_per_month'] = $postsPerMonth[$validated['plan_type']];
+
+        // Remove empty network links
+        if (!empty($validated['network_links'])) {
+            $validated['network_links'] = array_filter($validated['network_links'], fn($v) => !empty($v));
+        }
 
         // Set creator
         $validated['created_by'] = auth()->id();
@@ -170,12 +178,15 @@ class ClientController extends Controller
             'competitors' => 'nullable|string',
             'brand_assets_link' => 'nullable|url',
             'timezone' => 'required|string',
-            'posting_days' => 'nullable|array',
+            'posting_days'  => 'nullable|array',
+            'posting_times' => 'nullable|array',
             'needs_approval' => 'nullable|boolean',
             'approval_emails' => 'nullable|string',
             'additional_notes' => 'nullable|string',
             'plan_type' => 'required|in:starter,business,scale',
             'networks' => 'nullable|array',
+            'network_links' => 'nullable|array',
+            'network_links.*' => 'nullable|url',
             'status' => 'required|in:active,inactive,suspended',
         ]);
 
@@ -186,6 +197,11 @@ class ClientController extends Controller
             'scale' => 16,
         ];
         $validated['posts_per_month'] = $postsPerMonth[$validated['plan_type']];
+
+        // Remove empty network links
+        if (!empty($validated['network_links'])) {
+            $validated['network_links'] = array_filter($validated['network_links'], fn($v) => !empty($v));
+        }
 
         $validated['share_third_party_content'] = $request->has('share_third_party_content');
         $validated['needs_approval'] = $request->has('needs_approval');

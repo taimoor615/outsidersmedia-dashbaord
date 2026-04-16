@@ -13,7 +13,7 @@ class ClientWelcome extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public Client $client;
+    protected Client $client;
 
     public function __construct(Client $client)
     {
@@ -34,7 +34,7 @@ class ClientWelcome extends Mailable
             with: [
                 'clientName'  => $this->client->name,
                 'planType'    => ucfirst($this->client->plan_type),
-                'portalUrl'   => $this->client->portal_url,
+                'portalUrl'   => $this->client->share_url,
             ],
         );
     }

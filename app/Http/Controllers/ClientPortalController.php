@@ -52,21 +52,21 @@ class ClientPortalController extends Controller
         $client = Client::where('share_token', $token)->firstOrFail();
 
         $validated = $request->validate([
-            'post_id' => 'required|exists:posts,id',
-            'feedback' => 'required|string',
+            'post_id'       => 'required|exists:posts,id',
+            'feedback'      => 'required|string',
+            'feedback_name' => 'nullable|string|max:100',
         ]);
 
         $post = Post::findOrFail($validated['post_id']);
 
-        // Verify post belongs to this client
         if ($post->client_id !== $client->id) {
             abort(403);
         }
 
         PostFeedback::create([
-            'post_id' => $post->id,
-            'client_name' => $client->name,
-            'feedback' => $validated['feedback'],
+            'post_id'            => $post->id,
+            'client_name'        => $validated['feedback_name'] ?? $client->name,
+            'feedback'           => $validated['feedback'],
             'is_client_feedback' => true,
         ]);
 
@@ -160,5 +160,35 @@ class ClientPortalController extends Controller
             : 'Changes requested. Your feedback has been sent to the team member.';
 
         return back()->with('success', $message);
+    }
+
+    /**
+     * Client edits post content (captions per platform).
+     */
+    public function updatePost(Request $request, $token, Post $post)
+    {
+        $client = Client::where('share_token', $token)->firstOrFail();
+
+        if ($post->client_id !== $client->id) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'facebook_message'  => 'nullable|string',
+            'instagram_message' => 'nullable|string',
+            'tiktok_message'    => 'nullable|string',
+            'youtube_message'   => 'nullable|string',
+        ]);
+
+        $post->update(array_filter($validated, fn($v) => $v !== null));
+
+        PostFeedback::create([
+            'post_id'            => $post->id,
+            'client_name'        => $client->name,
+            'feedback'           => 'Client updated post content.',
+            'is_client_feedback' => true,
+        ]);
+
+        return back()->with('success', 'Post content updated successfully.');
     }
 }
