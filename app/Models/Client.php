@@ -40,6 +40,7 @@ class Client extends Model
         'posts_per_month',
         'networks',
         'network_links',
+        'content_mix',
         'status',
         'created_by',
         'share_token',
@@ -55,6 +56,7 @@ class Client extends Model
         'network_links' => 'array',
         'share_third_party_content' => 'boolean',
         'needs_approval' => 'boolean',
+        'content_mix' => 'array',
     ];
 
     // Relationships

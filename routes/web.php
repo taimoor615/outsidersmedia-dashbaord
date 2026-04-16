@@ -11,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientPortalController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Admin\ClientNotesController;
 
 // Redirect root to login
 Route::get('/', function () {
@@ -89,6 +90,15 @@ Route::middleware(['auth', 'team'])->group(function () {
         Route::put('/{client}', [ClientController::class, 'update'])->name('update');
         Route::delete('/{client}', [ClientController::class, 'destroy'])->name('destroy'); // Auth check in controller
         Route::post('/{client}/toggle-status', [ClientController::class, 'toggleStatus'])->name('toggle-status');
+        Route::post('/{client}/content-mix', [ClientController::class, 'updateContentMix'])->name('content-mix.update');
+    });
+
+    // Client Notes
+    Route::prefix('client-notes')->name('client-notes.')->group(function () {
+        Route::get('/', [ClientNotesController::class, 'index'])->name('index');
+        Route::post('/', [ClientNotesController::class, 'store'])->name('store');
+        Route::put('/{note}', [ClientNotesController::class, 'update'])->name('update');
+        Route::delete('/{note}', [ClientNotesController::class, 'destroy'])->name('destroy');
     });
 
     // Post Management (Both Admin and Team)
