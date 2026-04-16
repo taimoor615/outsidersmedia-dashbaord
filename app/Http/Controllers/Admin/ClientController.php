@@ -231,6 +231,24 @@ class ClientController extends Controller
     }
 
     /**
+     * Update content mix for a client (AJAX-friendly, returns back with flash).
+     */
+    public function updateContentMix(Request $request, Client $client)
+    {
+        $validated = $request->validate([
+            'content_mix'              => 'required|array',
+            'content_mix.static'       => 'nullable|integer|min:0',
+            'content_mix.carousel'     => 'nullable|integer|min:0',
+            'content_mix.video'        => 'nullable|integer|min:0',
+            'content_mix.stories'      => 'nullable|integer|min:0',
+        ]);
+
+        $client->update(['content_mix' => $validated['content_mix']]);
+
+        return back()->with('success', 'Content mix updated.');
+    }
+
+    /**
      * Toggle client status
      */
     public function toggleStatus(Client $client)

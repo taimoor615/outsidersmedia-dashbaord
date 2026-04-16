@@ -123,6 +123,93 @@
                     </div>
                 </div>
 
+                <!-- Content Mix -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6" x-data="{
+                    open: false,
+                    mix: {
+                        static:   {{ $client->content_mix['static']   ?? 0 }},
+                        carousel: {{ $client->content_mix['carousel'] ?? 0 }},
+                        video:    {{ $client->content_mix['video']    ?? 0 }},
+                        stories:  {{ $client->content_mix['stories']  ?? 0 }},
+                    },
+                    get total() { return this.mix.static + this.mix.carousel + this.mix.video + this.mix.stories; }
+                }">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Content Mix</h3>
+                        <button @click="open = true" class="text-xs font-medium text-[#CD571B] hover:underline">Edit</button>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Static Posts</span>
+                            <span class="font-semibold text-gray-900" x-text="mix.static"></span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Carousels</span>
+                            <span class="font-semibold text-gray-900" x-text="mix.carousel"></span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Video Posts</span>
+                            <span class="font-semibold text-gray-900" x-text="mix.video"></span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Stories</span>
+                            <span class="font-semibold text-gray-900" x-text="mix.stories"></span>
+                        </div>
+                        <div class="pt-2 border-t border-gray-100 flex items-center justify-between text-sm">
+                            <span class="font-semibold text-gray-700">Total</span>
+                            <span class="font-bold text-gray-900" x-text="total + ' / {{ $client->posts_per_month }}'"></span>
+                        </div>
+                    </div>
+
+                    <!-- Edit Content Mix Modal -->
+                    <div x-show="open" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display:none;">
+                        <div class="absolute inset-0 bg-black/50" @click="open = false"></div>
+                        <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 z-10">
+                            <h3 class="text-lg font-bold text-gray-900 mb-1">Edit Content Mix</h3>
+                            <p class="text-xs text-gray-500 mb-5">Posts/month cap: <span class="font-semibold">{{ $client->posts_per_month }}</span></p>
+
+                            <form action="{{ route('clients.content-mix.update', $client) }}" method="POST">
+                                @csrf
+                                <div class="space-y-4">
+                                    @foreach([
+                                        ['key' => 'static',   'label' => 'Static Posts'],
+                                        ['key' => 'carousel', 'label' => 'Carousels'],
+                                        ['key' => 'video',    'label' => 'Video Posts'],
+                                        ['key' => 'stories',  'label' => 'Stories'],
+                                    ] as $row)
+                                    <div class="flex items-center justify-between gap-4">
+                                        <label class="text-sm font-medium text-gray-700 flex-1">{{ $row['label'] }}</label>
+                                        <div class="flex items-center gap-2">
+                                            <button type="button"
+                                                @click="if(mix.{{ $row['key'] }} > 0) mix.{{ $row['key'] }}--"
+                                                class="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-bold transition-colors">−</button>
+                                            <input type="number" name="content_mix[{{ $row['key'] }}]"
+                                                x-model.number="mix.{{ $row['key'] }}"
+                                                min="0" max="99"
+                                                class="w-14 text-center border border-gray-300 rounded-lg py-1.5 text-sm font-semibold focus:ring-2 focus:ring-[#CD571B] focus:border-transparent">
+                                            <button type="button"
+                                                @click="mix.{{ $row['key'] }}++"
+                                                class="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-bold transition-colors">+</button>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between">
+                                    <span class="text-xs text-gray-500">
+                                        Total: <span class="font-bold text-gray-900" x-text="total"></span>
+                                        / {{ $client->posts_per_month }}
+                                    </span>
+                                    <div class="flex gap-2">
+                                        <button type="button" @click="open = false" class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">Cancel</button>
+                                        <button type="submit" class="px-4 py-2 bg-[#CD571B] text-white text-sm font-medium rounded-lg hover:bg-[#b54c17] transition-colors">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Social Networks -->
                 @if($client->networks && count($client->networks) > 0)
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">

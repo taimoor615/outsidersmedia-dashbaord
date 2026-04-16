@@ -12,6 +12,13 @@
     <title>@yield('title', 'Dashboard') - Outsidersmedia</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        .team-nav { scrollbar-width: thin; scrollbar-color: rgba(205,87,27,0.5) transparent; }
+        .team-nav::-webkit-scrollbar { width: 4px; }
+        .team-nav::-webkit-scrollbar-track { background: transparent; margin: 12px 0; }
+        .team-nav::-webkit-scrollbar-thumb { background: rgba(205,87,27,0.45); border-radius: 20px; transition: background 0.2s; }
+        .team-nav::-webkit-scrollbar-thumb:hover { background: rgba(205,87,27,0.85); }
+    </style>
 </head>
 <body class="bg-gray-50">
 
@@ -38,7 +45,8 @@
             </div>
 
             <!-- Navigation -->
-            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto min-h-0">
+            <div class="flex-1 min-h-0 relative">
+                <nav class="team-nav h-full px-4 py-6 space-y-2 overflow-y-auto pb-10">
 
                 <!-- Dashboard -->
                 <a href="{{ route('team.dashboard') }}" class="flex items-center gap-3 px-4 py-3 text-orange-200 hover:text-white rounded-xl transition-all {{ request()->routeIs('team.dashboard') ? 'sidebar-brand-active text-white shadow-lg' : '' }}" style="{{ request()->routeIs('team.dashboard') ? 'background:rgba(205,87,27,0.3)' : '' }}">
@@ -87,6 +95,12 @@
                     @endif
                 </a>
 
+                <!-- Client Notes -->
+                <a href="{{ route('client-notes.index') }}" class="flex items-center gap-3 px-4 py-3 text-orange-200 hover:text-white rounded-xl transition-all {{ request()->routeIs('client-notes.*') ? 'text-white shadow-lg' : '' }}" style="{{ request()->routeIs('client-notes.*') ? 'background:rgba(205,87,27,0.3)' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                    <span class="font-medium">Client Notes</span>
+                </a>
+
                 <!-- Scheduled -->
                 <a href="{{ route('calendar.index') }}" class="flex items-center gap-3 px-4 py-3 text-orange-200 hover:text-white rounded-xl transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
@@ -96,6 +110,9 @@
                     @endif
                 </a>
             </nav>
+            <!-- Fade overlay at bottom of nav -->
+            <div class="absolute bottom-0 left-0 right-0 h-10 pointer-events-none" style="background: linear-gradient(to bottom, transparent, #1a0a04);"></div>
+            </div>
 
             <!-- User Profile -->
             <div class="p-4" style="border-top:1px solid rgba(205,87,27,0.3)">
