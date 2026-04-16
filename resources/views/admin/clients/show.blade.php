@@ -76,18 +76,17 @@
                 </div>
 
                 <!-- Plan Card -->
-                <div class="bg-gradient-to-br from-indigo-500 to-[#EC921A] rounded-xl shadow-lg p-6 text-white">
-                    <h3 class="text-sm font-semibold uppercase tracking-wide mb-4 opacity-90">Current Plan</h3>
-                    <p class="text-3xl font-bold mb-2 capitalize">{{ $client->plan_type }}</p>
-                    <p class="text-lg opacity-90 mb-4">${{ $client->plan_details['price'] }}/month</p>
-                    <div class="space-y-2 pt-4 border-t border-white/20">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Current Plan</h3>
+                    <p class="text-2xl font-bold capitalize mb-3" style="color:#CD571B;">{{ $client->plan_type }}</p>
+                    <div class="space-y-2">
                         <div class="flex items-center justify-between text-sm">
-                            <span class="opacity-90">Posts per month</span>
-                            <span class="font-semibold">{{ $client->posts_per_month }}</span>
+                            <span class="text-gray-600">Posts per month</span>
+                            <span class="font-semibold text-gray-900">{{ $client->posts_per_month }}</span>
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="opacity-90">Networks</span>
-                            <span class="font-semibold">{{ $client->networks ? count($client->networks) : 0 }}</span>
+                            <span class="text-gray-600">Networks</span>
+                            <span class="font-semibold text-gray-900">{{ $client->networks ? count($client->networks) : 0 }}</span>
                         </div>
                     </div>
                 </div>
@@ -128,11 +127,19 @@
                 @if($client->networks && count($client->networks) > 0)
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Social Networks</h3>
-                    <div class="flex flex-wrap gap-2">
+                    <div class="space-y-2">
                         @foreach($client->networks as $network)
-                        <span class="px-3 py-1.5 bg-blue-50 text-blue-700 text-sm font-medium rounded-lg border border-blue-200">
-                            {{ $network }}
-                        </span>
+                        @php $link = $client->network_links[$network] ?? null; @endphp
+                        <div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-lg border border-gray-100">
+                            <span class="text-sm font-medium text-gray-800">{{ $network }}</span>
+                            @if($link)
+                            <a href="{{ $link }}" target="_blank" class="text-xs font-medium hover:underline truncate max-w-[160px]" style="color:#CD571B;" title="{{ $link }}">
+                                {{ parse_url($link, PHP_URL_HOST) ?: $link }}
+                            </a>
+                            @else
+                            <span class="text-xs text-gray-400">No link</span>
+                            @endif
+                        </div>
                         @endforeach
                     </div>
                 </div>
