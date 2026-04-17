@@ -212,7 +212,7 @@
 
                     <div>
                         <p class="text-gray-500 mb-1">Created By</p>
-                        <p class="font-medium text-gray-900">{{ $post->creator->name }}</p>
+                        <p class="font-medium text-gray-900">{{ $post->creator?->name ?? 'Deleted User' }}</p>
                     </div>
 
                     <div>
