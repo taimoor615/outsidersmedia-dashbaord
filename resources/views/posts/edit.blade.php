@@ -81,34 +81,35 @@
         <!-- Existing Media -->
         @if($post->media->count() > 0)
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-xl font-bold text-gray-900 mb-6">Current Media</h2>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-900">Current Media</h2>
+                <span class="text-sm text-gray-500">{{ $post->media->count() }} file(s) uploaded</span>
+            </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 @foreach($post->media as $media)
-                <div class="relative group">
+                <div class="relative rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
                     @if($media->isImage())
-                    <img src="{{ $media->url }}" alt="Post media" class="w-full h-32 object-cover rounded-lg">
+                    <img src="{{ $media->url }}" alt="Post media" class="w-full h-36 object-cover">
                     @else
-                    <video src="{{ $media->url }}" class="w-full h-32 object-cover rounded-lg" muted playsinline></video>
+                    <video src="{{ $media->url }}" class="w-full h-36 object-cover" muted playsinline></video>
                     @endif
 
-                    {{-- <form action="{{ route('post-media.delete', $media) }}" method="POST" class="absolute top-2 right-2" onsubmit="return confirm('Delete this media?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="p-2 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </button>
-                    </form> --}}
+                    <!-- Type badge -->
+                    <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-semibold {{ $media->isImage() ? 'bg-blue-500' : 'bg-purple-500' }} text-white shadow">
+                        {{ $media->isImage() ? 'Image' : 'Video' }}
+                    </span>
+
+                    <!-- Always-visible Remove button -->
                     <button
                         type="button"
-                        onclick="if(confirm('Delete this media?')) { document.getElementById('delete-media-{{ $media->id }}').submit(); }"
-                        class="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                        onclick="if(confirm('Remove this file from the post?')) { document.getElementById('delete-media-{{ $media->id }}').submit(); }"
+                        class="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-1.5 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold transition-colors"
                     >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                         </svg>
+                        Remove
                     </button>
                 </div>
                 @endforeach
@@ -118,30 +119,202 @@
 
         <!-- Add New Media -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-xl font-bold text-gray-900 mb-6">Add New Media (Optional)</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2">
+                {{ $post->post_type === 'video' ? 'Replace / Add Video' : 'Add More Images' }}
+                <span class="text-sm font-normal text-gray-500 ml-2">Optional</span>
+            </h2>
 
             @if($post->post_type === 'video')
-            <div x-show="postType === 'video'">
-                <label class="block text-sm font-semibold text-gray-700 mb-3">Upload Video</label>
-                <input
-                    type="file"
-                    name="media[]"
-                    accept="video/*"
-                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-                >
-                <p class="mt-2 text-sm text-gray-500">Supported: MP4, MOV. Max 100MB</p>
+            <!-- Video specs banner -->
+            <div class="mb-5 flex flex-wrap gap-3">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 text-xs font-medium rounded-lg border border-purple-200">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.362a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+                    MP4 or MOV only
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 text-xs font-medium rounded-lg border border-purple-200">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                    Max 100 MB
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 text-xs font-medium rounded-lg border border-purple-200">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                    1080×1920 (Reels/TikTok) · 1920×1080 (landscape)
+                </span>
             </div>
-            @else
-            <div x-show="postType !== 'video'">
-                <label class="block text-sm font-semibold text-gray-700 mb-3">Upload Image(s)</label>
-                <input
-                    type="file"
-                    name="media[]"
-                    multiple
-                    accept="image/*"
-                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-[#b54c17] hover:file:bg-indigo-100"
+
+            <div
+                x-data="{
+                    dragging: false,
+                    files: [],
+                    addFiles(list) {
+                        const f = Array.from(list)[0];
+                        if (!f) return;
+                        const url = URL.createObjectURL(f);
+                        this.files = [{ name: f.name, size: this.fmt(f.size), preview: url, id: Date.now() }];
+                        this.sync();
+                    },
+                    remove() { this.files = []; this.sync(); },
+                    fmt(b) { return b > 1048576 ? (b/1048576).toFixed(1)+' MB' : (b/1024).toFixed(0)+' KB'; },
+                    sync() {
+                        const dt = new DataTransfer();
+                        if (this.files[0]) {
+                            fetch(this.files[0].preview).then(r => r.blob()).then(b => {
+                                dt.items.add(new File([b], this.files[0].name, { type: b.type }));
+                                document.getElementById('video-input').files = dt.files;
+                            });
+                        } else {
+                            document.getElementById('video-input').files = dt.files;
+                        }
+                    }
+                }"
+                @dragover.prevent="dragging = true"
+                @dragleave="dragging = false"
+                @drop.prevent="dragging = false; addFiles($event.dataTransfer.files)"
+            >
+                <!-- Drop Zone -->
+                <div
+                    x-show="files.length === 0"
+                    @click="$refs.vInput.click()"
+                    :class="dragging ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'"
+                    class="border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all"
                 >
-                <p class="mt-2 text-sm text-gray-500">You can upload additional image files</p>
+                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.362a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
+                    </svg>
+                    <p class="text-base font-semibold text-gray-700 mb-1">Drop your video here</p>
+                    <p class="text-sm text-gray-500 mb-3">or <span class="text-purple-600 font-medium">click to browse</span></p>
+                    <p class="text-xs text-gray-400">MP4 · MOV · Max 100 MB</p>
+                    <input type="file" id="video-input" x-ref="vInput" name="media[]" accept="video/*" hidden @change="addFiles($event.target.files)">
+                </div>
+
+                <!-- Video Preview -->
+                <div x-show="files.length > 0" class="space-y-3" style="display:none;">
+                    <template x-for="f in files" :key="f.id">
+                        <div class="flex items-center gap-4 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+                            <video :src="f.preview" class="w-24 h-16 object-cover rounded-lg flex-shrink-0" muted playsinline></video>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-gray-900 truncate" x-text="f.name"></p>
+                                <p class="text-xs text-gray-500 mt-0.5" x-text="f.size"></p>
+                            </div>
+                            <button type="button" @click="remove()" class="flex items-center gap-1.5 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium rounded-lg transition-colors flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                Remove
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            @else
+            <!-- Image specs banner -->
+            @php
+                $isCarousel = $post->post_type === 'carousel';
+            @endphp
+            <div class="mb-5 flex flex-wrap gap-3">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 text-[#b54c17] text-xs font-medium rounded-lg border border-orange-200">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    JPG · PNG · WebP
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 text-[#b54c17] text-xs font-medium rounded-lg border border-orange-200">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                    Max 10 MB per image
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 text-[#b54c17] text-xs font-medium rounded-lg border border-orange-200">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                    {{ $isCarousel ? '1080×1080 or 1080×1350 (square/portrait)' : '1080×1080 recommended' }}
+                </span>
+                @if($isCarousel)
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg border border-blue-200">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Carousel: select multiple images at once (up to 10)
+                </span>
+                @endif
+            </div>
+
+            <div
+                x-data="{
+                    dragging: false,
+                    files: [],
+                    addFiles(list) {
+                        Array.from(list).forEach(f => {
+                            if (!f.type.startsWith('image/')) return;
+                            const reader = new FileReader();
+                            reader.onload = e => {
+                                this.files.push({ name: f.name, size: this.fmt(f.size), preview: e.target.result, id: Date.now() + Math.random(), file: f });
+                                this.sync();
+                            };
+                            reader.readAsDataURL(f);
+                        });
+                    },
+                    remove(id) {
+                        this.files = this.files.filter(f => f.id !== id);
+                        this.sync();
+                    },
+                    fmt(b) { return b > 1048576 ? (b/1048576).toFixed(1)+' MB' : (b/1024).toFixed(0)+' KB'; },
+                    sync() {
+                        const dt = new DataTransfer();
+                        this.files.forEach(f => dt.items.add(f.file));
+                        document.getElementById('image-input').files = dt.files;
+                    }
+                }"
+                @dragover.prevent="dragging = true"
+                @dragleave="dragging = false"
+                @drop.prevent="dragging = false; addFiles($event.dataTransfer.files)"
+            >
+                <!-- Drop Zone -->
+                <div
+                    @click="$refs.imgInput.click()"
+                    :class="dragging ? 'border-[#CD571B] bg-orange-50' : 'border-gray-300 hover:border-[#CD571B] hover:bg-orange-50/40'"
+                    class="border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all"
+                >
+                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    @if($isCarousel)
+                    <p class="text-base font-semibold text-gray-700 mb-1">Drop images here or click to browse</p>
+                    <p class="text-sm text-gray-500 mb-1">
+                        To select <span class="font-semibold text-[#CD571B]">multiple images</span>:
+                        hold <kbd class="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs font-mono">Ctrl</kbd>
+                        (Windows) or <kbd class="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs font-mono">⌘ Cmd</kbd>
+                        (Mac) while clicking each file
+                    </p>
+                    @else
+                    <p class="text-base font-semibold text-gray-700 mb-1">Drop your image here</p>
+                    <p class="text-sm text-gray-500 mb-3">or <span class="text-[#CD571B] font-medium">click to browse</span></p>
+                    @endif
+                    <p class="text-xs text-gray-400 mt-2">JPG · PNG · WebP · Max 10 MB each</p>
+                    <input type="file" id="image-input" x-ref="imgInput" name="media[]" accept="image/*" {{ $isCarousel ? 'multiple' : '' }} hidden @change="addFiles($event.target.files)">
+                </div>
+
+                <!-- Image Previews -->
+                <div x-show="files.length > 0" class="mt-4" style="display:none;">
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="text-sm font-semibold text-gray-700">
+                            <span x-text="files.length"></span> image(s) selected
+                        </p>
+                        @if($isCarousel)
+                        <button type="button" @click="$refs.imgInput.click()" class="text-xs text-[#CD571B] hover:underline font-medium">+ Add more</button>
+                        @endif
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <template x-for="f in files" :key="f.id">
+                            <div class="relative rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                                <img :src="f.preview" class="w-full h-28 object-cover">
+                                <div class="p-2">
+                                    <p class="text-xs text-gray-600 truncate font-medium" x-text="f.name"></p>
+                                    <p class="text-xs text-gray-400" x-text="f.size"></p>
+                                </div>
+                                <button
+                                    type="button"
+                                    @click="remove(f.id)"
+                                    class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-full shadow transition-colors"
+                                    title="Remove"
+                                >
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
             </div>
             @endif
         </div>
