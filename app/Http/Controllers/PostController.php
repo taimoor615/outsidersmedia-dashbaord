@@ -310,7 +310,7 @@ class PostController extends Controller
             $post->creator->notify(new PostActivityNotification(
                 $post,
                 'admin_approved',
-                "Admin approved your post for {$post->client->name}. You can schedule it from the post page."
+                'Admin approved your post for ' . ($post->client?->name ?? 'Unknown Client') . '. You can schedule it from the post page.'
             ));
         }
 
@@ -345,7 +345,7 @@ class PostController extends Controller
             $post->creator->notify(new PostActivityNotification(
                 $post,
                 'admin_scheduled',
-                "Post for {$post->client->name} is scheduled for " . \Carbon\Carbon::parse($validated['scheduled_at'])->format('M d, Y g:i A')
+                'Post for ' . ($post->client?->name ?? 'Unknown Client') . ' is scheduled for ' . \Carbon\Carbon::parse($validated['scheduled_at'])->format('M d, Y g:i A')
             ));
         }
 

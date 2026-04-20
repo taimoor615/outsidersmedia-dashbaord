@@ -48,7 +48,8 @@ class CalendarController extends Controller
         $events = $posts->map(function (Post $post) {
             $scheduledAt = $post->scheduled_at;
             $end = $scheduledAt->copy()->addHour();
-            $title = $post->client->name . ' – ' . ($post->caption ? \Str::limit($post->caption, 30) : 'Post #' . $post->id);
+            $clientName = $post->client?->name ?? 'Unknown Client';
+            $title = $clientName . ' – ' . ($post->caption ? \Str::limit($post->caption, 30) : 'Post #' . $post->id);
             return [
                 'id' => $post->id,
                 'title' => $title,
@@ -59,7 +60,7 @@ class CalendarController extends Controller
                 'borderColor' => $this->colorForStatus($post->status),
                 'extendedProps' => [
                     'status' => $post->status,
-                    'client' => $post->client->name,
+                    'client' => $clientName,
                     'post_type' => $post->post_type,
                 ],
             ];

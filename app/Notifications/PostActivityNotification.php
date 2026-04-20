@@ -24,7 +24,7 @@ class PostActivityNotification extends Notification
         return [
             'post_id' => $this->post->id,
             'post_title' => \Str::limit($this->post->facebook_message ?: $this->post->instagram_message ?: 'Post #' . $this->post->id, 40),
-            'client_name' => $this->post->client->name,
+            'client_name' => $this->post->client?->name ?? 'Unknown Client',
             'type' => $this->type,
             'message' => $this->message,
             'url' => route('posts.show', $this->post),

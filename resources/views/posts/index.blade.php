@@ -173,10 +173,10 @@
                 <!-- Client Name -->
                 <div class="flex items-center gap-2 mb-3">
                     <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-[#EC921A] rounded-full flex items-center justify-center text-white text-xs font-bold">
-                        {{ substr($post->client->name, 0, 2) }}
+                        {{ substr($post->client?->name ?? 'NA', 0, 2) }}
                     </div>
                     <div>
-                        <p class="font-semibold text-gray-900">{{ $post->client->name }}</p>
+                        <p class="font-semibold text-gray-900">{{ $post->client?->name ?? 'Unknown Client' }}</p>
                         <p class="text-xs text-gray-500">{{ $post->created_at->format('M d, Y') }}</p>
                     </div>
                 </div>
