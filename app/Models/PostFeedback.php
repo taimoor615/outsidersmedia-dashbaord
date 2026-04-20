@@ -43,6 +43,6 @@ class PostFeedback extends Model
         if ($this->is_client_feedback) {
             return $this->client_name ?? 'Client';
         }
-        return $this->user->name ?? 'Unknown';
+        return $this->user?->name ?? 'Unknown';
     }
 }

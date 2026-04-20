@@ -272,7 +272,7 @@
                     <div class="flex-1 min-w-0">
                         <p class="text-sm text-gray-900">{{ Str::limit($fb->feedback, 120) }}</p>
                         <p class="mt-1 text-xs text-gray-500">
-                            <a href="{{ route('posts.show', $fb->post) }}" class="text-[#CD571B] hover:text-[#b54c17] font-medium">{{ $fb->post->client->name }}</a>
+                            <a href="{{ route('posts.show', $fb->post) }}" class="text-[#CD571B] hover:text-[#b54c17] font-medium">{{ $fb->post?->client?->name ?? 'Unknown Client' }}</a>
                             · {{ $fb->created_at->diffForHumans() }}
                             @if($fb->action)
                             · <span class="font-medium">{{ ucfirst(str_replace('_', ' ', $fb->action)) }}</span>

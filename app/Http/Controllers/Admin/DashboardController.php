@@ -107,16 +107,16 @@ class DashboardController extends Controller
         $activities = collect();
 
         // Recent posts created
-        $recentPosts = Post::with('creator')
+        $recentPosts = Post::with(['creator', 'client'])
             ->latest()
             ->take(5)
             ->get()
             ->map(function ($post) {
                 return [
-                    'user' => $post->creator,
-                    'action' => 'created a new post',
-                    'details' => "for {$post->client->name}",
-                    'time' => $post->created_at,
+                    'user'    => $post->creator,
+                    'action'  => 'created a new post',
+                    'details' => 'for ' . ($post->client?->name ?? 'Unknown Client'),
+                    'time'    => $post->created_at,
                 ];
             });
 
@@ -129,10 +129,10 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($feedback) {
                 return [
-                    'user' => $feedback->user,
-                    'action' => $feedback->action === 'approve' ? 'approved a post' : 'provided feedback',
+                    'user'    => $feedback->user,
+                    'action'  => $feedback->action === 'approve' ? 'approved a post' : 'provided feedback',
                     'details' => '',
-                    'time' => $feedback->created_at,
+                    'time'    => $feedback->created_at,
                 ];
             });
 
@@ -143,10 +143,10 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($client) {
                 return [
-                    'user' => $client->creator,
-                    'action' => 'added a new client',
+                    'user'    => $client->creator,
+                    'action'  => 'added a new client',
                     'details' => $client->name,
-                    'time' => $client->created_at,
+                    'time'    => $client->created_at,
                 ];
             });
 

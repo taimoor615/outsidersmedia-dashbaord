@@ -16,7 +16,7 @@
                 Back to Posts
             </a>
             <h1 class="text-3xl font-bold text-gray-900">Post Details</h1>
-            <p class="mt-2 text-gray-600">{{ $post->client->name }} • {{ $post->created_at->format('M d, Y g:i A') }}</p>
+            <p class="mt-2 text-gray-600">{{ $post->client?->name ?? 'Unknown Client' }} • {{ $post->created_at->format('M d, Y g:i A') }}</p>
         </div>
 
         <div class="flex items-center gap-3">
@@ -217,9 +217,11 @@
 
                     <div>
                         <p class="text-gray-500 mb-1">Client</p>
-                        <a href="{{ route('clients.show', $post->client) }}" class="font-medium text-[#CD571B] hover:text-[#b54c17]">
-                            {{ $post->client->name }}
-                        </a>
+                        @if($post->client)
+                        <a href="{{ route('clients.show', $post->client) }}" class="font-medium text-[#CD571B] hover:text-[#b54c17]">{{ $post->client->name }}</a>
+                        @else
+                        <span class="font-medium text-gray-500">Unknown Client</span>
+                        @endif
                     </div>
 
                     @if($post->platforms && count($post->platforms) > 0)

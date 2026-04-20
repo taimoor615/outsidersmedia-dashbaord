@@ -83,7 +83,7 @@ class DashboardController extends Controller
             ->map(fn($p) => [
                 'date'   => $p->scheduled_at->format('Y-m-d'),
                 'title'  => $p->facebook_message ?: $p->instagram_message ?: 'Post',
-                'client' => $p->client->name ?? '',
+                'client' => $p->client?->name ?? '',
                 'status' => $p->status,
             ]);
 
