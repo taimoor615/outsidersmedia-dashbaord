@@ -156,7 +156,7 @@
                         </div>
                         @endif
                         <div class="flex-1">
-                            <h3 class="font-semibold text-gray-900 mb-1">{{ $post->client->name }}</h3>
+                            <h3 class="font-semibold text-gray-900 mb-1">{{ $post->client?->name ?? 'Unknown Client' }}</h3>
                             <p class="text-sm text-gray-600 mb-2 line-clamp-2">{{ Str::limit($post->facebook_message ?: $post->instagram_message, 80) }}</p>
                             @if($post->feedback->where('is_client_feedback', true)->last())
                             <div class="p-2 rounded-lg mb-2" style="background:#FEF3EC;border:1px solid #F5C4A0;">
@@ -185,11 +185,11 @@
                 <div class="p-6 hover:bg-gray-50 transition-colors">
                     <div class="flex items-start gap-3">
                         <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background:linear-gradient(135deg,#CD571B,#EC921A);">
-                            {{ substr($feedback->post->client->name, 0, 2) }}
+                            {{ substr($feedback->post?->client?->name ?? 'NA', 0, 2) }}
                         </div>
                         <div class="flex-1">
                             <div class="flex items-start justify-between mb-1">
-                                <p class="font-semibold text-gray-900 text-sm">{{ $feedback->post->client->name }}</p>
+                                <p class="font-semibold text-gray-900 text-sm">{{ $feedback->post?->client?->name ?? 'Unknown Client' }}</p>
                                 @if($feedback->action === 'approve')
                                 <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">Approved</span>
                                 @elseif($feedback->action === 'request_changes')
@@ -238,7 +238,7 @@
                         <div class="flex-1">
                             <div class="flex items-start justify-between mb-2">
                                 <div>
-                                    <h3 class="font-semibold text-gray-900">{{ $post->client->name }}</h3>
+                                    <h3 class="font-semibold text-gray-900">{{ $post->client?->name ?? 'Unknown Client' }}</h3>
                                     <p class="text-sm text-gray-600 mt-1 line-clamp-2">{{ Str::limit($post->facebook_message ?: $post->instagram_message, 120) }}</p>
                                 </div>
                                 <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">Approved</span>

@@ -36,7 +36,7 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Client</label>
                     <input
                         type="text"
-                        value="{{ $post->client->name }}"
+                        value="{{ $post->client?->name ?? 'Unknown Client' }}"
                         disabled
                         class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50"
                     >
@@ -59,7 +59,7 @@
         <!-- Platform Selection (only platforms selected for this client) -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
             <h2 class="text-xl font-bold text-gray-900 mb-6">Select Platforms *</h2>
-            <p class="text-sm text-gray-500 mb-4">Only platforms chosen for {{ $post->client->name }} are shown.</p>
+            <p class="text-sm text-gray-500 mb-4">Only platforms chosen for {{ $post->client?->name ?? 'this client' }} are shown.</p>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 @foreach($allowedPlatforms as $platform)

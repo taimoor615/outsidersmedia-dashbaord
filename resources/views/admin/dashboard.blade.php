@@ -165,12 +165,12 @@
                     <div class="p-6 hover:bg-gray-50 transition-colors">
                         <div class="flex items-start gap-4">
                             <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-[#EC921A] rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-                                {{ substr($feedback->post->client->name, 0, 2) }}
+                                {{ substr($feedback->post?->client?->name ?? 'NA', 0, 2) }}
                             </div>
                             <div class="flex-1">
                                 <div class="flex items-start justify-between mb-2">
                                     <div>
-                                        <h3 class="font-semibold text-gray-900">{{ $feedback->post->client->name }}</h3>
+                                        <h3 class="font-semibold text-gray-900">{{ $feedback->post?->client?->name ?? 'Unknown Client' }}</h3>
                                         <p class="text-sm text-gray-500">{{ $feedback->created_at->diffForHumans() }}</p>
                                     </div>
                                     @if($feedback->action === 'approve')
@@ -226,7 +226,7 @@
                             @endif
                             <div class="flex-1">
                                 <h3 class="font-semibold text-gray-900 mb-1">{{ Str::limit($post->facebook_message ?: $post->instagram_message, 60) }}</h3>
-                                <p class="text-sm text-gray-600 mb-2">{{ $post->client->name }} •
+                                <p class="text-sm text-gray-600 mb-2">{{ $post->client?->name ?? 'Unknown Client' }} •
                                     @foreach($post->platforms as $platform)
                                         <span class="capitalize">{{ $platform }}{{ !$loop->last ? ', ' : '' }}</span>
                                     @endforeach
@@ -292,7 +292,7 @@
                     @foreach($recentNotes->take(3) as $note)
                     <div class="border-l-4 border-[#CD571B] pl-4 py-2">
                         <p class="text-sm text-gray-700 mb-1">{{ Str::limit($note->feedback, 80) }}</p>
-                        <p class="text-xs text-gray-500">{{ $note->post->client->name }} • {{ $note->created_at->diffForHumans() }}</p>
+                        <p class="text-xs text-gray-500">{{ $note->post?->client?->name ?? 'Unknown Client' }} • {{ $note->created_at->diffForHumans() }}</p>
                     </div>
                     @endforeach
                 </div>
