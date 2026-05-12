@@ -144,7 +144,7 @@
                 <!-- Submit Button -->
                 <button
                     type="submit"
-                    class="w-full btn-brand py-3 px-4 rounded-xl font-semibold shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200"
+                    class="cursor-pointer w-full btn-brand py-3 px-4 rounded-xl font-semibold shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200"
                 >
                     Sign In
                 </button>

@@ -38,9 +38,9 @@ class TeamController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'timezone' => 'required|string',
+            'name'     => 'required|string|min:2|max:255',
+            'email'    => 'required|email:rfc,dns|max:254|unique:users,email',
+            'timezone' => ['required', 'string', 'in:' . implode(',', timezone_identifiers_list())],
         ]);
 
         // Create team member with temporary password
@@ -109,10 +109,10 @@ class TeamController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $team->id,
-            'timezone' => 'required|string',
-            'status' => 'required|in:active,inactive',
+            'name'     => 'required|string|min:2|max:255',
+            'email'    => 'required|email:rfc,dns|max:254|unique:users,email,' . $team->id,
+            'timezone' => ['required', 'string', 'in:' . implode(',', timezone_identifiers_list())],
+            'status'   => 'required|in:active,inactive',
         ]);
 
         $team->update($validated);

@@ -83,7 +83,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Unique Value Proposition</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">What makes this client stand out from competitors? <span class="text-gray-400 font-normal">(Their unique value, secret sauce, or strengths)</span></label>
                         <textarea
                             name="unique_value"
                             rows="3"

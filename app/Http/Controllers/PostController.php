@@ -102,25 +102,57 @@ class PostController extends Controller
     //     }
     // }
     // --- DEBUGGING END ---
+        $postType = $request->input('post_type');
+
         $validated = $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'post_type' => 'required|in:standard,carousel,video',
-            'caption' => 'nullable|string',
-            'webpage_url' => 'nullable|url',
-            'facebook_message' => 'nullable|string',
-            'instagram_message' => 'nullable|string',
-            'linkedin_message' => 'nullable|string',
-            'twitter_message' => 'nullable|string',
-            'tiktok_message' => 'nullable|string',
-            'youtube_message' => 'nullable|string',
-            'google_post_type' => 'nullable|in:whats_new,offer,event',
-            'google_title' => 'nullable|string',
-            'google_button' => 'nullable|in:none,book,order,buy,learn_more,sign_up',
-            'google_button_link' => 'nullable|url',
-            'platforms' => 'required|array',
-            'scheduled_at' => 'nullable|date',
-            'media.*' => 'bail|required|file|mimes:jpg,jpeg,png,gif,mp4,mov|max:102400', // 100MB max
+            'client_id'         => 'required|exists:clients,id',
+            'post_type'         => 'required|in:standard,carousel,video',
+            'caption'           => 'nullable|string|max:5000',
+            'webpage_url'       => 'nullable|url|max:500',
+            'facebook_message'  => 'nullable|string|max:63206',
+            'instagram_message' => 'nullable|string|max:2200',
+            'linkedin_message'  => 'nullable|string|max:3000',
+            'twitter_message'   => 'nullable|string|max:280',
+            'tiktok_message'    => 'nullable|string|max:2200',
+            'youtube_message'   => 'nullable|string|max:5000',
+            'google_post_type'  => 'nullable|in:whats_new,offer,event',
+            'google_title'      => 'nullable|string|max:300',
+            'google_button'     => 'nullable|in:none,book,order,buy,learn_more,sign_up',
+            'google_button_link'=> 'nullable|url|max:500',
+            'platforms'         => 'required|array|min:1',
+            'platforms.*'       => 'required|string|in:facebook,instagram,linkedin,twitter,tiktok,youtube,google',
+            'scheduled_at'      => 'nullable|date|after_or_equal:today',
+            'media'             => [
+                'nullable', 'array',
+                $postType === 'carousel' ? 'min:2' : 'min:1',
+                $postType === 'carousel' ? 'max:10' : 'max:1',
+            ],
+            'media.*'           => [
+                'bail', 'required', 'file', 'max:102400',
+                $postType === 'video'
+                    ? 'mimes:mp4,mov'
+                    : 'mimes:jpg,jpeg,png,gif',
+            ],
+        ], [
+            'platforms.*.in'  => 'One or more selected platforms are invalid.',
+            'media.min'       => $postType === 'carousel' ? 'Carousel posts require at least 2 images.' : 'Please upload a file.',
+            'media.max'       => $postType === 'carousel' ? 'Carousel posts allow a maximum of 10 images.' : 'Only one file is allowed for this post type.',
+            'media.*.mimes'   => $postType === 'video' ? 'Video must be an MP4 or MOV file.' : 'Images must be JPG, PNG, or GIF.',
+            'scheduled_at.after_or_equal' => 'Schedule date cannot be in the past.',
         ]);
+
+        // Verify client exists and is active (defence against inspect-element bypass)
+        $client = \App\Models\Client::where('id', $validated['client_id'])->where('status', 'active')->first();
+        if (!$client) {
+            return back()->withErrors(['client_id' => 'The selected client is inactive or does not exist.'])->withInput();
+        }
+
+        // Require at least one platform message
+        $messageFields = ['facebook_message','instagram_message','linkedin_message','twitter_message','tiktok_message','youtube_message'];
+        $hasMessage = collect($messageFields)->contains(fn($f) => !empty($request->input($f)));
+        if (!$hasMessage) {
+            return back()->withErrors(['facebook_message' => 'Please enter a caption for at least one platform.'])->withInput();
+        }
 
         $validated['created_by'] = auth()->id();
         $validated['status'] = 'draft';
@@ -177,36 +209,48 @@ class PostController extends Controller
                 ->with('error', 'This post cannot be edited');
         }
 
+        $postType = $request->input('post_type', $post->post_type);
+
         $validated = $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'post_type' => 'required|in:standard,carousel,video',
-            'caption' => 'nullable|string',
-            'webpage_url' => 'nullable|url',
-            'facebook_message' => 'nullable|string',
-            'instagram_message' => 'nullable|string',
-            'linkedin_message' => 'nullable|string',
-            'twitter_message' => 'nullable|string',
-            'tiktok_message' => 'nullable|string',
-            'youtube_message' => 'nullable|string',
-            'platforms' => 'required|array',
-            'scheduled_at' => 'nullable|date',
+            'client_id'         => 'required|exists:clients,id',
+            'post_type'         => 'required|in:standard,carousel,video',
+            'caption'           => 'nullable|string|max:5000',
+            'webpage_url'       => 'nullable|url|max:500',
+            'facebook_message'  => 'nullable|string|max:63206',
+            'instagram_message' => 'nullable|string|max:2200',
+            'linkedin_message'  => 'nullable|string|max:3000',
+            'twitter_message'   => 'nullable|string|max:280',
+            'tiktok_message'    => 'nullable|string|max:2200',
+            'youtube_message'   => 'nullable|string|max:5000',
+            'platforms'         => 'required|array|min:1',
+            'platforms.*'       => 'required|string|in:facebook,instagram,linkedin,twitter,tiktok,youtube,google',
+            'scheduled_at'      => 'nullable|date',
             // Google Business Profile fields
-            'google_post_type' => 'nullable|in:whats_new,offer,event',
-            'google_title' => 'nullable|string',
-            'google_button' => 'nullable|in:none,book,order,buy,learn_more,sign_up',
-            'google_button_link' => 'nullable|url',
-            'offer_code' => 'nullable|string',
-            'offer_link' => 'nullable|url',
-            'offer_terms' => 'nullable|string',
-            'offer_start_date' => 'nullable|date',
-            'offer_end_date' => 'nullable|date',
-            'offer_start_time' => 'nullable|string',
-            'offer_end_time' => 'nullable|string',
-            'event_start_date' => 'nullable|date',
-            'event_end_date' => 'nullable|date',
-            'event_start_time' => 'nullable|string',
-            'event_end_time' => 'nullable|string',
-            'media.*' => 'bail|nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov|max:102400',
+            'google_post_type'  => 'nullable|in:whats_new,offer,event',
+            'google_title'      => 'nullable|string|max:300',
+            'google_button'     => 'nullable|in:none,book,order,buy,learn_more,sign_up',
+            'google_button_link'=> 'nullable|url|max:500',
+            'offer_code'        => 'nullable|string|max:100',
+            'offer_link'        => 'nullable|url|max:500',
+            'offer_terms'       => 'nullable|string|max:2000',
+            'offer_start_date'  => 'nullable|date',
+            'offer_end_date'    => 'nullable|date|after_or_equal:offer_start_date',
+            'offer_start_time'  => 'nullable|string|max:10',
+            'offer_end_time'    => 'nullable|string|max:10',
+            'event_start_date'  => 'nullable|date',
+            'event_end_date'    => 'nullable|date|after_or_equal:event_start_date',
+            'event_start_time'  => 'nullable|string|max:10',
+            'event_end_time'    => 'nullable|string|max:10',
+            'media'             => 'nullable|array|max:10',
+            'media.*'           => [
+                'bail', 'nullable', 'file', 'max:102400',
+                $postType === 'video'
+                    ? 'mimes:mp4,mov'
+                    : 'mimes:jpg,jpeg,png,gif',
+            ],
+        ], [
+            'platforms.*.in' => 'One or more selected platforms are invalid.',
+            'media.*.mimes'  => $postType === 'video' ? 'Video must be an MP4 or MOV file.' : 'Images must be JPG, PNG, or GIF.',
         ]);
 
         $post->update($validated);

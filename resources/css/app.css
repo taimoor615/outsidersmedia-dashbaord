@@ -16,6 +16,11 @@
     outline: none !important;
     /* --tw-ring-color: transparent !important; */
   }
+  button, [role="button"], select, label[for],
+  input[type="submit"], input[type="button"], input[type="reset"] {
+    cursor: pointer;
+  }
+  a { cursor: pointer; }
 }
 .logo-wrapper{
     width: 100%;
@@ -38,6 +43,7 @@
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    cursor: pointer;
 }
 .btn-brand:hover {
     background: linear-gradient(135deg, #b54c17 0%, #d48216 100%);
@@ -56,3 +62,4 @@
 .sidebar-brand-text { color: #f5c9a8; }
 .sidebar-brand-text:hover { color: #ffffff; }
 .focus-brand:focus { outline: none; box-shadow: 0 0 0 3px rgba(205,87,27,0.3); }
+

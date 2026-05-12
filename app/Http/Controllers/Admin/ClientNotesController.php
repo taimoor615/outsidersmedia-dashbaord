@@ -33,12 +33,15 @@ class ClientNotesController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'note'      => 'required|string|max:2000',
+            'client_id' => 'required|integer|exists:clients,id',
+            'note'      => 'required|string|min:1|max:2000',
         ]);
 
+        // Ensure client exists (not soft-deleted)
+        $client = \App\Models\Client::findOrFail($validated['client_id']);
+
         ClientNote::create([
-            'client_id'   => $validated['client_id'],
+            'client_id'   => $client->id,
             'added_by'    => auth()->id(),
             'author_name' => auth()->user()->name,
             'note'        => $validated['note'],

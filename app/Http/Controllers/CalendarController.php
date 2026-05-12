@@ -27,8 +27,7 @@ class CalendarController extends Controller
         $start = $request->get('start') ? Carbon::parse($request->get('start')) : null;
         $end = $request->get('end') ? Carbon::parse($request->get('end')) : null;
 
-        $query = Post::with(['client', 'creator', 'media'])
-            ->whereIn('status', ['scheduled', 'published'])
+        $query = Post::with(['client'])
             ->whereNotNull('scheduled_at');
 
 
@@ -72,10 +71,13 @@ class CalendarController extends Controller
     private function colorForStatus(string $status): string
     {
         return match ($status) {
-            'scheduled' => '#CD571B',
-            'published' => '#EC921A',
-            'approved' => '#059669',
-            default => '#6b7280',
+            'scheduled'          => '#CD571B',
+            'published'          => '#EC921A',
+            'approved'           => '#059669',
+            'pending_approval'   => '#3b82f6',
+            'changes_requested'  => '#f97316',
+            'pending_client'     => '#8b5cf6',
+            default              => '#6b7280',
         };
     }
 }

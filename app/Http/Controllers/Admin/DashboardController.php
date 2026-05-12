@@ -18,7 +18,7 @@ class DashboardController extends Controller
             'total_clients' => Client::count(),
             'active_clients' => Client::where('status', 'active')->count(),
             'pending_approvals' => Post::where('status', 'pending_approval')->count(),
-            'scheduled_posts' => Post::where('status', 'scheduled')->count(),
+            'scheduled_posts' => Post::where('status', 'scheduled')->whereNotNull('scheduled_at')->count(),
             'published_posts' => Post::where('status', 'published')->count(),
             'total_posts_this_month' => Post::whereMonth('created_at', now()->month)->count(),
         ];

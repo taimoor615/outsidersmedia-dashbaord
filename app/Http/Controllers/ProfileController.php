@@ -27,9 +27,9 @@ class ProfileController extends Controller
         $user = auth()->user();
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'timezone' => 'required|string',
+            'name'          => 'required|string|min:2|max:255',
+            'email'         => 'required|email:rfc,dns|max:254|unique:users,email,' . $user->id,
+            'timezone'      => ['required', 'string', 'in:' . implode(',', timezone_identifiers_list())],
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 

@@ -10,13 +10,92 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
     <link rel="manifest" href="/images/site.webmanifest" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script>
+        window.datePicker = function(fieldName, initialValue) {
+            var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            return {
+                open: false,
+                fieldName: fieldName || 'scheduled_at',
+                selectedDate: '', selectedTime: '',
+                displayValue: '', hiddenValue: initialValue || '',
+                selMonth: '', selDay: '', selYear: '',
+                selHour: '12', selMin: '00', selAmpm: 'AM',
+                months: MONTHS,
+                get years() { var y = new Date().getFullYear(); return [y, y+1, y+2]; },
+                get days() {
+                    if (!this.selMonth || !this.selYear) return Array.from({length:31},function(_,i){return i+1;});
+                    var n = new Date(parseInt(this.selYear), MONTHS.indexOf(this.selMonth)+1, 0).getDate();
+                    return Array.from({length:n},function(_,i){return i+1;});
+                },
+                init() {
+                    if (initialValue) {
+                        var nm = initialValue.replace(' ','T').substring(0,16);
+                        var pts = nm.split('T');
+                        this.selectedDate = pts[0] || '';
+                        this.selectedTime = pts[1] ? pts[1].substring(0,5) : '';
+                        if (this.selectedDate) {
+                            var d = new Date(this.selectedDate+'T00:00');
+                            this.selMonth = MONTHS[d.getMonth()];
+                            this.selDay   = String(d.getDate());
+                            this.selYear  = String(d.getFullYear());
+                        }
+                        if (this.selectedTime) {
+                            var tp = this.selectedTime.split(':');
+                            var h = parseInt(tp[0]), m = parseInt(tp[1]);
+                            this.selAmpm = h >= 12 ? 'PM' : 'AM';
+                            h = h % 12 || 12;
+                            this.selHour = String(h);
+                            this.selMin  = String(m).padStart(2,'0');
+                        }
+                        this.updateDisplay();
+                    }
+                },
+                applyDate() {
+                    if (this.selMonth && this.selDay && this.selYear) {
+                        var mi = MONTHS.indexOf(this.selMonth)+1;
+                        this.selectedDate = this.selYear+'-'+String(mi).padStart(2,'0')+'-'+String(this.selDay).padStart(2,'0');
+                    } else { this.selectedDate = ''; }
+                    this.applyTime();
+                },
+                applyTime() {
+                    var h = parseInt(this.selHour);
+                    if (this.selAmpm==='PM' && h!==12) h+=12;
+                    if (this.selAmpm==='AM' && h===12) h=0;
+                    this.selectedTime = String(h).padStart(2,'0')+':'+this.selMin;
+                    this.updateDisplay();
+                },
+                updateDisplay() {
+                    if (this.selectedDate) {
+                        var d = new Date(this.selectedDate+'T'+(this.selectedTime||'00:00'));
+                        this.displayValue = d.toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'long',day:'numeric'})
+                            +' · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+                        this.hiddenValue = this.selectedDate+'T'+(this.selectedTime||'00:00');
+                    } else { this.displayValue=''; this.hiddenValue=''; }
+                },
+                confirm() { this.updateDisplay(); this.open=false; },
+                clear() {
+                    this.selectedDate=''; this.selectedTime='';
+                    this.selMonth=''; this.selDay=''; this.selYear='';
+                    this.selHour='12'; this.selMin='00'; this.selAmpm='AM';
+                    this.displayValue=''; this.hiddenValue='';
+                }
+            };
+        };
+    </script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
-        .admin-nav { scrollbar-width: thin; scrollbar-color: #374151 transparent; }
-        .admin-nav::-webkit-scrollbar { width: 4px; }
-        .admin-nav::-webkit-scrollbar-track { background: transparent; margin: 12px 0; }
-        .admin-nav::-webkit-scrollbar-thumb { background: #374151; border-radius: 20px; transition: background 0.2s; }
-        .admin-nav::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        .admin-nav { scrollbar-width: thin; scrollbar-color: #9ca3af #1f2937; }
+        .admin-nav::-webkit-scrollbar { width: 5px; }
+        .admin-nav::-webkit-scrollbar-track { background: #1f2937; border-radius: 20px; margin: 8px 0; }
+        .admin-nav::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 20px; }
+        .admin-nav::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+        select[x-model="selMonth"],select[x-model="selDay"],select[x-model="selYear"],
+        select[x-model="selHour"],select[x-model="selMin"],select[x-model="selAmpm"] {
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            background-image: none !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -138,13 +217,13 @@
 
             <!-- User Profile in Sidebar -->
             <div class="border-t border-gray-700 p-4">
-                <div class="flex items-center gap-3 px-4 py-3 bg-gray-800 rounded-xl">
-                    <img src="{{ auth()->user()->profile_image_url }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full border-2 style="border-color:#EC921A"">
+                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 bg-gray-800 rounded-xl hover:bg-gray-700 transition-colors group">
+                    <img src="{{ auth()->user()->profile_image_url }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full border-2 flex-shrink-0" style="border-color:#EC921A">
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold text-white truncate">{{ auth()->user()->name }}</p>
-                        <p class="text-xs text-gray-400 truncate">{{ auth()->user()->email }}</p>
+                        <p class="text-sm font-bold text-white truncate">{{ auth()->user()->name }}</p>
+                        <p class="text-xs font-medium truncate" style="color:#EC921A;">Administrator</p>
                     </div>
-                </div>
+                </a>
             </div>
         </aside>
 
@@ -204,9 +283,13 @@
 
                     <!-- Profile Dropdown -->
                     <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" @click.away="open = false" class="flex items-center gap-2 hover:bg-gray-100 rounded-lg p-2 transition-colors">
-                            <img src="{{ auth()->user()->profile_image_url }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full">
-                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button @click="open = !open" @click.away="open = false" class="flex items-center gap-2 hover:bg-gray-100 rounded-lg px-3 py-2 transition-colors">
+                            <div class="flex flex-col items-end leading-tight mr-0.5">
+                                <span class="text-sm font-bold text-gray-900 max-w-[140px] truncate">{{ auth()->user()->name }}</span>
+                                <span class="text-xs font-medium" style="color:#CD571B;">Administrator</span>
+                            </div>
+                            <img src="{{ auth()->user()->profile_image_url }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full flex-shrink-0">
+                            <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
@@ -224,7 +307,7 @@
                             <div class="border-t border-gray-200 my-2"></div>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                <button type="submit" class="cursor-pointer flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                     </svg>

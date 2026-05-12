@@ -57,31 +57,87 @@
 
             <!-- Media Preview -->
             @if($post->media->count() > 0)
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6" x-data="{ lightboxSrc: null }">
                 <h2 class="text-lg font-bold text-gray-900 mb-4">Media</h2>
 
                 @if($post->post_type === 'carousel')
-                <div class="grid grid-cols-2 gap-4">
+                {{-- 4:5 portrait grid, max-width clamped so it doesn't overflow at any zoom level --}}
+                <div class="grid grid-cols-2 gap-3" style="max-width:clamp(280px,100%,600px);margin:0 auto;">
                     @foreach($post->media as $media)
-                    @if($media->isImage())
-                    <img src="{{ $media->url }}" alt="Post media" class="w-full h-48 object-cover rounded-lg">
-                    @else
-                    <video src="{{ $media->url }}" class="w-full h-48 object-cover rounded-lg" muted playsinline></video>
-                    @endif
+                    <div class="rounded-lg overflow-hidden" style="aspect-ratio:4/5;">
+                        @if($media->isImage())
+                        <img src="{{ $media->url }}" alt="Post media" class="w-full h-full object-cover cursor-zoom-in" @click="lightboxSrc='{{ $media->url }}'">
+                        @else
+                        <video src="{{ $media->url }}" class="w-full h-full object-cover" muted playsinline></video>
+                        @endif
+                    </div>
                     @endforeach
                 </div>
-                @else
-                <div>
-                    @php($firstMedia = $post->media->first())
-                    @if($firstMedia->isImage())
-                    <img src="{{ $firstMedia->url }}" alt="Post media" class="w-full h-auto rounded-lg">
-                    @else
-                    <video controls class="w-full h-auto rounded-lg">
+                <p class="text-center text-xs text-gray-400 mt-2 flex items-center justify-center gap-1 select-none">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    Click any image to view full size
+                </p>
+                @elseif($post->post_type === 'video')
+                @php($firstMedia = $post->media->first())
+                {{-- 9:16 portrait, clamped width --}}
+                <div class="mx-auto rounded-lg overflow-hidden" style="aspect-ratio:9/16;width:clamp(200px,60%,320px);">
+                    <video controls class="w-full h-full object-contain bg-black">
                         <source src="{{ $firstMedia->url }}" type="{{ $firstMedia->mime_type }}">
                     </video>
-                    @endif
+                </div>
+                @else
+                @php($firstMedia = $post->media->first())
+                {{-- Square 1:1, clamped so it stays proportional at any browser zoom --}}
+                @if($firstMedia->isImage())
+                <div class="mx-auto rounded-lg overflow-hidden cursor-zoom-in" style="aspect-ratio:1/1;width:clamp(200px,100%,540px);" @click="lightboxSrc='{{ $firstMedia->url }}'">
+                    <img src="{{ $firstMedia->url }}" alt="Post media" class="w-full h-full object-cover">
+                </div>
+                <p class="text-center text-xs text-gray-400 mt-2 flex items-center justify-center gap-1 cursor-zoom-in select-none" @click="lightboxSrc='{{ $firstMedia->url }}'">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    Click image to view full size
+                </p>
+                @else
+                <div class="mx-auto rounded-lg overflow-hidden" style="aspect-ratio:9/16;width:clamp(200px,60%,320px);">
+                    <video controls class="w-full h-full object-contain bg-black">
+                        <source src="{{ $firstMedia->url }}" type="{{ $firstMedia->mime_type }}">
+                    </video>
                 </div>
                 @endif
+                @endif
+
+                <!-- Lightbox -->
+                <div
+                    x-show="lightboxSrc"
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    @keydown.escape.window="lightboxSrc = null"
+                    class="fixed inset-0 z-[200] flex flex-col"
+                    style="background:rgba(0,0,0,0.93);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;"
+                >
+                    <!-- Top bar: close button -->
+                    <div class="flex items-center justify-between px-5 py-3 flex-shrink-0" style="background:rgba(0,0,0,0.3);">
+                        <p class="text-white/50 text-xs tracking-wide select-none">Press Esc or click outside to close</p>
+                        <button @click="lightboxSrc = null"
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-semibold transition-all cursor-pointer"
+                            style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.22);"
+                            onmouseover="this.style.background='rgba(255,255,255,0.25)'"
+                            onmouseout="this.style.background='rgba(255,255,255,0.12)'"
+                        >
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                            Close
+                        </button>
+                    </div>
+                    <!-- Image area: click outside image to close -->
+                    <div class="flex-1 flex items-center justify-center p-4 cursor-zoom-out overflow-hidden" @click="lightboxSrc = null">
+                        <img :src="lightboxSrc" @click.stop
+                            class="max-w-full object-contain rounded-xl shadow-2xl cursor-default"
+                            style="max-height:calc(100vh - 100px);width:clamp(200px,88vw,1200px);">
+                    </div>
+                </div>
             </div>
             @endif
 
@@ -309,12 +365,71 @@
                 <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Schedule for Publish</h3>
                 <form action="{{ route('posts.schedule', $post) }}" method="POST" class="space-y-3">
                     @csrf
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1">Date &amp; time</label>
-                        <input type="datetime-local" name="scheduled_at" required
-                            min="{{ now()->addMinute()->format('Y-m-d\TH:i') }}"
-                            value="{{ old('scheduled_at', $post->scheduled_at?->format('Y-m-d\TH:i')) }}"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    <div x-data="datePicker('scheduled_at', '{{ old('scheduled_at', $post->scheduled_at?->format('Y-m-d\TH:i')) }}')">
+                        <label class="block text-xs text-gray-500 mb-1.5">Date &amp; Time</label>
+                        <div @click="open = !open" role="button" tabindex="0" @keydown.enter.prevent="open = !open"
+                            class="w-full flex items-center gap-2.5 px-3 py-2.5 border-2 rounded-xl bg-white hover:bg-gray-50 transition-colors text-sm cursor-pointer select-none"
+                            :class="open ? 'border-blue-500' : 'border-gray-200 hover:border-blue-400'">
+                            <svg class="w-4 h-4 flex-shrink-0" :class="displayValue ? 'text-blue-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <span class="flex-1" :class="displayValue ? 'text-gray-900 font-medium' : 'text-gray-400'" x-text="displayValue || 'Pick a date & time'"></span>
+                        </div>
+                        <div x-show="open" @click.outside="open = false" class="mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl p-4" style="display:none;">
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Date</p>
+                            <div class="grid grid-cols-3 gap-1.5 mb-3">
+                                <div class="relative">
+                                    <select x-model="selMonth" @change="applyDate()" class="w-full appearance-none px-2 py-2 pr-6 border-2 rounded-xl text-xs font-medium bg-white outline-none cursor-pointer transition-colors" :class="selMonth ? 'border-blue-500 bg-blue-50 text-gray-900' : 'border-gray-200 text-gray-400'">
+                                        <option value="">Mon</option>
+                                        <template x-for="m in months" :key="m"><option :value="m" x-text="m.slice(0,3)"></option></template>
+                                    </select>
+                                    <svg class="w-3 h-3 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                                <div class="relative">
+                                    <select x-model="selDay" @change="applyDate()" class="w-full appearance-none px-2 py-2 pr-6 border-2 rounded-xl text-xs font-medium bg-white outline-none cursor-pointer transition-colors" :class="selDay ? 'border-blue-500 bg-blue-50 text-gray-900' : 'border-gray-200 text-gray-400'">
+                                        <option value="">Day</option>
+                                        <template x-for="d in days" :key="d"><option :value="d" x-text="d"></option></template>
+                                    </select>
+                                    <svg class="w-3 h-3 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                                <div class="relative">
+                                    <select x-model="selYear" @change="applyDate()" class="w-full appearance-none px-2 py-2 pr-6 border-2 rounded-xl text-xs font-medium bg-white outline-none cursor-pointer transition-colors" :class="selYear ? 'border-blue-500 bg-blue-50 text-gray-900' : 'border-gray-200 text-gray-400'">
+                                        <option value="">Year</option>
+                                        <template x-for="y in years" :key="y"><option :value="y" x-text="y"></option></template>
+                                    </select>
+                                    <svg class="w-3 h-3 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                            </div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Time</p>
+                            <div class="grid grid-cols-3 gap-1.5 mb-3">
+                                <div class="relative">
+                                    <select x-model="selHour" @change="applyTime()" class="w-full appearance-none px-2 py-2 pr-6 border-2 border-blue-500 bg-blue-50 rounded-xl text-xs font-semibold text-gray-900 outline-none cursor-pointer">
+                                        <template x-for="h in ['1','2','3','4','5','6','7','8','9','10','11','12']" :key="h"><option :value="h" x-text="h"></option></template>
+                                    </select>
+                                    <svg class="w-3 h-3 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                                <div class="relative">
+                                    <select x-model="selMin" @change="applyTime()" class="w-full appearance-none px-2 py-2 pr-6 border-2 border-blue-500 bg-blue-50 rounded-xl text-xs font-semibold text-gray-900 outline-none cursor-pointer">
+                                        <template x-for="m in ['00','05','10','15','20','25','30','35','40','45','50','55']" :key="m"><option :value="m" x-text="m"></option></template>
+                                    </select>
+                                    <svg class="w-3 h-3 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                                <div class="relative">
+                                    <select x-model="selAmpm" @change="applyTime()" class="w-full appearance-none px-2 py-2 pr-6 border-2 border-blue-500 bg-blue-50 rounded-xl text-xs font-semibold text-gray-900 outline-none cursor-pointer">
+                                        <option>AM</option><option>PM</option>
+                                    </select>
+                                    <svg class="w-3 h-3 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                            </div>
+                            <div x-show="selectedDate" class="mb-3 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg" style="display:none;">
+                                <p class="text-xs font-semibold text-gray-900" x-text="displayValue"></p>
+                            </div>
+                            <button type="button" @click="confirm()"
+                                :disabled="!selectedDate"
+                                class="w-full py-2 rounded-xl font-bold text-sm transition-all"
+                                :class="selectedDate ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-100 text-gray-400 cursor-not-allowed'">
+                                OK — Confirm
+                            </button>
+                        </div>
+                        <input type="hidden" :name="fieldName" :value="hiddenValue">
                         @error('scheduled_at')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                     </div>
                     <button type="submit" class="w-full px-4 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors">
