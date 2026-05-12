@@ -11,7 +11,7 @@
           <tr>
             <td style="padding:32px 40px 24px;text-align:center;background:linear-gradient(135deg,#CD571B,#EC921A);border-radius:16px 16px 0 0;">
               <div style="margin-bottom:14px;">
-                <img src="{{ config('app.url') }}/images/logo-img.png" alt="Outsidersmedia" style="max-height:60px;max-width:220px;object-fit:contain;">
+                <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:0.5px;font-family:'Helvetica Neue',Arial,sans-serif;">Outsidersmedia</span>
               </div>
               <h1 style="margin:0;color:#ffffff;font-size:24px;font-weight:bold;">Welcome to Outsidersmedia!</h1>
             </td>

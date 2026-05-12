@@ -220,7 +220,7 @@
                 </span>
                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 text-[#b54c17] text-xs font-medium rounded-lg border border-orange-200">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
-                    {{ $isCarousel ? '1080×1080 or 1080×1350 (square/portrait)' : '1080×1080 recommended' }}
+                    {{ $isCarousel ? '1080 × 1350 px (portrait 4:5 recommended)' : '1080 × 1080 px (Facebook) · 1080 × 1350 px (Instagram)' }}
                 </span>
                 @if($isCarousel)
                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg border border-blue-200">
@@ -298,7 +298,7 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <template x-for="f in files" :key="f.id">
                             <div class="relative rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-                                <img :src="f.preview" class="w-full h-28 object-cover">
+                                <div style="aspect-ratio:4/5;"><img :src="f.preview" class="w-full h-full object-cover"></div>
                                 <div class="p-2">
                                     <p class="text-xs text-gray-600 truncate font-medium" x-text="f.name"></p>
                                     <p class="text-xs text-gray-400" x-text="f.size"></p>
@@ -520,12 +520,79 @@
 
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Schedule Date & Time</label>
-                <input
-                    type="datetime-local"
-                    name="scheduled_at"
-                    value="{{ old('scheduled_at', $post->scheduled_at?->format('Y-m-d\TH:i')) }}"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
-                >
+                <div x-data="datePicker('scheduled_at', '{{ old('scheduled_at', $post->scheduled_at?->format('Y-m-d\TH:i')) }}')">
+                    <div @click="open = !open" role="button" tabindex="0" @keydown.enter.prevent="open = !open"
+                        class="w-full flex items-center gap-3 px-4 py-3 border-2 rounded-xl bg-white hover:bg-gray-50 transition-colors cursor-pointer select-none"
+                        :class="open ? 'border-[#CD571B]' : 'border-gray-200 hover:border-[#CD571B]'">
+                        <svg class="w-5 h-5 flex-shrink-0" :class="displayValue ? 'text-[#CD571B]' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span class="flex-1 text-sm" :class="displayValue ? 'text-gray-900 font-medium' : 'text-gray-400'" x-text="displayValue || 'No date set'"></span>
+                        <span x-show="displayValue" @click.stop="clear()" class="text-gray-400 hover:text-red-500 transition-colors cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </span>
+                    </div>
+                    <div x-show="open" @click.outside="open = false" class="mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl p-5" style="display:none;">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Select date & time</p>
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Date</p>
+                        <div class="grid grid-cols-3 gap-2 mb-4">
+                            <div class="relative">
+                                <select x-model="selMonth" @change="applyDate()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 rounded-xl text-sm font-medium bg-white outline-none cursor-pointer transition-colors" :class="selMonth ? 'border-[#CD571B] bg-orange-50 text-gray-900' : 'border-gray-200 text-gray-400'">
+                                    <option value="">Month</option>
+                                    <template x-for="m in months" :key="m"><option :value="m" x-text="m.slice(0,3)"></option></template>
+                                </select>
+                                <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                            <div class="relative">
+                                <select x-model="selDay" @change="applyDate()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 rounded-xl text-sm font-medium bg-white outline-none cursor-pointer transition-colors" :class="selDay ? 'border-[#CD571B] bg-orange-50 text-gray-900' : 'border-gray-200 text-gray-400'">
+                                    <option value="">Day</option>
+                                    <template x-for="d in days" :key="d"><option :value="d" x-text="d"></option></template>
+                                </select>
+                                <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                            <div class="relative">
+                                <select x-model="selYear" @change="applyDate()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 rounded-xl text-sm font-medium bg-white outline-none cursor-pointer transition-colors" :class="selYear ? 'border-[#CD571B] bg-orange-50 text-gray-900' : 'border-gray-200 text-gray-400'">
+                                    <option value="">Year</option>
+                                    <template x-for="y in years" :key="y"><option :value="y" x-text="y"></option></template>
+                                </select>
+                                <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                        </div>
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Time</p>
+                        <div class="grid grid-cols-3 gap-2 mb-4">
+                            <div class="relative">
+                                <select x-model="selHour" @change="applyTime()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 border-[#CD571B] bg-orange-50 rounded-xl text-sm font-semibold text-gray-900 outline-none cursor-pointer">
+                                    <template x-for="h in ['1','2','3','4','5','6','7','8','9','10','11','12']" :key="h"><option :value="h" x-text="h"></option></template>
+                                </select>
+                                <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-[#CD571B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                            <div class="relative">
+                                <select x-model="selMin" @change="applyTime()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 border-[#CD571B] bg-orange-50 rounded-xl text-sm font-semibold text-gray-900 outline-none cursor-pointer">
+                                    <template x-for="m in ['00','05','10','15','20','25','30','35','40','45','50','55']" :key="m"><option :value="m" x-text="m"></option></template>
+                                </select>
+                                <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-[#CD571B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                            <div class="relative">
+                                <select x-model="selAmpm" @change="applyTime()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 border-[#CD571B] bg-orange-50 rounded-xl text-sm font-semibold text-gray-900 outline-none cursor-pointer">
+                                    <option>AM</option><option>PM</option>
+                                </select>
+                                <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-[#CD571B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                        </div>
+                        <div x-show="selectedDate" class="mb-4 px-4 py-2.5 bg-orange-50 border border-orange-200 rounded-xl" style="display:none;">
+                            <p class="text-xs text-gray-500">Selected</p>
+                            <p class="text-sm font-bold text-gray-900" x-text="displayValue"></p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="button" @click="confirm()"
+                                :disabled="!selectedDate"
+                                class="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all"
+                                :class="selectedDate ? 'bg-[#CD571B] hover:bg-[#b54c17] text-white shadow-sm' : 'bg-gray-100 text-gray-400 cursor-not-allowed'">
+                                OK — Confirm
+                            </button>
+                            <button type="button" @click="clear(); open = false" class="px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors">Clear</button>
+                        </div>
+                    </div>
+                    <input type="hidden" :name="fieldName" :value="hiddenValue">
+                </div>
             </div>
         </div>
 

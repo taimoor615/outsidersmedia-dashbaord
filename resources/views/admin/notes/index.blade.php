@@ -97,7 +97,7 @@
                         Team
                     </span>
                     @endif
-                    <span class="text-sm font-medium text-gray-900">{{ $note->author_name ?? $note->client?->name ?? 'Unknown' }}</span>
+                    <span class="text-sm font-bold text-gray-900">{{ $note->author_name ?? $note->client?->name ?? 'Unknown' }}</span>
                     <span class="text-gray-300">·</span>
                     @if($note->client)
                     <a href="{{ route('clients.show', $note->client) }}" class="text-xs text-gray-500 hover:text-[#CD571B]">{{ $note->client->name }}</a>
