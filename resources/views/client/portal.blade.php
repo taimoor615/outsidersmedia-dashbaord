@@ -5,14 +5,22 @@
     feedbackModal: false,
     noteModal: false,
     editModal: false,
+    dateModal: false,
+    lightboxSrc: null,
     viewFeedbackId: null,
     calMonth: new Date().getMonth(),
-    calYear: new Date().getFullYear()
+    calYear: new Date().getFullYear(),
+    notesEditId: null, notesEditText: ''
 }" x-effect="if(view==='calendar'){ $nextTick(function(){ window.renderCalendar(calMonth, calYear); }) }"
 x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function(){ window.renderCalendar(v, calYear); }) }); $watch('calYear', function(v){ if(view==='calendar') $nextTick(function(){ window.renderCalendar(calMonth, v); }) })">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+    <link rel="manifest" href="/images/site.webmanifest" />
     <title>{{ $client->name }} - Content Portal</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -39,7 +47,7 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                         'instagram'      => '<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>',
                         'tiktok'         => '<path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>',
                         'youtube'        => '<path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>',
-                        'google business'=> '<path d="M12 0C5.383 0 0 5.383 0 12s5.383 12 12 12 12-5.383 12-12S18.617 0 12 0zm0 4.5c4.136 0 7.5 3.364 7.5 7.5 0 .343-.027.68-.068 1.013H12v-2.82h6.964c-.43-3.197-3.195-5.693-6.964-5.693-3.866 0-7 3.134-7 7 0 3.866 3.134 7 7 7 2.396 0 4.51-1.208 5.793-3.046l2.207 1.573C18.2 19.578 15.284 21 12 21c-4.97 0-9-4.03-9-9s4.03-9 9-9z"/>',
+                        'google business'=> '<path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>',
                     ];
                     $colors = ['facebook'=>'#1877F2','instagram'=>'#E1306C','tiktok'=>'#000000','youtube'=>'#FF0000','google business'=>'#4285F4'];
                     $icon = $icons[$netLower] ?? null;
@@ -80,23 +88,36 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                 <h1 class="text-xl font-bold text-gray-900">{{ $client->name }}</h1>
                 <p class="text-xs text-gray-500 mt-0.5">Review and approve your content</p>
             </div>
-            <div class="flex gap-2">
+            <div class="flex gap-1.5">
+                <!-- Feed -->
                 <button
-                    @click="view = (view === 'calendar' ? 'feed' : 'calendar')"
-                    class="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-xl border transition"
-                    :style="view==='calendar' ? 'background:#CD571B;color:#fff;border-color:#CD571B' : 'background:#fff;color:#CD571B;border-color:#CD571B'"
+                    @click="view = 'feed'; notesEditId = null"
+                    class="cursor-pointer flex items-center gap-1 px-3 py-2 text-sm font-semibold rounded-xl border transition"
+                    :style="view==='feed' ? 'background:#CD571B;color:#fff;border-color:#CD571B' : 'background:#fff;color:#374151;border-color:#e5e7eb'"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                    Feed
+                </button>
+                <!-- Calendar -->
+                <button
+                    @click="view = 'calendar'; notesEditId = null"
+                    class="cursor-pointer flex items-center gap-1 px-3 py-2 text-sm font-semibold rounded-xl border transition"
+                    :style="view==='calendar' ? 'background:#CD571B;color:#fff;border-color:#CD571B' : 'background:#fff;color:#374151;border-color:#e5e7eb'"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    <span x-text="view === 'calendar' ? 'Feed' : 'Calendar'"></span>
+                    Calendar
                 </button>
+                <!-- Notes -->
                 <button
-                    @click="noteModal = true"
-                    class="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white rounded-xl transition"
-                    style="background:#CD571B;"
-                    onmouseover="this.style.background='#b54c17'" onmouseout="this.style.background='#CD571B'"
+                    @click="view = 'notes'; notesEditId = null"
+                    class="cursor-pointer flex items-center gap-1 px-3 py-2 text-sm font-semibold rounded-xl border transition"
+                    :style="view==='notes' ? 'background:#3b82f6;color:#fff;border-color:#3b82f6' : 'background:#fff;color:#374151;border-color:#e5e7eb'"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
-                    Note
+                    Notes
+                    @if($notes->count() > 0)
+                    <span class="ml-0.5 px-1.5 py-0.5 text-xs font-bold rounded-full" :style="view==='notes' ? 'background:rgba(255,255,255,0.25);color:#fff' : 'background:#e5e7eb;color:#374151'">{{ $notes->count() }}</span>
+                    @endif
                 </button>
             </div>
         </div>
@@ -107,17 +128,17 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
             <!-- Filter tabs -->
             <div class="mb-4 flex gap-2 overflow-x-auto pb-1">
                 <button @click="filterPosts = 'all'"
-                    class="px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap border transition"
+                    class="cursor-pointer px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap border transition"
                     :style="filterPosts==='all' ? 'background:#CD571B;color:#fff;border-color:#CD571B' : 'background:#fff;color:#374151;border-color:#e5e7eb'">
                     All ({{ $posts->count() }})
                 </button>
                 <button @click="filterPosts = 'pending'"
-                    class="px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap border transition"
+                    class="cursor-pointer px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap border transition"
                     :style="filterPosts==='pending' ? 'background:#D97706;color:#fff;border-color:#D97706' : 'background:#fff;color:#374151;border-color:#e5e7eb'">
                     Pending ({{ $posts->where('status', 'pending_client')->count() }})
                 </button>
                 <button @click="filterPosts = 'approved'"
-                    class="px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap border transition"
+                    class="cursor-pointer px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap border transition"
                     :style="filterPosts==='approved' ? 'background:#059669;color:#fff;border-color:#059669' : 'background:#fff;color:#374151;border-color:#e5e7eb'">
                     Approved ({{ $posts->whereIn('status', ['approved','scheduled'])->count() }})
                 </button>
@@ -135,13 +156,14 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                 >
                     <!-- Image -->
                     @if($post->media->count() > 0)
-                    <div class="w-full bg-gray-100">
+                    <div class="w-full bg-gray-100 overflow-hidden">
                         @if($post->post_type === 'carousel')
-                        <div class="swiper miniCarousel-{{ $post->id }}">
-                            <div class="swiper-wrapper">
+                        {{-- Carousel: 4:5 portrait (1080×1350) --}}
+                        <div class="swiper miniCarousel-{{ $post->id }}" style="aspect-ratio:4/5;">
+                            <div class="swiper-wrapper h-full">
                                 @foreach($post->media as $media)
-                                <div class="swiper-slide">
-                                    <img src="{{ $media->url }}" alt="Post" class="w-full object-cover" style="max-height:400px;">
+                                <div class="swiper-slide" style="height:100%;">
+                                    <img src="{{ $media->url }}" alt="Post" class="w-full h-full object-cover block cursor-zoom-in" @click="lightboxSrc = '{{ $media->url }}'">
                                 </div>
                                 @endforeach
                             </div>
@@ -149,12 +171,25 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                             <div class="swiper-button-next"></div>
                             <div class="swiper-button-prev"></div>
                         </div>
+                        @elseif($post->post_type === 'video')
+                        {{-- Video: 9:16 portrait (1080×1920) --}}
+                        <div class="mx-auto" style="aspect-ratio:9/16;max-width:320px;">
+                            <video controls class="w-full h-full object-contain bg-black block">
+                                <source src="{{ $post->media->first()->url }}" type="{{ $post->media->first()->mime_type }}">
+                            </video>
+                        </div>
                         @elseif($post->media->first()->isImage())
-                        <img src="{{ $post->media->first()->url }}" alt="Post" class="w-full object-cover" style="max-height:400px;">
+                        {{-- Standard image: 1:1 square (1080×1080) --}}
+                        <div style="aspect-ratio:1/1;">
+                            <img src="{{ $post->media->first()->url }}" alt="Post" class="w-full h-full object-cover block cursor-zoom-in" @click="lightboxSrc = '{{ $post->media->first()->url }}'">
+                        </div>
                         @else
-                        <video controls class="w-full" style="max-height:400px;">
-                            <source src="{{ $post->media->first()->url }}" type="{{ $post->media->first()->mime_type }}">
-                        </video>
+                        {{-- Fallback video --}}
+                        <div class="mx-auto" style="aspect-ratio:9/16;max-width:320px;">
+                            <video controls class="w-full h-full object-contain bg-black block">
+                                <source src="{{ $post->media->first()->url }}" type="{{ $post->media->first()->mime_type }}">
+                            </video>
+                        </div>
                         @endif
                     </div>
                     @endif
@@ -182,27 +217,40 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
 
                             <!-- Caption: first platform shown, others behind toggle -->
                             @php
+                                $pNetIcons = [
+                                    'facebook'  => '<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>',
+                                    'instagram' => '<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>',
+                                    'tiktok'    => '<path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>',
+                                    'youtube'   => '<path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>',
+                                ];
+                                $pNetColors = ['facebook'=>'#1877F2','instagram'=>'#E1306C','tiktok'=>'#000000','youtube'=>'#FF0000'];
                                 $platforms = collect([
-                                    ['label' => 'FB', 'color' => 'text-blue-600',  'msg' => $post->facebook_message],
-                                    ['label' => 'IG', 'color' => 'text-pink-600',  'msg' => $post->instagram_message],
-                                    ['label' => 'TT', 'color' => 'text-gray-800',  'msg' => $post->tiktok_message],
-                                    ['label' => 'YT', 'color' => 'text-red-600',   'msg' => $post->youtube_message],
+                                    ['key' => 'facebook',  'msg' => $post->facebook_message],
+                                    ['key' => 'instagram', 'msg' => $post->instagram_message],
+                                    ['key' => 'tiktok',    'msg' => $post->tiktok_message],
+                                    ['key' => 'youtube',   'msg' => $post->youtube_message],
                                 ])->filter(fn($p) => !empty($p['msg']))->values();
                             @endphp
                             @if($platforms->count() > 0)
                             <div class="mb-2">
-                                <span class="text-xs font-semibold {{ $platforms[0]['color'] }} uppercase tracking-wide">{{ $platforms[0]['label'] }}</span>
+                                <span class="inline-flex items-center gap-1 mb-0.5">
+                                    <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" style="color:{{ $pNetColors[$platforms[0]['key']] ?? '#6b7280' }}">{!! $pNetIcons[$platforms[0]['key']] ?? '' !!}</svg>
+                                    <span class="text-xs font-semibold capitalize" style="color:{{ $pNetColors[$platforms[0]['key']] ?? '#6b7280' }}">{{ ucfirst($platforms[0]['key']) }}</span>
+                                </span>
                                 <p class="text-sm text-gray-800 leading-relaxed">{{ Str::limit($platforms[0]['msg'], 160) }}</p>
                                 @if($platforms->count() > 1)
                                 <div x-data="{ more: false }">
-                                    <button @click="more = !more" class="text-xs mt-1 underline" style="color:#CD571B;">
+                                    <button @click="more = !more" class="text-xs mt-1 underline cursor-pointer" style="color:#CD571B;">
                                         <span x-show="!more">+ {{ $platforms->count() - 1 }} more platform{{ $platforms->count() - 1 > 1 ? 's' : '' }}</span>
                                         <span x-show="more" x-cloak>Hide platforms</span>
                                     </button>
                                     <div x-show="more" x-cloak class="mt-1 space-y-1">
                                         @foreach($platforms->slice(1) as $pm)
                                         <div>
-                                            <span class="text-xs font-semibold {{ $pm['color'] }} uppercase tracking-wide">{{ $pm['label'] }}</span>
+                                            <span class="inline-flex items-center gap-1 mb-0.5">
+                                                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" style="color:{{ $pNetColors[$pm['key']] ?? '#6b7280' }}">{!! $pNetIcons[$pm['key']] ?? '' !!}</svg>
+                                                <span class="text-xs font-semibold capitalize" style="color:{{ $pNetColors[$pm['key']] ?? '#6b7280' }}">{{ ucfirst($pm['key']) }}</span>
+                                            </span>
                                             <p class="text-sm text-gray-800 leading-relaxed">{{ Str::limit($pm['msg'], 160) }}</p>
                                         </div>
                                         @endforeach
@@ -224,7 +272,7 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                             @if($post->feedback->where('is_client_feedback', true)->count() > 0)
                             <button
                                 @click="viewFeedbackId = (viewFeedbackId === {{ $post->id }} ? null : {{ $post->id }})"
-                                class="mt-2 text-xs font-semibold underline"
+                                class="mt-2 text-xs font-semibold underline cursor-pointer"
                                 style="color:#CD571B;"
                             >
                                 <span x-text="viewFeedbackId === {{ $post->id }} ? 'Hide feedback' : 'View feedback ({{ $post->feedback->where("is_client_feedback", true)->count() }})'"></span>
@@ -243,7 +291,7 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                             <!-- Suggest edits → opens modal -->
                             <button
                                 @click="editModal = {{ $post->id }}"
-                                class="mt-2 text-xs font-medium flex items-center gap-1 text-gray-500 hover:text-gray-700"
+                                class="mt-2 text-xs font-medium flex items-center gap-1 text-gray-500 hover:text-gray-700 cursor-pointer"
                             >
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                 Suggest edits
@@ -257,7 +305,7 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                             @if($post->status === 'pending_client')
                             <form action="{{ route('client.approve', [$client->share_token, $post]) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="flex items-center gap-1 px-3 py-2 bg-green-600 text-white text-xs font-bold rounded-xl hover:bg-green-700 transition whitespace-nowrap">
+                                <button type="submit" class="flex items-center gap-1 px-3 py-2 bg-green-600 text-white text-xs font-bold rounded-xl hover:bg-green-700 transition whitespace-nowrap cursor-pointer">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                                     Approve
                                 </button>
@@ -273,7 +321,7 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                             @if($post->status === 'pending_client')
                             <button
                                 @click="feedbackModal = {{ $post->id }}"
-                                class="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-xl border transition whitespace-nowrap"
+                                class="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-xl border transition whitespace-nowrap cursor-pointer"
                                 style="border-color:#CD571B;color:#CD571B;"
                                 onmouseover="this.style.background='#CD571B';this.style.color='#fff'"
                                 onmouseout="this.style.background='';this.style.color='#CD571B'"
@@ -288,10 +336,22 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                             </span>
                             @endif
 
+                            <!-- Set Date -->
+                            <button
+                                @click="dateModal = {{ $post->id }}"
+                                class="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-xl border transition whitespace-nowrap cursor-pointer"
+                                style="border-color:#3b82f6;color:#3b82f6;"
+                                onmouseover="this.style.background='#3b82f6';this.style.color='#fff'"
+                                onmouseout="this.style.background='';this.style.color='#3b82f6'"
+                            >
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                {{ $post->scheduled_at ? 'Change Date' : 'Set Date' }}
+                            </button>
+
                             <!-- Feedback — always active -->
                             <button
                                 @click="feedbackModal = -{{ $post->id }}"
-                                class="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-xl transition whitespace-nowrap text-white"
+                                class="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-xl transition whitespace-nowrap text-white cursor-pointer"
                                 style="background:#6b7280;"
                                 onmouseover="this.style.background='#4b5563'" onmouseout="this.style.background='#6b7280'"
                             >
@@ -336,6 +396,89 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                 <div class="grid grid-cols-7 gap-1" id="calGrid"></div>
                 <div id="calDayPosts" class="mt-5 space-y-2"></div>
             </div>
+        </div>
+
+        <!-- ───── NOTES VIEW ───── -->
+        <div x-show="view === 'notes'" x-cloak>
+            <!-- Header row -->
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-base font-bold text-gray-900">Notes & Messages</h2>
+                    <p class="text-xs text-gray-500 mt-0.5">Messages between you and your account manager</p>
+                </div>
+                <button
+                    @click="noteModal = true"
+                    class="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white rounded-xl transition"
+                    style="background:#CD571B;"
+                    onmouseover="this.style.background='#b54c17'" onmouseout="this.style.background='#CD571B'"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Add Note
+                </button>
+            </div>
+
+            @forelse($notes as $note)
+            <div class="bg-white rounded-2xl border mb-3 overflow-hidden {{ $note->isFromClient() ? 'border-orange-200' : 'border-gray-200' }}">
+                <!-- Note header -->
+                <div class="flex items-center justify-between px-4 py-3 {{ $note->isFromClient() ? 'bg-orange-50' : 'bg-gray-50' }} border-b {{ $note->isFromClient() ? 'border-orange-100' : 'border-gray-100' }}">
+                    <div class="flex items-center gap-2">
+                        @if($note->isFromClient())
+                        <span class="px-2 py-0.5 text-white text-xs font-bold rounded-full" style="background:#CD571B;">You</span>
+                        @else
+                        <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">Team</span>
+                        <span class="text-xs text-gray-600 font-medium">{{ $note->author_name }}</span>
+                        @endif
+                    </div>
+                    <span class="text-xs text-gray-400">{{ $note->created_at->diffForHumans() }}</span>
+                </div>
+
+                <!-- Note body -->
+                <div class="p-4">
+                    {{-- View mode --}}
+                    <div x-show="notesEditId !== {{ $note->id }}">
+                        <p class="text-sm text-gray-800 leading-relaxed whitespace-pre-line">{{ $note->note }}</p>
+                        @if($note->isFromClient())
+                        <button
+                            @click="notesEditId = {{ $note->id }}; notesEditText = @js($note->note); $nextTick(() => $refs['noteEdit{{ $note->id }}'] && $refs['noteEdit{{ $note->id }}'].focus())"
+                            class="mt-3 inline-flex items-center gap-1 text-xs font-semibold hover:underline"
+                            style="color:#CD571B;"
+                        >
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            Edit note
+                        </button>
+                        @endif
+                    </div>
+
+                    {{-- Edit mode (client notes only) --}}
+                    @if($note->isFromClient())
+                    <div x-show="notesEditId === {{ $note->id }}" style="display:none;">
+                        <form action="{{ route('client.note.update', [$client->share_token, $note]) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <textarea
+                                x-ref="noteEdit{{ $note->id }}"
+                                name="note"
+                                rows="4"
+                                x-model="notesEditText"
+                                class="w-full px-3 py-2.5 border-2 rounded-xl text-sm outline-none resize-none transition-colors"
+                                style="border-color:#CD571B;"
+                            ></textarea>
+                            <div class="flex gap-2 mt-2">
+                                <button type="submit" class="flex-1 py-2 text-white text-sm font-bold rounded-xl transition" style="background:#CD571B;" onmouseover="this.style.background='#b54c17'" onmouseout="this.style.background='#CD571B'">Save</button>
+                                <button type="button" @click="notesEditId = null" class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-200 transition">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            @empty
+            <div class="bg-white rounded-2xl border border-gray-200 p-10 text-center">
+                <svg class="w-10 h-10 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                <p class="text-sm font-medium text-gray-500">No notes yet</p>
+                <p class="text-xs text-gray-400 mt-1">Click "Add Note" to send a message to your account manager.</p>
+            </div>
+            @endforelse
         </div>
 
     </div><!-- /container -->
@@ -392,6 +535,106 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
         </div>
     </div>
 
+    <!-- "Set Date" modal: dateModal === post.id -->
+    <div
+        x-show="dateModal === {{ $post->id }}"
+        x-transition
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+        style="display:none;"
+        @click.self="dateModal = false"
+    >
+        <div class="bg-white rounded-2xl max-w-sm w-full shadow-2xl overflow-hidden"
+             x-data="{
+                 selDate: '{{ $post->scheduled_at ? $post->scheduled_at->format('Y-m-d') : '' }}',
+                 selTime: '{{ $post->scheduled_at ? $post->scheduled_at->format('H:i') : '' }}',
+                 step: 'pick',
+                 get preview() {
+                     if (!this.selDate) return '';
+                     const d = new Date(this.selDate + 'T' + (this.selTime || '00:00'));
+                     return d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' })
+                         + (this.selTime ? ' · ' + d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' }) : '');
+                 }
+             }">
+
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                    <h3 class="text-base font-bold text-gray-900">
+                        {{ $post->scheduled_at ? 'Change Publish Date' : 'Suggest a Publish Date' }}
+                    </h3>
+                    <p class="text-xs text-gray-500 mt-0.5">
+                        @if($post->scheduled_at)
+                            Currently set to {{ $post->scheduled_at->format('M d, Y g:i A') }}. You can suggest a new date.
+                        @else
+                            Let the team know when to publish this post.
+                        @endif
+                    </p>
+                </div>
+                <button type="button" @click="dateModal = false" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Pick step -->
+            <div x-show="step === 'pick'" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Date *</label>
+                    <input type="date" x-model="selDate" :min="new Date().toISOString().split('T')[0]"
+                        class="w-full px-4 py-3 border-2 rounded-xl text-sm font-medium transition-colors outline-none"
+                        :class="selDate ? 'border-blue-400 bg-blue-50 text-blue-900' : 'border-gray-200 text-gray-700'"
+                    >
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                        Time <span class="text-gray-400 font-normal normal-case">(optional)</span>
+                    </label>
+                    <input type="time" x-model="selTime"
+                        class="w-full px-4 py-3 border-2 rounded-xl text-sm font-medium transition-colors outline-none"
+                        :class="selTime ? 'border-blue-400 bg-blue-50 text-blue-900' : 'border-gray-200 text-gray-700'"
+                    >
+                </div>
+
+                <!-- Preview pill -->
+                <div x-show="selDate" class="flex items-center gap-2 px-4 py-3 bg-blue-50 rounded-xl border border-blue-200" style="display:none;">
+                    <svg class="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <p class="text-sm font-semibold text-blue-800" x-text="preview"></p>
+                </div>
+
+                <div class="flex gap-3 pt-1">
+                    <button
+                        type="button"
+                        @click="if (selDate) step = 'confirm'"
+                        class="flex-1 py-3 rounded-xl font-bold text-sm transition-all"
+                        :class="selDate ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-sm' : 'bg-gray-100 text-gray-400 cursor-not-allowed'"
+                    >
+                        OK — Confirm
+                    </button>
+                    <button type="button" @click="dateModal = false" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Confirm step -->
+            <div x-show="step === 'confirm'" class="p-6" style="display:none;">
+                <div class="text-center mb-5">
+                    <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-2">You're suggesting:</p>
+                    <p class="text-base font-bold text-gray-900" x-text="preview"></p>
+                </div>
+                <form action="{{ route('client.suggest-date', [$client->share_token, $post]) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="suggested_date" :value="selDate">
+                    <input type="hidden" name="suggested_time" :value="selTime">
+                    <div class="flex gap-3">
+                        <button type="submit" class="flex-1 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold text-sm transition-colors shadow-sm">Send to Team</button>
+                        <button type="button" @click="step = 'pick'" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors">Change</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- "Suggest edits" modal: editModal === post.id -->
     <div
         x-show="editModal === {{ $post->id }}"
@@ -442,6 +685,28 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
         </div>
     </div>
     @endforeach
+
+    <!-- Lightbox -->
+    <div
+        x-show="lightboxSrc"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+        @click="lightboxSrc = null"
+        @keydown.escape.window="lightboxSrc = null"
+        class="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
+        style="display:none;"
+    >
+        <button @click.stop="lightboxSrc = null"
+            class="absolute top-4 right-4 w-10 h-10 bg-white/15 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition-colors z-10">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <p class="absolute bottom-4 left-0 right-0 text-center text-white/50 text-xs">Click anywhere to close</p>
+        <img :src="lightboxSrc" @click.stop class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl cursor-default">
+    </div>
 
     <!-- Note Modal -->
     <div

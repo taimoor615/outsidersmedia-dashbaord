@@ -141,74 +141,224 @@
             <!-- Standard Post -->
             <div x-show="postType === 'standard'">
                 <label class="block text-sm font-semibold text-gray-700 mb-3">Upload Image</label>
-                <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-[#CD571B] transition-colors cursor-pointer" onclick="document.getElementById('stdFileInput').click()">
-                    <input
-                        id="stdFileInput"
-                        type="file"
-                        name="media[]"
-                        accept="image/*"
-                        :disabled="postType !== 'standard'"
-                        class="hidden"
-                        onchange="previewFile(this, 'stdPreview')"
+                <!-- Dimension badges -->
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg border border-blue-200">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                        Facebook: 1080 × 1080 px
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-pink-50 text-pink-700 text-xs font-semibold rounded-lg border border-pink-200">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                        Instagram: 1080 × 1350 px
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 text-[#b54c17] text-xs font-medium rounded-lg border border-orange-200">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                        Max 10 MB · JPG · PNG
+                    </span>
+                </div>
+                <div
+                    x-data="{
+                        dragging: false,
+                        preview: null, fileName: '', fileSize: '',
+                        handleFile(file) {
+                            if (!file || !file.type.startsWith('image/')) return;
+                            const reader = new FileReader();
+                            reader.onload = e => { this.preview = e.target.result; };
+                            reader.readAsDataURL(file);
+                            this.fileName = file.name;
+                            this.fileSize = file.size > 1048576 ? (file.size/1048576).toFixed(1)+' MB' : (file.size/1024).toFixed(0)+' KB';
+                            const dt = new DataTransfer(); dt.items.add(file);
+                            document.getElementById('stdFileInput').files = dt.files;
+                        },
+                        clear() { this.preview = null; this.fileName = ''; this.fileSize = ''; const dt = new DataTransfer(); document.getElementById('stdFileInput').files = dt.files; }
+                    }"
+                    @dragover.prevent="dragging = true"
+                    @dragleave="dragging = false"
+                    @drop.prevent="dragging = false; handleFile($event.dataTransfer.files[0])"
+                >
+                    <input id="stdFileInput" type="file" name="media[]" accept="image/*" :disabled="postType !== 'standard'" hidden @change="handleFile($event.target.files[0])">
+
+                    <!-- Drop zone (no preview yet) -->
+                    <div x-show="!preview"
+                        @click="document.getElementById('stdFileInput').click()"
+                        :class="dragging ? 'border-[#CD571B] bg-orange-50' : 'border-gray-300 hover:border-[#CD571B] hover:bg-orange-50/40'"
+                        class="border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all"
                     >
-                    <div id="stdPreview" class="mb-3 hidden">
-                        <img id="stdPreviewImg" src="" alt="Preview" class="w-full max-h-64 object-contain rounded-lg">
+                        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <p class="text-base font-semibold text-gray-700 mb-1">Drop your image here</p>
+                        <p class="text-sm text-gray-500">or <span class="font-medium" style="color:#CD571B;">click to browse</span></p>
+                        <p class="text-xs text-gray-400 mt-2">JPG · PNG · WebP · Max 10 MB</p>
                     </div>
-                    <div class="flex flex-col items-center justify-center py-4 text-gray-400" id="stdPlaceholder">
-                        <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <p class="text-sm font-medium" style="color:#CD571B;">Click to upload image</p>
-                        <p class="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 10MB</p>
+
+                    <!-- Preview (square aspect 1:1 matching 1080×1080) -->
+                    <div x-show="preview" class="relative rounded-xl overflow-hidden border border-gray-200 bg-gray-50" style="display:none;">
+                        <div class="w-full" style="aspect-ratio:1/1;">
+                            <img :src="preview" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-3 bg-white border-t border-gray-200">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-gray-900 truncate" x-text="fileName"></p>
+                                <p class="text-xs text-gray-500" x-text="fileSize"></p>
+                            </div>
+                            <button type="button" @click="clear()" class="flex items-center gap-1.5 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium rounded-lg transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                Remove
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Carousel Post -->
             <div x-show="postType === 'carousel'">
-                <label class="block text-sm font-semibold text-gray-700 mb-3">Upload 4 Images for Carousel</label>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @foreach([1,2,3,4] as $i)
-                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-[#CD571B] transition-colors cursor-pointer" onclick="document.getElementById('carFile{{ $i }}').click()">
-                        <input
-                            id="carFile{{ $i }}"
-                            type="file"
-                            name="media[]"
-                            accept="image/*"
-                            :disabled="postType !== 'carousel'"
-                            class="hidden"
-                            onchange="previewFile(this, 'carPreview{{ $i }}')"
-                        >
-                        <div id="carPreview{{ $i }}" class="mb-2 hidden">
-                            <img id="carPreviewImg{{ $i }}" src="" alt="Preview" class="w-full h-32 object-cover rounded-lg">
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Upload Images for Carousel</label>
+                <!-- Dimension badges -->
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-pink-50 text-pink-700 text-xs font-semibold rounded-lg border border-pink-200">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                        Recommended: 1080 × 1350 px (portrait 4:5)
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 text-[#b54c17] text-xs font-medium rounded-lg border border-orange-200">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                        Max 10 MB per image
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg border border-blue-200">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Select multiple: hold Ctrl (Windows) or ⌘ Cmd (Mac)
+                    </span>
+                </div>
+
+                <div
+                    x-data="{
+                        dragging: false,
+                        files: [],
+                        addFiles(list) {
+                            Array.from(list).forEach(f => {
+                                if (!f.type.startsWith('image/')) return;
+                                const reader = new FileReader();
+                                reader.onload = e => {
+                                    this.files.push({ name: f.name, size: this.fmt(f.size), preview: e.target.result, id: Date.now() + Math.random(), file: f });
+                                    this.sync();
+                                };
+                                reader.readAsDataURL(f);
+                            });
+                        },
+                        remove(id) { this.files = this.files.filter(f => f.id !== id); this.sync(); },
+                        fmt(b) { return b > 1048576 ? (b/1048576).toFixed(1)+' MB' : (b/1024).toFixed(0)+' KB'; },
+                        sync() {
+                            const dt = new DataTransfer();
+                            this.files.forEach(f => dt.items.add(f.file));
+                            document.getElementById('carouselInput').files = dt.files;
+                        }
+                    }"
+                    @dragover.prevent="dragging = true"
+                    @dragleave="dragging = false"
+                    @drop.prevent="dragging = false; addFiles($event.dataTransfer.files)"
+                >
+                    <input type="file" id="carouselInput" x-ref="carInput" name="media[]" accept="image/*" multiple hidden @change="addFiles($event.target.files)" :disabled="postType !== 'carousel'">
+
+                    <!-- Drop zone -->
+                    <div
+                        @click="$refs.carInput.click()"
+                        :class="dragging ? 'border-[#CD571B] bg-orange-50' : 'border-gray-300 hover:border-[#CD571B] hover:bg-orange-50/40'"
+                        class="border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all"
+                    >
+                        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <p class="text-base font-semibold text-gray-700 mb-1">Drop images here or click to browse</p>
+                        <p class="text-sm text-gray-500 mb-1">
+                            Hold <kbd class="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs font-mono">Ctrl</kbd> (Windows) or
+                            <kbd class="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs font-mono">⌘ Cmd</kbd> (Mac) to select multiple
+                        </p>
+                        <p class="text-xs text-gray-400 mt-2">JPG · PNG · WebP · Max 10 MB each</p>
+                    </div>
+
+                    <!-- Image grid preview (4:5 portrait aspect ratio) -->
+                    <div x-show="files.length > 0" class="mt-4" style="display:none;">
+                        <div class="flex items-center justify-between mb-3">
+                            <p class="text-sm font-semibold text-gray-700"><span x-text="files.length"></span> image(s) selected</p>
+                            <button type="button" @click="$refs.carInput.click()" class="text-xs text-[#CD571B] hover:underline font-medium">+ Add more</button>
                         </div>
-                        <div class="flex flex-col items-center justify-center py-3 text-gray-400" id="carPlaceholder{{ $i }}">
-                            <svg class="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
-                            <p class="text-xs font-medium" style="color:#CD571B;">Image {{ $i }}</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <template x-for="f in files" :key="f.id">
+                                <div class="relative rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                                    <!-- 4:5 portrait ratio matching 1080×1350 -->
+                                    <div style="aspect-ratio:4/5;">
+                                        <img :src="f.preview" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="p-2">
+                                        <p class="text-xs text-gray-600 truncate font-medium" x-text="f.name"></p>
+                                        <p class="text-xs text-gray-400" x-text="f.size"></p>
+                                    </div>
+                                    <button type="button" @click="remove(f.id)" class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-full shadow transition-colors" title="Remove">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    </button>
+                                </div>
+                            </template>
                         </div>
                     </div>
-                    @endforeach
                 </div>
             </div>
 
             <!-- Video Post -->
             <div x-show="postType === 'video'">
                 <label class="block text-sm font-semibold text-gray-700 mb-3">Upload Video</label>
-                <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-[#CD571B] transition-colors cursor-pointer" onclick="document.getElementById('vidFileInput').click()">
-                    <input
-                        id="vidFileInput"
-                        type="file"
-                        name="media[]"
-                        accept="video/*"
-                        :disabled="postType !== 'video'"
-                        class="hidden"
-                        onchange="previewVideo(this)"
+                <!-- Dimension badges -->
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 text-xs font-semibold rounded-lg border border-purple-200">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                        1080 × 1920 px (Reels / TikTok / Shorts · 9:16)
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 text-xs font-medium rounded-lg border border-purple-200">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.362a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+                        MP4 · MOV only
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 text-xs font-medium rounded-lg border border-purple-200">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                        Max 100 MB
+                    </span>
+                </div>
+
+                <div
+                    x-data="{
+                        dragging: false,
+                        file: null,
+                        addFile(f) {
+                            if (!f || !f.type.startsWith('video/')) return;
+                            this.file = { name: f.name, size: f.size > 1048576 ? (f.size/1048576).toFixed(1)+' MB' : (f.size/1024).toFixed(0)+' KB', preview: URL.createObjectURL(f) };
+                            const dt = new DataTransfer(); dt.items.add(f);
+                            document.getElementById('vidFileInput').files = dt.files;
+                        },
+                        remove() { this.file = null; const dt = new DataTransfer(); document.getElementById('vidFileInput').files = dt.files; }
+                    }"
+                    @dragover.prevent="dragging = true"
+                    @dragleave="dragging = false"
+                    @drop.prevent="dragging = false; addFile($event.dataTransfer.files[0])"
+                >
+                    <input id="vidFileInput" type="file" x-ref="vInput" name="media[]" accept="video/*" :disabled="postType !== 'video'" hidden @change="addFile($event.target.files[0])">
+
+                    <!-- Drop zone -->
+                    <div x-show="!file"
+                        @click="$refs.vInput.click()"
+                        :class="dragging ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'"
+                        class="border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all"
                     >
-                    <div id="vidPreview" class="mb-3 hidden">
-                        <video id="vidPreviewEl" controls class="w-full max-h-64 rounded-lg"></video>
+                        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.362a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+                        <p class="text-base font-semibold text-gray-700 mb-1">Drop your video here</p>
+                        <p class="text-sm text-gray-500">or <span class="text-purple-600 font-medium">click to browse</span></p>
+                        <p class="text-xs text-gray-400 mt-2">MP4 · MOV · Max 100 MB</p>
                     </div>
-                    <div class="flex flex-col items-center justify-center py-4 text-gray-400" id="vidPlaceholder">
-                        <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.069A1 1 0 0121 8.878v6.244a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                        <p class="text-sm font-medium" style="color:#CD571B;">Click to upload video</p>
-                        <p class="text-xs text-gray-400 mt-1">MP4, MOV — Max 100MB</p>
+
+                    <!-- Video preview -->
+                    <div x-show="file" class="flex items-center gap-4 p-4 bg-purple-50 border border-purple-200 rounded-xl" style="display:none;">
+                        <video :src="file && file.preview" class="w-24 h-16 object-cover rounded-lg flex-shrink-0" muted playsinline></video>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-semibold text-gray-900 truncate" x-text="file && file.name"></p>
+                            <p class="text-xs text-gray-500 mt-0.5" x-text="file && file.size"></p>
+                        </div>
+                        <button type="button" @click="remove()" class="flex items-center gap-1.5 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium rounded-lg transition-colors flex-shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            Remove
+                        </button>
                     </div>
                 </div>
             </div>
@@ -503,11 +653,87 @@
             <div class="space-y-6">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Schedule Date & Time</label>
-                    <input
-                        type="datetime-local"
-                        name="scheduled_at"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
-                    >
+                    <div x-data="datePicker('scheduled_at', '{{ old('scheduled_at') }}')">
+                        <!-- Trigger row (div, not button, to avoid nested-button invalid HTML) -->
+                        <div @click="open = !open" role="button" tabindex="0" @keydown.enter.prevent="open = !open"
+                            class="w-full flex items-center gap-3 px-4 py-3 border-2 rounded-xl bg-white hover:bg-gray-50 transition-colors cursor-pointer select-none"
+                            :class="open ? 'border-[#CD571B]' : 'border-gray-200 hover:border-[#CD571B]'">
+                            <svg class="w-5 h-5 flex-shrink-0" :class="displayValue ? 'text-[#CD571B]' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <span class="flex-1 text-sm" :class="displayValue ? 'text-gray-900 font-medium' : 'text-gray-400'" x-text="displayValue || 'No date set — leave blank to save as draft'"></span>
+                            <span x-show="displayValue" @click.stop="clear()" class="text-gray-400 hover:text-red-500 transition-colors cursor-pointer">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </span>
+                        </div>
+                        <!-- Picker panel -->
+                        <div x-show="open" @click.outside="open = false" class="mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl p-5 z-50" style="display:none;">
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Select date & time</p>
+
+                            <!-- Date dropdowns -->
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Date</p>
+                            <div class="grid grid-cols-3 gap-2 mb-4">
+                                <div class="relative">
+                                    <select x-model="selMonth" @change="applyDate()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 rounded-xl text-sm font-medium bg-white outline-none cursor-pointer transition-colors" :class="selMonth ? 'border-[#CD571B] bg-orange-50 text-gray-900' : 'border-gray-200 text-gray-400'">
+                                        <option value="">Month</option>
+                                        <template x-for="m in months" :key="m"><option :value="m" x-text="m.slice(0,3)"></option></template>
+                                    </select>
+                                    <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                                <div class="relative">
+                                    <select x-model="selDay" @change="applyDate()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 rounded-xl text-sm font-medium bg-white outline-none cursor-pointer transition-colors" :class="selDay ? 'border-[#CD571B] bg-orange-50 text-gray-900' : 'border-gray-200 text-gray-400'">
+                                        <option value="">Day</option>
+                                        <template x-for="d in days" :key="d"><option :value="d" x-text="d"></option></template>
+                                    </select>
+                                    <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                                <div class="relative">
+                                    <select x-model="selYear" @change="applyDate()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 rounded-xl text-sm font-medium bg-white outline-none cursor-pointer transition-colors" :class="selYear ? 'border-[#CD571B] bg-orange-50 text-gray-900' : 'border-gray-200 text-gray-400'">
+                                        <option value="">Year</option>
+                                        <template x-for="y in years" :key="y"><option :value="y" x-text="y"></option></template>
+                                    </select>
+                                    <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                            </div>
+
+                            <!-- Time dropdowns -->
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Time</p>
+                            <div class="grid grid-cols-3 gap-2 mb-4">
+                                <div class="relative">
+                                    <select x-model="selHour" @change="applyTime()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 border-[#CD571B] bg-orange-50 rounded-xl text-sm font-semibold text-gray-900 outline-none cursor-pointer">
+                                        <template x-for="h in ['1','2','3','4','5','6','7','8','9','10','11','12']" :key="h"><option :value="h" x-text="h"></option></template>
+                                    </select>
+                                    <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-[#CD571B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                                <div class="relative">
+                                    <select x-model="selMin" @change="applyTime()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 border-[#CD571B] bg-orange-50 rounded-xl text-sm font-semibold text-gray-900 outline-none cursor-pointer">
+                                        <template x-for="m in ['00','05','10','15','20','25','30','35','40','45','50','55']" :key="m"><option :value="m" x-text="m"></option></template>
+                                    </select>
+                                    <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-[#CD571B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                                <div class="relative">
+                                    <select x-model="selAmpm" @change="applyTime()" class="w-full appearance-none px-2.5 py-2.5 pr-7 border-2 border-[#CD571B] bg-orange-50 rounded-xl text-sm font-semibold text-gray-900 outline-none cursor-pointer">
+                                        <option>AM</option><option>PM</option>
+                                    </select>
+                                    <svg class="w-3.5 h-3.5 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-[#CD571B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                            </div>
+
+                            <!-- Preview -->
+                            <div x-show="selectedDate" class="mb-4 px-4 py-2.5 bg-orange-50 border border-orange-200 rounded-xl" style="display:none;">
+                                <p class="text-xs text-gray-500">Selected</p>
+                                <p class="text-sm font-bold text-gray-900" x-text="displayValue"></p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="button" @click="confirm()"
+                                    :disabled="!selectedDate"
+                                    class="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all"
+                                    :class="selectedDate ? 'bg-[#CD571B] hover:bg-[#b54c17] text-white shadow-sm' : 'bg-gray-100 text-gray-400 cursor-not-allowed'">
+                                    OK — Confirm
+                                </button>
+                                <button type="button" @click="clear(); open = false" class="px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors">Clear</button>
+                            </div>
+                        </div>
+                        <input type="hidden" :name="fieldName" :value="hiddenValue">
+                    </div>
                     <p class="mt-2 text-sm text-gray-500">Leave empty to save as draft. Post will be sent to client for approval before publishing.</p>
                 </div>
 
@@ -551,32 +777,6 @@
 </div>
 
 <script>
-function previewFile(input, previewId) {
-    const file = input.files[0];
-    if (!file) return;
-    const preview = document.getElementById(previewId);
-    const img = document.getElementById(previewId.replace('Preview', 'PreviewImg'));
-    const placeholder = document.getElementById(previewId.replace('Preview', 'Placeholder'));
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        img.src = e.target.result;
-        preview.classList.remove('hidden');
-        if (placeholder) placeholder.classList.add('hidden');
-    };
-    reader.readAsDataURL(file);
-}
-
-function previewVideo(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const video = document.getElementById('vidPreviewEl');
-    const preview = document.getElementById('vidPreview');
-    const placeholder = document.getElementById('vidPlaceholder');
-    video.src = URL.createObjectURL(file);
-    preview.classList.remove('hidden');
-    placeholder.classList.add('hidden');
-}
-
 function postForm(clientNetworks = {}) {
     return {
         clientNetworks: clientNetworks,

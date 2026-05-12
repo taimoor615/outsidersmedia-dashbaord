@@ -98,51 +98,100 @@
     </div>
 
     <!-- Analytics Section -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-gray-900">Analytics</h2>
-            <a href="{{ route('admin.analytics.index') }}" class="text-sm font-medium text-[#CD571B] hover:text-[#b54c17]">View full analytics →</a>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#FEF0E7;">
+                    <svg class="w-4 h-4" style="color:#CD571B;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                </div>
+                <h2 class="text-base font-bold text-gray-900">Analytics Overview</h2>
+            </div>
+            <a href="{{ route('admin.analytics.index') }}" class="text-sm font-semibold hover:underline" style="color:#CD571B;">View full analytics →</a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Posts by Client</h3>
-                <div class="space-y-2 max-h-48 overflow-y-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+
+            <!-- Posts by Client -->
+            <div class="p-5">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0" style="background:#FEF0E7;">
+                        <svg class="w-3.5 h-3.5" style="color:#CD571B;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Posts by Client</h3>
+                </div>
+                @php $maxClient = $postsPerClient->max('total') ?: 1; @endphp
+                <div class="space-y-4 max-h-48 overflow-y-auto pr-1">
                     @forelse($postsPerClient as $row)
-                    <div class="flex justify-between items-center text-sm">
-                        <span class="text-gray-900 font-medium truncate mr-2">{{ $row['client_name'] }}</span>
-                        <span class="text-[#CD571B] font-bold">{{ $row['total'] }}</span>
+                    <div class="py-0.5">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm font-medium text-gray-800 truncate mr-2">{{ $row['client_name'] }}</span>
+                            <span class="text-sm font-bold flex-shrink-0" style="color:#CD571B;">{{ $row['total'] }}</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5">
+                            <div class="h-1.5 rounded-full transition-all" style="width:{{ round(($row['total']/$maxClient)*100) }}%;background:#CD571B;"></div>
+                        </div>
                     </div>
                     @empty
-                    <p class="text-gray-500 text-sm">No posts yet</p>
+                    <p class="text-sm text-gray-400 italic">No posts yet</p>
                     @endforelse
                 </div>
             </div>
-            <div>
-                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Revisions &amp; Feedback</h3>
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center p-3 bg-amber-50 rounded-lg">
-                        <span class="text-gray-700">Total feedback messages</span>
-                        <span class="font-bold text-amber-700">{{ $totalRevisions }}</span>
+
+            <!-- Revisions & Feedback -->
+            <div class="p-5">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 bg-amber-100">
+                        <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
                     </div>
-                    <div class="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
-                        <span class="text-gray-700">Posts needing changes</span>
-                        <span class="font-bold text-orange-700">{{ $postsWithChangesRequested }}</span>
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Revisions &amp; Feedback</h3>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 p-3.5 rounded-xl border border-amber-100 bg-amber-50">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-amber-100">
+                            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-amber-700 font-medium">Total Feedback</p>
+                            <p class="text-2xl font-extrabold text-amber-700 leading-tight">{{ $totalRevisions }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3.5 rounded-xl border border-orange-100 bg-orange-50">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-orange-100">
+                            <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-orange-700 font-medium">Needs Changes</p>
+                            <p class="text-2xl font-extrabold text-orange-600 leading-tight">{{ $postsWithChangesRequested }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div>
-                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Posts by Month</h3>
-                <div class="space-y-2 max-h-48 overflow-y-auto">
+
+            <!-- Posts by Month -->
+            <div class="p-5">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 bg-green-100">
+                        <svg class="w-3.5 h-3.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Posts by Month</h3>
+                </div>
+                @php $maxMonth = collect($monthlyPosts)->max('total') ?: 1; @endphp
+                <div class="space-y-4 max-h-48 overflow-y-auto pr-1">
                     @forelse($monthlyPosts as $row)
-                    <div class="flex justify-between items-center text-sm">
-                        <span class="text-gray-700">{{ $row['label'] }}</span>
-                        <span class="font-bold text-green-600">{{ $row['total'] }}</span>
+                    <div class="py-0.5">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm text-gray-700">{{ $row['label'] }}</span>
+                            <span class="text-sm font-bold text-green-600 flex-shrink-0">{{ $row['total'] }}</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5">
+                            <div class="h-1.5 rounded-full bg-green-500 transition-all" style="width:{{ round(($row['total']/$maxMonth)*100) }}%;"></div>
+                        </div>
                     </div>
                     @empty
-                    <p class="text-gray-500 text-sm">No data yet</p>
+                    <p class="text-sm text-gray-400 italic">No data yet</p>
                     @endforelse
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -292,7 +341,7 @@
                     @foreach($recentNotes->take(3) as $note)
                     <div class="border-l-4 border-[#CD571B] pl-4 py-2">
                         <p class="text-sm text-gray-700 mb-1">{{ Str::limit($note->feedback, 80) }}</p>
-                        <p class="text-xs text-gray-500">{{ $note->post?->client?->name ?? 'Unknown Client' }} • {{ $note->created_at->diffForHumans() }}</p>
+                        <p class="text-xs text-gray-500"><span class="font-bold text-gray-800">{{ $note->post?->client?->name ?? 'Unknown Client' }}</span> • {{ $note->created_at->diffForHumans() }}</p>
                     </div>
                     @endforeach
                 </div>

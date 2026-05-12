@@ -123,4 +123,6 @@ Route::prefix('client')->name('client.')->group(function () {
     Route::post('/{token}/approve/{post}', [ClientPortalController::class, 'approvePost'])->name('approve');
     Route::post('/{token}/reject/{post}', [ClientPortalController::class, 'rejectPost'])->name('reject');
     Route::post('/{token}/update-post/{post}', [ClientPortalController::class, 'updatePost'])->name('update-post');
+    Route::post('/{token}/suggest-date/{post}', [ClientPortalController::class, 'suggestDate'])->name('suggest-date');
+    Route::put('/{token}/notes/{note}', [ClientPortalController::class, 'updateNote'])->name('note.update');
 });
