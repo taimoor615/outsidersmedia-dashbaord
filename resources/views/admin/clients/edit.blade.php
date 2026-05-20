@@ -14,8 +14,8 @@
                 </svg>
                 Back to Client Details
             </a>
-            <h1 class="text-3xl font-bold text-gray-900">Edit Client: {{ $client->name }}</h1>
-            <p class="mt-2 text-gray-600">Update client information and preferences</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Edit Client: {{ $client->name }}</h1>
+            <p class="mt-1 sm:mt-2 text-gray-600 text-sm sm:text-base">Update client information and preferences</p>
         </div>
 
         <form action="{{ route('clients.update', $client) }}" method="POST" class="space-y-8">
@@ -23,7 +23,7 @@
             @method('PUT')
 
             <!-- CLIENT INFORMATION -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Client Information</h2>
 
                 <div class="space-y-6">
@@ -104,7 +104,7 @@
             </div>
 
             <!-- CONTENT STRATEGY -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Content Strategy</h2>
 
                 <div class="space-y-6">
@@ -188,7 +188,7 @@
             </div>
 
             <!-- SCHEDULING -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Scheduling & Approval</h2>
 
                 <div class="space-y-6">
@@ -283,7 +283,7 @@
             </div>
 
             <!-- NETWORKS & STATUS -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Social Networks & Status</h2>
 
                 {{-- Keep plan_type so validation passes without changing it --}}

@@ -83,12 +83,12 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
         @endif
 
         <!-- ───── TOP BAR (replaces old gradient banner) ───── -->
-        <div class="mb-5 flex items-center justify-between">
+        <div class="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
                 <h1 class="text-xl font-bold text-gray-900">{{ $client->name }}</h1>
                 <p class="text-xs text-gray-500 mt-0.5">Review and approve your content</p>
             </div>
-            <div class="flex gap-1.5">
+            <div class="flex gap-1.5 flex-wrap">
                 <!-- Feed -->
                 <button
                     @click="view = 'feed'; notesEditId = null"
@@ -162,8 +162,8 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                         <div class="swiper miniCarousel-{{ $post->id }}" style="aspect-ratio:4/5;">
                             <div class="swiper-wrapper h-full">
                                 @foreach($post->media as $media)
-                                <div class="swiper-slide" style="height:100%;">
-                                    <img src="{{ $media->url }}" alt="Post" class="w-full h-full object-cover block cursor-zoom-in" @click="lightboxSrc = '{{ $media->url }}'">
+                                <div class="swiper-slide" style="height:100%;background:#000;">
+                                    <img src="{{ $media->url }}" alt="Post" class="w-full h-full object-contain block cursor-zoom-in" @click="lightboxSrc = '{{ $media->url }}'">
                                 </div>
                                 @endforeach
                             </div>
@@ -179,9 +179,15 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                             </video>
                         </div>
                         @elseif($post->media->first()->isImage())
-                        {{-- Standard image: 1:1 square (1080×1080) --}}
-                        <div style="aspect-ratio:1/1;">
-                            <img src="{{ $post->media->first()->url }}" alt="Post" class="w-full h-full object-cover block cursor-zoom-in" @click="lightboxSrc = '{{ $post->media->first()->url }}'">
+                        @php
+                            $allPlatforms = implode(',', array_map('strtolower', $post->platforms ?? []));
+                            if (str_contains($allPlatforms, 'instagram'))   $imgRatio = '4/5';
+                            elseif (str_contains($allPlatforms, 'tiktok'))  $imgRatio = '9/16';
+                            elseif (str_contains($allPlatforms, 'youtube')) $imgRatio = '16/9';
+                            else                                             $imgRatio = '1/1';
+                        @endphp
+                        <div style="aspect-ratio:{{ $imgRatio }};background:#000;">
+                            <img src="{{ $post->media->first()->url }}" alt="Post" class="w-full h-full object-contain block cursor-zoom-in" @click="lightboxSrc = '{{ $post->media->first()->url }}'">
                         </div>
                         @else
                         {{-- Fallback video --}}
@@ -195,7 +201,7 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                     @endif
 
                     <!-- Card body: two columns -->
-                    <div class="p-4 flex gap-4">
+                    <div class="p-4 flex gap-3">
 
                         <!-- LEFT: content -->
                         <div class="flex-1 min-w-0">
@@ -418,9 +424,9 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
             </div>
 
             @forelse($notes as $note)
-            <div class="bg-white rounded-2xl border mb-3 overflow-hidden {{ $note->isFromClient() ? 'border-orange-200' : 'border-gray-200' }}">
+            <div class="bg-white rounded-2xl border mb-3 {{ $note->isFromClient() ? 'border-orange-200' : 'border-gray-200' }}">
                 <!-- Note header -->
-                <div class="flex items-center justify-between px-4 py-3 {{ $note->isFromClient() ? 'bg-orange-50' : 'bg-gray-50' }} border-b {{ $note->isFromClient() ? 'border-orange-100' : 'border-gray-100' }}">
+                <div class="flex items-center justify-between px-4 py-3 rounded-t-2xl {{ $note->isFromClient() ? 'bg-orange-50' : 'bg-gray-50' }} border-b {{ $note->isFromClient() ? 'border-orange-100' : 'border-gray-100' }}">
                     <div class="flex items-center gap-2">
                         @if($note->isFromClient())
                         <span class="px-2 py-0.5 text-white text-xs font-bold rounded-full" style="background:#CD571B;">You</span>
@@ -436,11 +442,19 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                 <div class="p-4">
                     {{-- View mode --}}
                     <div x-show="notesEditId !== {{ $note->id }}">
-                        <p class="text-sm text-gray-800 leading-relaxed whitespace-pre-line">{{ $note->note }}</p>
+                        @php
+                            $noteHtml = nl2br(e($note->note));
+                            $noteHtml = preg_replace(
+                                '/(https?:\/\/[^\s<]+)/i',
+                                '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#2563eb;text-decoration:underline;">$1</a>',
+                                $noteHtml
+                            );
+                        @endphp
+                        <p class="text-sm text-gray-800 leading-relaxed" style="overflow-wrap:anywhere;word-break:break-word;">{!! $noteHtml !!}</p>
                         @if($note->isFromClient())
                         <button
                             @click="notesEditId = {{ $note->id }}; notesEditText = @js($note->note); $nextTick(() => $refs['noteEdit{{ $note->id }}'] && $refs['noteEdit{{ $note->id }}'].focus())"
-                            class="mt-3 inline-flex items-center gap-1 text-xs font-semibold hover:underline"
+                            class="cursor-pointer mt-3 inline-flex items-center gap-1 text-xs font-semibold hover:underline"
                             style="color:#CD571B;"
                         >
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -458,9 +472,9 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                             <textarea
                                 x-ref="noteEdit{{ $note->id }}"
                                 name="note"
-                                rows="4"
+                                rows="5"
                                 x-model="notesEditText"
-                                class="w-full px-3 py-2.5 border-2 rounded-xl text-sm outline-none resize-none transition-colors"
+                                class="w-full px-3 py-2.5 border-2 rounded-xl text-sm outline-none resize-y transition-colors"
                                 style="border-color:#CD571B;"
                             ></textarea>
                             <div class="flex gap-2 mt-2">

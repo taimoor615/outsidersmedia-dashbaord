@@ -16,19 +16,19 @@
                 Back to Clients
             </a>
 
-            <div class="flex items-start justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">{{ $client->name }}</h1>
-                    <p class="mt-2 text-gray-600">{{ $client->email }}</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ $client->name }}</h1>
+                    <p class="mt-1 sm:mt-2 text-gray-600 text-sm sm:text-base">{{ $client->email }}</p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <a href="{{ route('clients.edit', $client) }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+                    <a href="{{ route('clients.edit', $client) }}" class="inline-flex items-center px-3 sm:px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                         </svg>
                         Edit Client
                     </a>
-                    <a href="{{ $client->share_url }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#CD571B] text-white rounded-lg hover:bg-[#b54c17] transition-colors">
+                    <a href="{{ $client->share_url }}" target="_blank" class="inline-flex items-center px-3 sm:px-4 py-2 bg-[#CD571B] text-white rounded-lg hover:bg-[#b54c17] transition-colors text-sm">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                         </svg>

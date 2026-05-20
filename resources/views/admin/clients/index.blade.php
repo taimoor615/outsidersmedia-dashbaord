@@ -8,12 +8,12 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <div class="mb-8">
-            <div class="flex justify-between items-center">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Clients</h1>
-                    <p class="mt-2 text-gray-600">Manage your client accounts and subscriptions</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Clients</h1>
+                    <p class="mt-1 sm:mt-2 text-gray-600 text-sm sm:text-base">Manage your client accounts and subscriptions</p>
                 </div>
-                <a href="{{ route('clients.create') }}" class="inline-flex items-center px-6 py-3 btn-brand">
+                <a href="{{ route('clients.create') }}" class="inline-flex items-center self-start sm:self-auto px-4 sm:px-6 py-2.5 sm:py-3 btn-brand text-sm sm:text-base">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
