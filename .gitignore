@@ -37,3 +37,6 @@ yarn-error.log
 
 # Vite Build Directory
 /public/build
+
+/docs
+/public

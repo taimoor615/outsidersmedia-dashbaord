@@ -7,11 +7,11 @@
 <div class="space-y-6">
 
     <!-- Welcome Section -->
-    <div class="rounded-2xl shadow-xl p-8 text-white" style="background: linear-gradient(135deg, #CD571B 0%, #EC921A 100%);">
-        <div class="flex items-center justify-between">
+    <div class="rounded-2xl shadow-xl p-5 sm:p-8 text-white" style="background: linear-gradient(135deg, #CD571B 0%, #EC921A 100%);">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold mb-2">Welcome back, {{ auth()->user()->name }}! 👋</h1>
-                <p class="text-orange-100 text-lg">Ready to create amazing content today?</p>
+                <h1 class="text-xl sm:text-3xl font-bold mb-1 sm:mb-2">Welcome back, {{ auth()->user()->name }}! 👋</h1>
+                <p class="text-orange-100 text-sm sm:text-lg">Ready to create amazing content today?</p>
             </div>
             <div class="hidden lg:block">
                 <div class="w-24 h-24 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.15);">
@@ -24,8 +24,8 @@
     </div>
 
     <!-- Quick Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:#FEE8DC;">
                     <svg class="w-6 h-6" style="color:#CD571B;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@
             @endif
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
                     <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,7 +55,7 @@
             @endif
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:#FEE8DC;">
                     <svg class="w-6 h-6" style="color:#CD571B;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,7 +73,7 @@
             @endif
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +88,7 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
         <h2 class="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <a href="{{ route('posts.create') }}" class="flex items-center gap-4 p-4 border rounded-xl hover:shadow-md transition-all" style="background:#FEF3EC;border-color:#F5C4A0;">

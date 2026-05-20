@@ -7,22 +7,22 @@
 <div class="max-w-6xl mx-auto space-y-6">
 
     <!-- Header -->
-    <div class="flex items-start justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-            <a href="{{ route('posts.index') }}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4">
+            <a href="{{ route('posts.index') }}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-3">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
                 Back to Posts
             </a>
-            <h1 class="text-3xl font-bold text-gray-900">Post Details</h1>
-            <p class="mt-2 text-gray-600">{{ $post->client?->name ?? 'Unknown Client' }} • {{ $post->created_at->format('M d, Y g:i A') }}</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Post Details</h1>
+            <p class="mt-1 sm:mt-2 text-gray-600 text-sm sm:text-base">{{ $post->client?->name ?? 'Unknown Client' }} • {{ $post->created_at->format('M d, Y g:i A') }}</p>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
             @if($post->canEdit())
-            <a href="{{ route('posts.edit', $post) }}" class="px-4 py-2 bg-[#CD571B] text-white rounded-lg hover:bg-[#b54c17] transition-colors">
-                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('posts.edit', $post) }}" class="px-3 sm:px-4 py-2 bg-[#CD571B] text-white rounded-lg hover:bg-[#b54c17] transition-colors text-sm">
+                <svg class="w-4 h-4 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                 </svg>
                 Edit Post
@@ -33,8 +33,8 @@
             <form action="{{ route('posts.destroy', $post) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button type="submit" class="px-3 sm:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm">
+                    <svg class="w-4 h-4 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                     </svg>
                     Delete
@@ -64,11 +64,11 @@
                 {{-- 4:5 portrait grid, max-width clamped so it doesn't overflow at any zoom level --}}
                 <div class="grid grid-cols-2 gap-3" style="max-width:clamp(280px,100%,600px);margin:0 auto;">
                     @foreach($post->media as $media)
-                    <div class="rounded-lg overflow-hidden" style="aspect-ratio:4/5;">
+                    <div class="rounded-lg overflow-hidden" style="aspect-ratio:4/5;background:#000;">
                         @if($media->isImage())
-                        <img src="{{ $media->url }}" alt="Post media" class="w-full h-full object-cover cursor-zoom-in" @click="lightboxSrc='{{ $media->url }}'">
+                        <img src="{{ $media->url }}" alt="Post media" class="w-full h-full object-contain cursor-zoom-in" @click="lightboxSrc='{{ $media->url }}'">
                         @else
-                        <video src="{{ $media->url }}" class="w-full h-full object-cover" muted playsinline></video>
+                        <video src="{{ $media->url }}" class="w-full h-full object-contain" muted playsinline></video>
                         @endif
                     </div>
                     @endforeach
@@ -86,11 +86,17 @@
                     </video>
                 </div>
                 @else
-                @php($firstMedia = $post->media->first())
-                {{-- Square 1:1, clamped so it stays proportional at any browser zoom --}}
+                @php
+                    $firstMedia = $post->media->first();
+                    $allPlatforms = implode(',', array_map('strtolower', $post->platforms ?? []));
+                    if (str_contains($allPlatforms, 'instagram'))      $imgRatio = '4/5';
+                    elseif (str_contains($allPlatforms, 'tiktok'))     $imgRatio = '9/16';
+                    elseif (str_contains($allPlatforms, 'youtube'))    $imgRatio = '16/9';
+                    else                                                $imgRatio = '1/1';
+                @endphp
                 @if($firstMedia->isImage())
-                <div class="mx-auto rounded-lg overflow-hidden cursor-zoom-in" style="aspect-ratio:1/1;width:clamp(200px,100%,540px);" @click="lightboxSrc='{{ $firstMedia->url }}'">
-                    <img src="{{ $firstMedia->url }}" alt="Post media" class="w-full h-full object-cover">
+                <div class="mx-auto rounded-lg overflow-hidden cursor-zoom-in" style="aspect-ratio:{{ $imgRatio }};width:clamp(200px,100%,540px);background:#000;" @click="lightboxSrc='{{ $firstMedia->url }}'">
+                    <img src="{{ $firstMedia->url }}" alt="Post media" class="w-full h-full object-contain">
                 </div>
                 <p class="text-center text-xs text-gray-400 mt-2 flex items-center justify-center gap-1 cursor-zoom-in select-none" @click="lightboxSrc='{{ $firstMedia->url }}'">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>

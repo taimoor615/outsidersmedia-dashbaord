@@ -14,15 +14,15 @@
                 </svg>
                 Back to Clients
             </a>
-            <h1 class="text-3xl font-bold text-gray-900">Add Your Client</h1>
-            <p class="mt-2 text-gray-600">Tell us about your client to create amazing social media content</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Add Your Client</h1>
+            <p class="mt-1 sm:mt-2 text-gray-600 text-sm sm:text-base">Tell us about your client to create amazing social media content</p>
         </div>
 
         <form action="{{ route('clients.store') }}" method="POST" class="space-y-8">
             @csrf
 
             <!-- CLIENT INFORMATION -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Client Information</h2>
 
                 <div class="space-y-6">
@@ -97,7 +97,7 @@
             </div>
 
             <!-- AUDIENCE & STRATEGY -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Audience & Strategy</h2>
 
                 <div class="space-y-6">
@@ -133,7 +133,7 @@
             </div>
 
             <!-- BRAND IDENTITY -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Brand Identity & Content Direction</h2>
 
                 <div class="space-y-6">
@@ -230,7 +230,7 @@
             </div>
 
             <!-- ASSETS & BRANDING -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Assets & Branding</h2>
 
                 <div>
@@ -247,7 +247,7 @@
             </div>
 
             <!-- SCHEDULING & APPROVAL -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Content Scheduling & Approval</h2>
 
                 <div class="space-y-6">
@@ -358,7 +358,7 @@
             </div>
 
             <!-- PLAN SELECTION -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Select Plan</h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">

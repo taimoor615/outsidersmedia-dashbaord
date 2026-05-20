@@ -7,12 +7,12 @@
 <div class="space-y-6">
 
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Posts</h1>
-            <p class="mt-2 text-gray-600">Manage your social media content</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Posts</h1>
+            <p class="mt-1 sm:mt-2 text-gray-600 text-sm sm:text-base">Manage your social media content</p>
         </div>
-        <a href="{{ route('posts.create') }}" class="inline-flex items-center px-6 py-3 btn-brand">
+        <a href="{{ route('posts.create') }}" class="inline-flex items-center self-start sm:self-auto px-4 sm:px-6 py-2.5 sm:py-3 btn-brand text-sm sm:text-base">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -45,23 +45,23 @@
     @endphp
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200/80 overflow-hidden">
         <div class="bg-gradient-to-r from-slate-50 to-gray-50/80 px-5 py-4 border-b border-gray-200/60">
-            <div class="flex flex-wrap items-center gap-3">
-                <span class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <div class="flex items-center gap-3 overflow-x-auto pb-1 -mb-1">
+                <span class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500 flex-shrink-0">
                     <svg class="w-4 h-4 text-[#CD571B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
                     Status
                 </span>
                 <a href="{{ route('posts.index', $queryParamsNoStatus) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ !request('status') ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">All</a>
+                   class="flex-shrink-0 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap {{ !request('status') ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">All</a>
                 <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'draft'])) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'draft' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Drafts</a>
+                   class="flex-shrink-0 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap {{ request('status') == 'draft' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Drafts</a>
                 <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'pending_approval'])) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'pending_approval' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Pending</a>
+                   class="flex-shrink-0 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap {{ request('status') == 'pending_approval' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Pending</a>
                 <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'approved'])) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'approved' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Approved</a>
+                   class="flex-shrink-0 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap {{ request('status') == 'approved' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Approved</a>
                 <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'scheduled'])) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'scheduled' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Scheduled</a>
+                   class="flex-shrink-0 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap {{ request('status') == 'scheduled' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Scheduled</a>
                 <a href="{{ route('posts.index', array_merge($queryParams, ['status' => 'published'])) }}"
-                   class="px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 {{ request('status') == 'published' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Published</a>
+                   class="flex-shrink-0 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap {{ request('status') == 'published' ? 'bg-[#CD571B] text-white shadow-md shadow-indigo-200' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-gray-200' }}">Published</a>
             </div>
         </div>
         <form id="posts-filter-form" method="GET" action="{{ route('posts.index') }}" class="p-5">
