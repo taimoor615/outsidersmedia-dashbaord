@@ -77,6 +77,8 @@
 .fc-event { cursor: pointer !important; }
 /* Month/year emphasis in title */
 .fc-toolbar-title { letter-spacing: -0.01em; }
+/* Footer toolbar spacing on mobile */
+.fc-footer-toolbar { margin-top: 0.75rem !important; }
 </style>
 
 <script>
@@ -85,19 +87,34 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedClient = '';
 
     const calendarEl = document.getElementById('calendar');
+    const isMobile = () => window.innerWidth < 640;
+
+    function getHeaderToolbar() {
+        return isMobile()
+            ? { left: 'prev,next', center: 'title', right: 'today' }
+            : { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listWeek' };
+    }
+
+    function getFooterToolbar() {
+        return isMobile()
+            ? { center: 'dayGridMonth,timeGridWeek,listWeek' }
+            : false;
+    }
+
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,listWeek'
-        },
+        headerToolbar: getHeaderToolbar(),
+        footerToolbar: getFooterToolbar(),
         buttonText: {
             today:   'Today',
             month:   'Month',
             week:    'Week',
             list:    'List',
             day:     'Day'
+        },
+        windowResize: function() {
+            calendar.setOption('headerToolbar', getHeaderToolbar());
+            calendar.setOption('footerToolbar', getFooterToolbar());
         },
         height: 'auto',
         events: function(fetchInfo, successCallback, failureCallback) {
