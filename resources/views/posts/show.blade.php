@@ -78,8 +78,9 @@
                     Click any image to view full size
                 </p>
                 @elseif($post->post_type === 'video')
-                @php($firstMedia = $post->media->first())
-                {{-- 9:16 portrait, clamped width --}}
+                @php
+                    $firstMedia = $post->media->first();
+                @endphp
                 <div class="mx-auto rounded-lg overflow-hidden" style="aspect-ratio:9/16;width:clamp(200px,60%,320px);">
                     <video controls class="w-full h-full object-contain bg-black">
                         <source src="{{ $firstMedia->url }}" type="{{ $firstMedia->mime_type }}">
@@ -95,8 +96,8 @@
                     else                                                $imgRatio = '1/1';
                 @endphp
                 @if($firstMedia->isImage())
-                <div class="mx-auto rounded-lg overflow-hidden cursor-zoom-in" style="aspect-ratio:{{ $imgRatio }};width:clamp(200px,100%,540px);background:#000;" @click="lightboxSrc='{{ $firstMedia->url }}'">
-                    <img src="{{ $firstMedia->url }}" alt="Post media" class="w-full h-full object-contain">
+                <div class="mx-auto rounded-lg overflow-hidden cursor-zoom-in" style="aspect-ratio:{{ $imgRatio }};width:clamp(200px,100%,540px);" @click="lightboxSrc='{{ $firstMedia->url }}'">
+                    <img src="{{ $firstMedia->url }}" alt="Post media" class="w-full h-full object-cover">
                 </div>
                 <p class="text-center text-xs text-gray-400 mt-2 flex items-center justify-center gap-1 cursor-zoom-in select-none" @click="lightboxSrc='{{ $firstMedia->url }}'">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>

@@ -9,13 +9,13 @@
 
         <!-- Page Header -->
         <div class="mb-8">
-            <div class="flex justify-between items-center">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Team Management</h1>
-                    <p class="mt-2 text-gray-600">Manage your team members and their access</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Team Management</h1>
+                    <p class="mt-1 sm:mt-2 text-gray-600 text-sm sm:text-base">Manage your team members and their access</p>
                 </div>
-                <a href="{{ route('admin.team.create') }}" class="inline-flex items-center px-6 py-3 btn-brand">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('admin.team.create') }}" class="inline-flex items-center self-start sm:self-auto px-4 sm:px-6 py-2 sm:py-3 text-sm btn-brand">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
                     Add Team Member
