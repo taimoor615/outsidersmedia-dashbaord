@@ -110,14 +110,22 @@
 
                 <!-- Note body / inline edit -->
                 <div x-show="editId !== {{ $note->id }}">
-                    <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ $note->note }}</p>
+                    @php
+                        $noteHtml = nl2br(e($note->note));
+                        $noteHtml = preg_replace(
+                            '/(https?:\/\/[^\s<]+)/i',
+                            '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#2563eb;text-decoration:underline;">$1</a>',
+                            $noteHtml
+                        );
+                    @endphp
+                    <p class="text-sm text-gray-700" style="overflow-wrap:anywhere;word-break:break-word;">{!! $noteHtml !!}</p>
                 </div>
 
                 <form x-show="editId === {{ $note->id }}" action="{{ route('client-notes.update', $note) }}" method="POST" class="mt-2" style="display:none;">
                     @csrf
                     @method('PUT')
-                    <textarea name="note" rows="3" x-model="editText" required maxlength="2000"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#CD571B] focus:border-transparent resize-none"></textarea>
+                    <textarea name="note" rows="4" x-model="editText" required maxlength="2000"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#CD571B] focus:border-transparent resize-y"></textarea>
                     <div class="flex gap-2 mt-2">
                         <button type="submit" class="px-3 py-1.5 bg-[#CD571B] text-white text-xs font-medium rounded-lg hover:bg-[#b54c17] transition-colors">Save</button>
                         <button type="button" @click="editId = null" class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-200 transition-colors">Cancel</button>

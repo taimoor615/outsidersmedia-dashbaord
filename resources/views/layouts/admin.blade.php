@@ -231,7 +231,7 @@
         <div class="flex-1 flex flex-col overflow-hidden">
 
             <!-- Top Header Bar -->
-            <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6">
+            <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-3 sm:px-6">
                 <!-- Mobile Menu Button -->
                 <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden text-gray-600 hover:text-gray-900">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -255,7 +255,7 @@
                             <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                             @endif
                         </button>
-                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50" style="display: none;">
+                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-80 max-h-96 overflow-y-auto bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50" style="display: none;">
                             <div class="px-4 py-2 border-b border-gray-200 flex justify-between items-center">
                                 <span class="font-semibold text-gray-900">Notifications</span>
                                 @if(auth()->user()->unreadNotifications->count() > 0)
@@ -320,7 +320,7 @@
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto p-6">
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6">
                 @yield('content')
             </main>
         </div>
