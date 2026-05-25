@@ -128,20 +128,49 @@
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Brand Tone (Max 3)</label>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div id="brand-tone-group" class="grid grid-cols-2 md:grid-cols-4 gap-3">
                             @foreach(['Friendly', 'Professional', 'Fun/playful', 'Inspirational', 'Bold', 'Educational', 'Minimalist', 'Other'] as $tone)
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <label class="brand-tone-label flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
                                 <input
                                     type="checkbox"
                                     name="brand_tone[]"
                                     value="{{ $tone }}"
                                     {{ in_array($tone, old('brand_tone', $client->brand_tone ?? [])) ? 'checked' : '' }}
-                                    class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
+                                    class="brand-tone-cb w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
                                 >
                                 <span class="ml-3 text-sm text-gray-700">{{ $tone }}</span>
                             </label>
                             @endforeach
                         </div>
+                        <p id="brand-tone-hint" class="text-xs text-gray-400 mt-2 hidden">Maximum 3 tones selected.</p>
+                        <script>
+                        (function() {
+                            function syncBrandTone() {
+                                var cbs = document.querySelectorAll('.brand-tone-cb');
+                                var count = document.querySelectorAll('.brand-tone-cb:checked').length;
+                                var hint = document.getElementById('brand-tone-hint');
+                                hint.classList.toggle('hidden', count < 3);
+                                cbs.forEach(function(cb) {
+                                    var lbl = cb.closest('.brand-tone-label');
+                                    if (!cb.checked && count >= 3) {
+                                        cb.disabled = true;
+                                        lbl.style.opacity = '0.45';
+                                        lbl.style.cursor = 'not-allowed';
+                                    } else {
+                                        cb.disabled = false;
+                                        lbl.style.opacity = '';
+                                        lbl.style.cursor = '';
+                                    }
+                                });
+                            }
+                            document.addEventListener('DOMContentLoaded', function() {
+                                document.querySelectorAll('.brand-tone-cb').forEach(function(cb) {
+                                    cb.addEventListener('change', syncBrandTone);
+                                });
+                                syncBrandTone();
+                            });
+                        })();
+                        </script>
                     </div>
 
                     <div>

@@ -20,6 +20,7 @@
                 displayValue: '', hiddenValue: initialValue || '',
                 selMonth: '', selDay: '', selYear: '',
                 selHour: '12', selMin: '00', selAmpm: 'AM',
+                pastError: '',
                 months: MONTHS,
                 get years() { var y = new Date().getFullYear(); return [y, y+1, y+2]; },
                 get days() {
@@ -72,7 +73,15 @@
                         this.hiddenValue = this.selectedDate+'T'+(this.selectedTime||'00:00');
                     } else { this.displayValue=''; this.hiddenValue=''; }
                 },
-                confirm() { this.updateDisplay(); this.open=false; },
+                confirm() {
+                    if (this.selectedDate) {
+                        var today = new Date(); today.setHours(0,0,0,0);
+                        var sel = new Date(this.selectedDate+'T00:00');
+                        if (sel < today) { this.pastError = 'Cannot schedule for a past date. Please choose today or a future date.'; return; }
+                    }
+                    this.pastError = '';
+                    this.updateDisplay(); this.open=false;
+                },
                 clear() {
                     this.selectedDate=''; this.selectedTime='';
                     this.selMonth=''; this.selDay=''; this.selYear='';
@@ -240,7 +249,7 @@
                 </button>
 
                 <!-- Page Title (Mobile) -->
-                <h1 class="lg:hidden text-lg font-bold text-gray-900">@yield('page-title', 'Dashboard')</h1>
+                <h1 class="lg:hidden text-sm sm:text-base font-bold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis">@yield('page-title', 'Dashboard')</h1>
 
                 <!-- Right Side Actions -->
                 <div class="ml-auto flex items-center gap-4">
@@ -255,7 +264,7 @@
                             <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                             @endif
                         </button>
-                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-80 max-h-96 overflow-y-auto bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50" style="display: none;">
+                        <div x-show="open" x-transition class="fixed top-16 left-3 right-3 lg:absolute lg:top-full lg:left-auto lg:right-0 lg:mt-2 lg:w-80 max-h-96 overflow-y-auto bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50" style="display: none;">
                             <div class="px-4 py-2 border-b border-gray-200 flex justify-between items-center">
                                 <span class="font-semibold text-gray-900">Notifications</span>
                                 @if(auth()->user()->unreadNotifications->count() > 0)

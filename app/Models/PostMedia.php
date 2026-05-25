@@ -30,6 +30,20 @@ class PostMedia extends Model
         return asset('storage/' . $this->file_path);
     }
 
+    /**
+     * For videos, return a streaming URL that sends proper Range headers so
+     * the browser can seek to any position.  For images, falls back to the
+     * normal storage URL.
+     */
+    public function getStreamUrlAttribute(): string
+    {
+        if ($this->isVideo()) {
+            return route('media.stream', $this->id);
+        }
+
+        return asset('storage/' . $this->file_path);
+    }
+
     public function isImage(): bool
     {
         return $this->type === 'image';
