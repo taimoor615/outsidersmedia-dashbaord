@@ -231,7 +231,9 @@
                                     @endif
                                 </div>
                                 <p class="text-gray-700 text-sm">{{ Str::limit($feedback->feedback, 150) }}</p>
+                                @if($feedback->post)
                                 <a href="{{ route('posts.show', $feedback->post) }}" class="text-sm text-[#CD571B] hover:text-[#b54c17] mt-2 inline-block">View Post →</a>
+                                @endif
                             </div>
                         </div>
                     </div>
