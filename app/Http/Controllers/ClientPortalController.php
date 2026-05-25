@@ -184,11 +184,17 @@ class ClientPortalController extends Controller
         ]);
 
         $timeLabel = '';
+        $scheduledAt = \Carbon\Carbon::parse($validated['suggested_date']);
+
         if (!empty($validated['suggested_time'])) {
             $timeLabel = ' at ' . date('g:i A', strtotime($validated['suggested_time']));
+            [$h, $m] = explode(':', $validated['suggested_time']);
+            $scheduledAt->setHour((int)$h)->setMinute((int)$m)->setSecond(0);
         }
 
-        $dateLabel = \Carbon\Carbon::parse($validated['suggested_date'])->format('M d, Y') . $timeLabel;
+        $dateLabel = $scheduledAt->format('M d, Y') . $timeLabel;
+
+        $post->update(['scheduled_at' => $scheduledAt]);
 
         PostFeedback::create([
             'post_id'            => $post->id,

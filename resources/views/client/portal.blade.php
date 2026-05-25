@@ -148,7 +148,7 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
             <div class="space-y-5">
                 @forelse($posts as $post)
                 <div
-                    class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+                    class="bg-white rounded-2xl shadow-sm border border-gray-200 {{ $post->post_type === 'video' ? '' : 'overflow-hidden' }}"
                     x-show="filterPosts === 'all' ||
                             (filterPosts === 'pending' && '{{ $post->status }}' === 'pending_client') ||
                             (filterPosts === 'approved' && ('{{ $post->status }}' === 'approved' || '{{ $post->status }}' === 'scheduled'))"
@@ -172,12 +172,8 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                             <div class="swiper-button-prev"></div>
                         </div>
                         @elseif($post->post_type === 'video')
-                        {{-- Video: 9:16 portrait (1080×1920) --}}
-                        <div class="mx-auto" style="aspect-ratio:9/16;max-width:320px;">
-                            <video controls class="w-full h-full object-contain bg-black block">
-                                <source src="{{ $post->media->first()->url }}" type="{{ $post->media->first()->mime_type }}">
-                            </video>
-                        </div>
+                        {{-- Video: custom player --}}
+                        @include('partials.video-player', ['src' => $post->media->first()->stream_url, 'type' => $post->media->first()->mime_type])
                         @elseif($post->media->first()->isImage())
                         @php
                             $allPlatforms = implode(',', array_map('strtolower', $post->platforms ?? []));
@@ -191,11 +187,7 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                         </div>
                         @else
                         {{-- Fallback video --}}
-                        <div class="mx-auto" style="aspect-ratio:9/16;max-width:320px;">
-                            <video controls class="w-full h-full object-contain bg-black block">
-                                <source src="{{ $post->media->first()->url }}" type="{{ $post->media->first()->mime_type }}">
-                            </video>
-                        </div>
+                        @include('partials.video-player', ['src' => $post->media->first()->stream_url, 'type' => $post->media->first()->mime_type])
                         @endif
                     </div>
                     @endif
@@ -211,8 +203,10 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                                 <span class="px-2 py-0.5 text-xs font-bold rounded-full text-white" style="background:#CD571B;">Pending Review</span>
                                 @elseif($post->status === 'changes_requested')
                                 <span class="px-2 py-0.5 bg-orange-500 text-white text-xs font-bold rounded-full">Changes Requested</span>
+                                @elseif($post->status === 'pending_approval')
+                                <span class="px-2 py-0.5 bg-blue-500 text-white text-xs font-bold rounded-full">✓ Approved by {{ $client->name }}</span>
                                 @elseif(in_array($post->status, ['approved','scheduled']))
-                                <span class="px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">Approved</span>
+                                <span class="px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">✓ Approved — Scheduling</span>
                                 @elseif($post->status === 'published')
                                 <span class="px-2 py-0.5 bg-purple-500 text-white text-xs font-bold rounded-full">Published</span>
                                 @else
@@ -243,7 +237,8 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                                     <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" style="color:{{ $pNetColors[$platforms[0]['key']] ?? '#6b7280' }}">{!! $pNetIcons[$platforms[0]['key']] ?? '' !!}</svg>
                                     <span class="text-xs font-semibold capitalize" style="color:{{ $pNetColors[$platforms[0]['key']] ?? '#6b7280' }}">{{ ucfirst($platforms[0]['key']) }}</span>
                                 </span>
-                                <p class="text-sm text-gray-800 leading-relaxed">{{ Str::limit($platforms[0]['msg'], 160) }}</p>
+                                @php $p0html = preg_replace('/(https?:\/\/[^\s<]+)/i','<a href="$1" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;word-break:break-all;">$1</a>',nl2br(e($platforms[0]['msg']))); @endphp
+                                <p class="text-sm text-gray-800 leading-relaxed">{!! $p0html !!}</p>
                                 @if($platforms->count() > 1)
                                 <div x-data="{ more: false }">
                                     <button @click="more = !more" class="text-xs mt-1 underline cursor-pointer" style="color:#CD571B;">
@@ -257,7 +252,8 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                                                 <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" style="color:{{ $pNetColors[$pm['key']] ?? '#6b7280' }}">{!! $pNetIcons[$pm['key']] ?? '' !!}</svg>
                                                 <span class="text-xs font-semibold capitalize" style="color:{{ $pNetColors[$pm['key']] ?? '#6b7280' }}">{{ ucfirst($pm['key']) }}</span>
                                             </span>
-                                            <p class="text-sm text-gray-800 leading-relaxed">{{ Str::limit($pm['msg'], 160) }}</p>
+                                            @php $pmhtml = preg_replace('/(https?:\/\/[^\s<]+)/i','<a href="$1" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;word-break:break-all;">$1</a>',nl2br(e($pm['msg']))); @endphp
+                                            <p class="text-sm text-gray-800 leading-relaxed">{!! $pmhtml !!}</p>
                                         </div>
                                         @endforeach
                                     </div>
@@ -342,7 +338,8 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                             </span>
                             @endif
 
-                            <!-- Set Date -->
+                            <!-- Set Date: only available while post is still awaiting/needs-changes from client -->
+                            @if(in_array($post->status, ['pending_client', 'changes_requested', 'draft']))
                             <button
                                 @click="dateModal = {{ $post->id }}"
                                 class="flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-xl border transition whitespace-nowrap cursor-pointer"
@@ -353,6 +350,12 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 {{ $post->scheduled_at ? 'Change Date' : 'Set Date' }}
                             </button>
+                            @else
+                            <span class="flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-400 text-xs font-bold rounded-xl whitespace-nowrap cursor-not-allowed">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                Change Date
+                            </span>
+                            @endif
 
                             <!-- Feedback — always active -->
                             <button
@@ -562,6 +565,7 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                  selDate: '{{ $post->scheduled_at ? $post->scheduled_at->format('Y-m-d') : '' }}',
                  selTime: '{{ $post->scheduled_at ? $post->scheduled_at->format('H:i') : '' }}',
                  step: 'pick',
+                 pastDateErr: '',
                  get preview() {
                      if (!this.selDate) return '';
                      const d = new Date(this.selDate + 'T' + (this.selTime || '00:00'));
@@ -614,10 +618,16 @@ x-init="$watch('calMonth', function(v){ if(view==='calendar') $nextTick(function
                     <p class="text-sm font-semibold text-blue-800" x-text="preview"></p>
                 </div>
 
+                <p x-show="pastDateErr" x-text="pastDateErr" class="text-xs text-red-600 font-medium mb-2 pt-1" x-cloak></p>
                 <div class="flex gap-3 pt-1">
                     <button
                         type="button"
-                        @click="if (selDate) step = 'confirm'"
+                        @click="if (selDate) {
+                            var today = new Date(); today.setHours(0,0,0,0);
+                            var sel = new Date(selDate + 'T00:00');
+                            if (sel < today) { pastDateErr = 'Cannot select a past date. Please choose today or a future date.'; }
+                            else { pastDateErr = ''; step = 'confirm'; }
+                        }"
                         class="flex-1 py-3 rounded-xl font-bold text-sm transition-all"
                         :class="selDate ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-sm' : 'bg-gray-100 text-gray-400 cursor-not-allowed'"
                     >

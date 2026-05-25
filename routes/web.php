@@ -115,6 +115,12 @@ Route::middleware(['auth', 'team'])->group(function () {
     Route::get('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
 });
 
+// Video Streaming — public route, no auth required.
+// Works for both authenticated admin/team views and the client portal.
+// Sends proper Accept-Ranges + Content-Range headers so browser seeking works.
+Route::get('/media/stream/{media}', [App\Http\Controllers\VideoStreamController::class, 'stream'])
+    ->name('media.stream');
+
 // Client Portal Routes (Public - no auth required)
 Route::prefix('client')->name('client.')->group(function () {
     Route::get('/{token}', [ClientPortalController::class, 'show'])->name('view');

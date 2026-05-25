@@ -722,6 +722,7 @@
                                 <p class="text-xs text-gray-500">Selected</p>
                                 <p class="text-sm font-bold text-gray-900" x-text="displayValue"></p>
                             </div>
+                            <p x-show="pastError" x-text="pastError" class="text-xs text-red-600 font-medium mb-2" x-cloak></p>
                             <div class="flex gap-2">
                                 <button type="button" @click="confirm()"
                                     :disabled="!selectedDate"
@@ -729,7 +730,7 @@
                                     :class="selectedDate ? 'bg-[#CD571B] hover:bg-[#b54c17] text-white shadow-sm' : 'bg-gray-100 text-gray-400 cursor-not-allowed'">
                                     OK — Confirm
                                 </button>
-                                <button type="button" @click="clear(); open = false" class="px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors">Clear</button>
+                                <button type="button" @click="clear(); open = false; pastError = ''" class="px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors">Clear</button>
                             </div>
                         </div>
                         <input type="hidden" :name="fieldName" :value="hiddenValue">
