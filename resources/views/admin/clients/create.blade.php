@@ -222,17 +222,36 @@
                         >
                     </div>
 
-                    <div>
-                        <label class="flex items-center p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
-                            <input
-                                type="checkbox"
-                                name="share_third_party_content"
-                                value="1"
-                                {{ old('share_third_party_content') ? 'checked' : '' }}
-                                class="w-4 h-4 text-[#CD571B] border-gray-300 rounded focus:ring-[#CD571B]"
-                            >
-                            <span class="ml-3 text-sm text-gray-700">Share information from third-party sources (articles & blogs) that audience might find helpful</span>
-                        </label>
+                    {{-- Third-party sources toggle + conditional preferred sources field --}}
+                    <div x-data="{ sharing: '{{ old('share_third_party_content') ? '1' : '0' }}' }">
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Would you like us to share information from third-party sources (like articles &amp; blogs) that your audience might find helpful or interesting?</label>
+                        <div class="flex items-center gap-6 mb-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="share_third_party_content" value="1"
+                                    x-model="sharing"
+                                    class="w-4 h-4 border-gray-300 focus:ring-[#CD571B]" style="accent-color:#CD571B;">
+                                <span class="text-sm font-medium text-gray-700">Yes</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="share_third_party_content" value="0"
+                                    x-model="sharing"
+                                    class="w-4 h-4 border-gray-300 focus:ring-[#CD571B]" style="accent-color:#CD571B;">
+                                <span class="text-sm font-medium text-gray-700">No</span>
+                            </label>
+                        </div>
+                        <div x-show="sharing === '1'" x-transition x-cloak>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">If yes, do you have any preferred sources or industry blogs?</label>
+                            <textarea
+                                name="preferred_sources"
+                                rows="3"
+                                maxlength="2000"
+                                placeholder="e.g. Industry Week, HubSpot Blog, specific news sites..."
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
+                                x-ref="preferredSources"
+                                @input="$el.nextElementSibling.textContent = $el.value.length + ' / 2000'"
+                            >{{ old('preferred_sources') }}</textarea>
+                            <p class="text-xs text-gray-400 text-right mt-1">{{ strlen(old('preferred_sources', '')) }} / 2000</p>
+                        </div>
                     </div>
 
                     <div>
