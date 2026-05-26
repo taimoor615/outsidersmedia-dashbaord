@@ -282,6 +282,21 @@
                 </div>
                 @endif
 
+                @php
+                /**
+                 * Detect URLs in free-form text and wrap them in clickable <a> tags.
+                 * Safe: e() escapes all HTML first, then we inject only our own <a> tags.
+                 */
+                function linkifyText(string $text): string {
+                    $escaped = e($text);
+                    return preg_replace(
+                        '/(https?:\/\/[^\s<>"\']+)/i',
+                        '<a href="$1" target="_blank" rel="noopener" class="text-[#CD571B] hover:underline break-all">$1</a>',
+                        $escaped
+                    );
+                }
+                @endphp
+
                 <!-- Audience & Strategy -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">Audience & Strategy</h3>
@@ -289,7 +304,7 @@
                     @if($client->target_audience)
                     <div class="mb-4">
                         <h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Target Audience</h4>
-                        <p class="text-gray-700">{{ $client->target_audience }}</p>
+                        <p class="text-gray-700 whitespace-pre-wrap">{!! linkifyText($client->target_audience) !!}</p>
                     </div>
                     @endif
 
@@ -332,12 +347,56 @@
                     @endif
 
                     @if($client->preferred_cta)
-                    <div>
+                    <div class="mb-4">
                         <h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Preferred CTA</h4>
                         <p class="text-gray-700">{{ $client->preferred_cta }}</p>
                     </div>
                     @endif
+
+                    @if($client->keywords)
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Keywords & Hashtags</h4>
+                        <p class="text-gray-700 whitespace-pre-wrap">{!! linkifyText($client->keywords) !!}</p>
+                    </div>
+                    @endif
                 </div>
+
+                <!-- Competitors -->
+                @if($client->competitors)
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Competitors</h3>
+                    <div class="text-gray-700 text-sm whitespace-pre-wrap leading-relaxed">{!! linkifyText($client->competitors) !!}</div>
+                </div>
+                @endif
+
+                <!-- Brand Assets -->
+                @if($client->brand_assets_link)
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Brand Assets</h3>
+                    <div class="text-gray-700 text-sm whitespace-pre-wrap leading-relaxed">{!! linkifyText($client->brand_assets_link) !!}</div>
+                </div>
+                @endif
+
+                <!-- Content to Avoid & Additional Notes -->
+                @if($client->content_to_avoid || $client->additional_notes)
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Additional Guidance</h3>
+
+                    @if($client->content_to_avoid)
+                    <div class="mb-4">
+                        <h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Content to Avoid</h4>
+                        <p class="text-gray-700 whitespace-pre-wrap text-sm">{!! linkifyText($client->content_to_avoid) !!}</p>
+                    </div>
+                    @endif
+
+                    @if($client->additional_notes)
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Additional Notes</h4>
+                        <p class="text-gray-700 whitespace-pre-wrap text-sm">{!! linkifyText($client->additional_notes) !!}</p>
+                    </div>
+                    @endif
+                </div>
+                @endif
 
                 <!-- Posting Schedule -->
                 @if($client->posting_days && count($client->posting_days) > 0)
