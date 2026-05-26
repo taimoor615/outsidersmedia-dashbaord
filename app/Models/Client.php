@@ -27,6 +27,7 @@ class Client extends Model
         'content_to_avoid',
         'preferred_cta',
         'share_third_party_content',
+        'preferred_sources',
         'keywords',
         'competitors',
         'brand_assets_link',

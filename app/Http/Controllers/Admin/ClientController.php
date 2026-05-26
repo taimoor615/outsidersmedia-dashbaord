@@ -9,6 +9,7 @@ use App\Models\Client;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 
 class ClientController extends Controller
 {
@@ -68,7 +69,7 @@ class ClientController extends Controller
         // dd($request->all());
         $validated = $request->validate([
             'name'                       => 'required|string|min:2|max:255',
-            'email'                      => 'required|email:rfc|max:254|unique:clients,email',
+            'email'                      => ['required', 'email:rfc', 'max:254', Rule::unique('clients', 'email')->whereNull('deleted_at')],
             'website_url'                => 'nullable|url|max:500',
             'location'                   => 'nullable|string|max:500',
             'business_description'       => 'nullable|string|max:5000',
@@ -83,6 +84,7 @@ class ClientController extends Controller
             'content_to_avoid'           => 'nullable|string|max:5000',
             'preferred_cta'              => 'nullable|string|max:500',
             'share_third_party_content'  => 'nullable|boolean',
+            'preferred_sources'          => 'nullable|string|max:2000',
             'keywords'                   => 'nullable|string|max:5000',
             'competitors'                => 'nullable|string|max:5000',
             'brand_assets_link'          => 'nullable|string|max:5000',
@@ -115,7 +117,7 @@ class ClientController extends Controller
 
         // Set creator
         $validated['created_by'] = auth()->id();
-        $validated['share_third_party_content'] = $request->has('share_third_party_content');
+        $validated['share_third_party_content'] = $request->input('share_third_party_content') === '1';
         $validated['needs_approval'] = $request->has('needs_approval');
 
         $client = Client::create($validated);
@@ -167,7 +169,7 @@ class ClientController extends Controller
     {
         $validated = $request->validate([
             'name'                       => 'required|string|min:2|max:255',
-            'email'                      => 'required|email:rfc|max:254|unique:clients,email,' . $client->id,
+            'email'                      => ['required', 'email:rfc', 'max:254', Rule::unique('clients', 'email')->ignore($client->id)->whereNull('deleted_at')],
             'website_url'                => 'nullable|url|max:500',
             'location'                   => 'nullable|string|max:500',
             'business_description'       => 'nullable|string|max:5000',
@@ -182,6 +184,7 @@ class ClientController extends Controller
             'content_to_avoid'           => 'nullable|string|max:5000',
             'preferred_cta'              => 'nullable|string|max:500',
             'share_third_party_content'  => 'nullable|boolean',
+            'preferred_sources'          => 'nullable|string|max:2000',
             'keywords'                   => 'nullable|string|max:5000',
             'competitors'                => 'nullable|string|max:5000',
             'brand_assets_link'          => 'nullable|string|max:5000',
@@ -213,7 +216,7 @@ class ClientController extends Controller
             $validated['network_links'] = array_filter($validated['network_links'], fn($v) => !empty($v));
         }
 
-        $validated['share_third_party_content'] = $request->has('share_third_party_content');
+        $validated['share_third_party_content'] = $request->input('share_third_party_content') === '1';
         $validated['needs_approval'] = $request->has('needs_approval');
 
         $client->update($validated);
