@@ -103,13 +103,12 @@
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Who is their target audience?</label>
-                        <input
-                            type="text"
+                        <textarea
                             name="target_audience"
-                            value="{{ old('target_audience') }}"
+                            rows="3"
                             placeholder="Examples: Millennial moms in the US, HR Directors in tech, etc."
                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
-                        >
+                        >{{ old('target_audience') }}</textarea>
                     </div>
 
                     <div>
@@ -263,15 +262,14 @@
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Assets & Branding</h2>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Brand assets link (Google Drive/Dropbox)</label>
-                    <input
-                        type="url"
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Brand assets link (Google Drive / Dropbox)</label>
+                    <textarea
                         name="brand_assets_link"
-                        value="{{ old('brand_assets_link') }}"
-                        placeholder="https://drive.google.com/..."
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
-                    >
-                    <p class="mt-2 text-sm text-gray-500">Share logos, color palette, brand guidelines, fonts, photos, testimonials, etc.</p>
+                        rows="4"
+                        placeholder="Paste one or more links here — each on its own line. You can also add labels before each link.&#10;&#10;e.g.&#10;Client Assets: https://drive.google.com/...&#10;Archive: https://www.dropbox.com/..."
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent font-mono text-sm"
+                    >{{ old('brand_assets_link') }}</textarea>
+                    <p class="mt-2 text-sm text-gray-500">Paste multiple links, each on its own line. Labels are welcome (e.g. "Client Assets: https://...").</p>
                 </div>
             </div>
 

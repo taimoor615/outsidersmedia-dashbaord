@@ -35,9 +35,8 @@ yarn-error.log
 /storage/framework/views/*
 !/storage/framework/views/.gitignore
 
-# Vite Build Directory
-/public/build
+# Vite Build Directory — tracked so live server gets compiled assets on git pull
+# /public/build   ← intentionally NOT ignored
 
 /docs
-/public
 .claude

@@ -93,12 +93,12 @@
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Target Audience</label>
-                        <input
-                            type="text"
+                        <textarea
                             name="target_audience"
-                            value="{{ old('target_audience', $client->target_audience) }}"
+                            rows="3"
+                            placeholder="Examples: Millennial moms in the US, HR Directors in tech, etc."
                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
-                        >
+                        >{{ old('target_audience', $client->target_audience) }}</textarea>
                     </div>
                 </div>
             </div>
@@ -213,6 +213,42 @@
                             <span class="ml-3 text-sm text-gray-700">Share third-party content</span>
                         </label>
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Keywords for captions</label>
+                        <textarea
+                            name="keywords"
+                            rows="3"
+                            placeholder="Specific keywords, hashtags, or phrases to include"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
+                        >{{ old('keywords', $client->keywords) }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Competitors to research</label>
+                        <textarea
+                            name="competitors"
+                            rows="4"
+                            placeholder="List competitor names or URLs, one per line"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent"
+                        >{{ old('competitors', $client->competitors) }}</textarea>
+                        <p class="mt-2 text-sm text-gray-500">You can paste URLs or names — one per line.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ASSETS & BRANDING -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-8">
+                <h2 class="text-xl font-bold text-gray-900 mb-6">Assets & Branding</h2>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Brand assets link (Google Drive / Dropbox)</label>
+                    <textarea
+                        name="brand_assets_link"
+                        rows="4"
+                        placeholder="Paste one or more links here — each on its own line. You can also add labels before each link."
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CD571B] focus:border-transparent font-mono text-sm"
+                    >{{ old('brand_assets_link', $client->brand_assets_link) }}</textarea>
+                    <p class="mt-2 text-sm text-gray-500">Paste multiple links, each on its own line. Labels are welcome (e.g. "Client Assets: https://...").</p>
                 </div>
             </div>
 
