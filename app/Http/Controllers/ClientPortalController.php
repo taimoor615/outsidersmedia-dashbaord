@@ -19,7 +19,14 @@ class ClientPortalController extends Controller
     {
         $client = Client::where('share_token', $token)->firstOrFail();
 
+        $visibilityCutoff = now()->addWeeks(3);
+
         $posts = Post::where('client_id', $client->id)
+            ->where(function ($query) use ($visibilityCutoff) {
+                $query->where('status', '!=', 'scheduled')
+                    ->orWhereNull('scheduled_at')
+                    ->orWhere('scheduled_at', '<=', $visibilityCutoff);
+            })
             ->with(['media', 'feedback'])
             ->orderBy('created_at', 'desc')
             ->get();
