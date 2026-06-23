@@ -23,9 +23,11 @@ class ClientPortalController extends Controller
 
         $posts = Post::where('client_id', $client->id)
             ->where(function ($query) use ($visibilityCutoff) {
-                $query->where('status', '!=', 'scheduled')
-                    ->orWhereNull('scheduled_at')
-                    ->orWhere('scheduled_at', '<=', $visibilityCutoff);
+                $query->where('status', 'published')
+                    ->orWhere(function ($q) use ($visibilityCutoff) {
+                        $q->whereNotNull('scheduled_at')
+                            ->where('scheduled_at', '<=', $visibilityCutoff);
+                    });
             })
             ->with(['media', 'feedback'])
             ->orderBy('created_at', 'desc')
