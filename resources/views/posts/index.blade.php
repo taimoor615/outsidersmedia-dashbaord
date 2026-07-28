@@ -270,7 +270,7 @@
     <!-- Pagination -->
     @if($posts->hasPages())
     <div class="mt-8">
-        {{ $posts->links() }}
+        {{ $posts->onEachSide(1)->links('vendor.pagination.custom') }}
     </div>
     @endif
 
