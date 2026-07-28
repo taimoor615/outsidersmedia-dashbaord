@@ -144,7 +144,8 @@ class Post extends Model
 
     public function canDelete(): bool
     {
-        return in_array($this->status, ['draft', 'pending_client', 'changes_requested']);
+        // Admins can delete a post regardless of its status.
+        return true;
     }
 
     public function getStatusBadgeAttribute(): string
