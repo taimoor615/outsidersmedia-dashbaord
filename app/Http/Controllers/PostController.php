@@ -62,7 +62,8 @@ class PostController extends Controller
             $query->orderBy($sortColumn, $sortOrder);
         }
 
-        $posts = $query->paginate(20)->withQueryString();
+        // 21 per page = 7 full rows in the 3-column grid (no half-empty last row)
+        $posts = $query->paginate(21)->withQueryString();
         $clients = Client::where('status', 'active')->orderBy('name')->get();
 
         return view('posts.index', compact('posts', 'clients'));
