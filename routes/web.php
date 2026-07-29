@@ -10,6 +10,7 @@ use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientPortalController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\ClientNotesController;
 
@@ -113,6 +114,9 @@ Route::middleware(['auth', 'team'])->group(function () {
     // Calendar (Admin: all posts; Team: own posts)
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::get('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
+
+    // Client Feedback (Admin: all feedback; Team: feedback on own posts)
+    Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
 });
 
 // Video Streaming — public route, no auth required.
