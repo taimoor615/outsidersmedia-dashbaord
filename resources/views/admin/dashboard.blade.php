@@ -205,7 +205,7 @@
                 <div class="p-6 border-b border-gray-200">
                     <div class="flex items-center justify-between">
                         <h2 class="text-lg font-bold text-gray-900">Recent Client Feedback</h2>
-                        <a href="{{ route('posts.index', ['status' => 'pending_approval']) }}" class="text-sm text-[#CD571B] hover:text-[#b54c17] font-medium">View All</a>
+                        <a href="{{ route('feedback.index') }}" class="text-sm text-[#CD571B] hover:text-[#b54c17] font-medium">View All</a>
                     </div>
                 </div>
                 <div class="divide-y divide-gray-200">
