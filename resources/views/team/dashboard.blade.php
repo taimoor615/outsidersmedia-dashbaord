@@ -177,8 +177,13 @@
         <!-- Recent Client Feedback -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="p-6 border-b border-gray-200">
-                <h2 class="text-lg font-bold text-gray-900">Recent Client Feedback</h2>
-                <p class="text-sm text-gray-600">From your posts</p>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-gray-900">Recent Client Feedback</h2>
+                        <p class="text-sm text-gray-600">From your posts</p>
+                    </div>
+                    <a href="{{ route('feedback.index') }}" class="text-sm text-[#CD571B] hover:text-[#b54c17] font-medium">View All</a>
+                </div>
             </div>
             <div class="divide-y divide-gray-200">
                 @forelse($recentClientFeedback->take(5) as $feedback)
