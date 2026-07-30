@@ -11,7 +11,7 @@
         <div>
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Client Feedback</h1>
             <p class="mt-1 sm:mt-2 text-gray-600 text-sm sm:text-base">
-                {{ auth()->user()->isAdmin() ? 'All feedback across every client and post' : 'Feedback on the posts you created' }}
+                All feedback across every client and post
             </p>
         </div>
     </div>
@@ -22,49 +22,52 @@
         $queryParams = array_filter(request()->only(['type', 'client_id', 'date_filter', 'sort_order']), fn ($v) => $v !== null && $v !== '');
         $queryParamsNoType = $queryParams; unset($queryParamsNoType['type']);
     @endphp
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-3 sm:p-4">
-        <form id="feedback-filter-form" method="GET" action="{{ route('feedback.index') }}"
-              class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-4 sm:p-5">
+        <form id="feedback-filter-form" method="GET" action="{{ route('feedback.index') }}" class="space-y-4">
             <input type="hidden" name="type" value="{{ $activeType }}">
 
             <!-- Source segmented control -->
-            <div class="flex items-center gap-2 shrink-0">
-                <span class="hidden xl:flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500">
-                    <svg class="w-4 h-4 text-[#CD571B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                    Source
-                </span>
-                <div class="inline-flex items-center bg-gray-100 rounded-xl p-1 w-full lg:w-auto">
+            <div class="flex items-center gap-3 flex-wrap">
+                <span class="text-xs font-semibold uppercase tracking-wider text-gray-500 shrink-0">Source</span>
+                <div class="inline-flex items-center bg-gray-100 rounded-xl p-1">
                     <a href="{{ route('feedback.index', array_merge($queryParams, ['type' => 'client'])) }}"
-                       class="flex-1 lg:flex-none text-center px-4 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap {{ $activeType == 'client' ? 'bg-[#CD571B] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">Client</a>
+                       class="px-5 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap {{ $activeType == 'client' ? 'bg-[#CD571B] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">Client</a>
                     <a href="{{ route('feedback.index', array_merge($queryParams, ['type' => 'team'])) }}"
-                       class="flex-1 lg:flex-none text-center px-4 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap {{ $activeType == 'team' ? 'bg-[#CD571B] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">Team</a>
+                       class="px-5 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap {{ $activeType == 'team' ? 'bg-[#CD571B] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">Team</a>
                     <a href="{{ route('feedback.index', array_merge($queryParams, ['type' => 'all'])) }}"
-                       class="flex-1 lg:flex-none text-center px-4 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap {{ $activeType == 'all' ? 'bg-[#CD571B] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">All</a>
+                       class="px-5 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap {{ $activeType == 'all' ? 'bg-[#CD571B] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900' }}">All</a>
                 </div>
             </div>
 
-            <div class="hidden lg:block h-8 w-px bg-gray-200 shrink-0"></div>
-
-            <!-- Dropdown filters -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 flex-1 min-w-0">
-                <select name="client_id" title="Filter by client" class="feedback-filter-select w-full rounded-lg border-gray-200 text-sm py-2 px-3 bg-white focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B]">
-                    <option value="">All clients</option>
-                    @foreach($clients as $c)
-                    <option value="{{ $c->id }}" {{ request('client_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
-                    @endforeach
-                </select>
-                <select name="date_filter" title="Filter by date" class="feedback-filter-select w-full rounded-lg border-gray-200 text-sm py-2 px-3 bg-white focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B]">
-                    <option value="all" {{ request('date_filter', 'all') == 'all' ? 'selected' : '' }}>All time</option>
-                    <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
-                    <option value="this_week" {{ request('date_filter') == 'this_week' ? 'selected' : '' }}>This week</option>
-                    <option value="this_month" {{ request('date_filter') == 'this_month' ? 'selected' : '' }}>This month</option>
-                    <option value="last_7_days" {{ request('date_filter') == 'last_7_days' ? 'selected' : '' }}>Last 7 days</option>
-                    <option value="last_30_days" {{ request('date_filter') == 'last_30_days' ? 'selected' : '' }}>Last 30 days</option>
-                </select>
-                <select name="sort_order" title="Sort order" class="feedback-filter-select w-full rounded-lg border-gray-200 text-sm py-2 px-3 bg-white focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B]">
-                    <option value="desc" {{ request('sort_order', 'desc') == 'desc' ? 'selected' : '' }}>Newest first</option>
-                    <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Oldest first</option>
-                </select>
+            <!-- Filter dropdowns: 1 row, 3 columns (stack on mobile) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Client</label>
+                    <select name="client_id" class="feedback-filter-select w-full rounded-lg border-gray-200 text-sm py-2.5 px-3 bg-gray-50/50 focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B]">
+                        <option value="">All clients</option>
+                        @foreach($clients as $c)
+                        <option value="{{ $c->id }}" {{ request('client_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Date</label>
+                    <select name="date_filter" class="feedback-filter-select w-full rounded-lg border-gray-200 text-sm py-2.5 px-3 bg-gray-50/50 focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B]">
+                        <option value="all" {{ request('date_filter', 'all') == 'all' ? 'selected' : '' }}>All time</option>
+                        <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
+                        <option value="this_week" {{ request('date_filter') == 'this_week' ? 'selected' : '' }}>This week</option>
+                        <option value="this_month" {{ request('date_filter') == 'this_month' ? 'selected' : '' }}>This month</option>
+                        <option value="last_7_days" {{ request('date_filter') == 'last_7_days' ? 'selected' : '' }}>Last 7 days</option>
+                        <option value="last_30_days" {{ request('date_filter') == 'last_30_days' ? 'selected' : '' }}>Last 30 days</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Order</label>
+                    <select name="sort_order" class="feedback-filter-select w-full rounded-lg border-gray-200 text-sm py-2.5 px-3 bg-gray-50/50 focus:ring-2 focus:ring-[#CD571B]/30 focus:border-[#CD571B]">
+                        <option value="desc" {{ request('sort_order', 'desc') == 'desc' ? 'selected' : '' }}>Newest first</option>
+                        <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Oldest first</option>
+                    </select>
+                </div>
             </div>
         </form>
     </div>

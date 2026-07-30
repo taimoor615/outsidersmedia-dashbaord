@@ -14,16 +14,9 @@ class FeedbackController extends Controller
      */
     public function index(Request $request)
     {
-        $user = auth()->user();
-
+        // Both admins and team members see all feedback (team can already
+        // view every post, so feedback visibility matches).
         $query = PostFeedback::with(['post.client', 'user']);
-
-        // Team members are scoped to feedback on posts they created.
-        if (!$user->isAdmin()) {
-            $query->whereHas('post', function ($q) use ($user) {
-                $q->where('created_by', $user->id);
-            });
-        }
 
         // Type filter: client (default) / team / all
         $type = $request->get('type', 'client');
