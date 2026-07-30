@@ -49,11 +49,8 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        // Recent feedback from clients
+        // Recent feedback from clients (all clients — same as admin dashboard)
         $recentClientFeedback = PostFeedback::with(['post.client'])
-            ->whereHas('post', function ($query) use ($userId) {
-                $query->where('created_by', $userId);
-            })
             ->where('is_client_feedback', true)
             ->latest()
             ->take(5)

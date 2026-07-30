@@ -180,7 +180,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="text-lg font-bold text-gray-900">Recent Client Feedback</h2>
-                        <p class="text-sm text-gray-600">From your posts</p>
+                        <p class="text-sm text-gray-600">Latest client feedback</p>
                     </div>
                     <a href="{{ route('feedback.index') }}" class="text-sm text-[#CD571B] hover:text-[#b54c17] font-medium">View All</a>
                 </div>
