@@ -19,7 +19,7 @@ class ClientPortalController extends Controller
     {
         $client = Client::where('share_token', $token)->firstOrFail();
 
-        $visibilityCutoff = now()->addWeeks(3);
+        $visibilityCutoff = now()->addWeeks(4);
 
         $posts = Post::where('client_id', $client->id)
             ->where(function ($query) use ($visibilityCutoff) {

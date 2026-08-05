@@ -170,7 +170,7 @@ users 1─* client_notes     (added_by; NULL = note came from client portal)
 - **URL:** `route('client.view', token)` → `resources/views/client/portal.blade.php`. Routes under `Route::prefix('client')` with **no auth middleware**.
 - **Access model:** each request resolves the client by `Client::where('share_token', $token)->firstOrFail()` (404 on bad token), then checks `$post->client_id === $client->id` (else 403). Possession of the token = access; no password.
 - **Actions:** approve, reject/request-changes, suggest-date, update-post (captions), store/update notes.
-- **Visibility rule:** portal shows posts that are `published` OR have `scheduled_at <= now() + 3 weeks` (published + near-term work), plus the client's notes thread.
+- **Visibility rule:** portal shows posts that are `published` OR have `scheduled_at <= now() + 4 weeks` (published + near-term work), plus the client's notes thread.
 - Client actions write `post_feedback` (`is_client_feedback = true`) and/or `client_notes` (`added_by = null`), and trigger admin/creator notifications.
 
 ---
