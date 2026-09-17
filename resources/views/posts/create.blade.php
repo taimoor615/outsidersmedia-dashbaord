@@ -162,6 +162,7 @@
                         preview: null, fileName: '', fileSize: '',
                         handleFile(file) {
                             if (!file || !file.type.startsWith('image/')) return;
+                            if (file.size > 10 * 1024 * 1024) { alert('Image must be 10 MB or smaller.'); document.getElementById('stdFileInput').value = ''; return; }
                             const reader = new FileReader();
                             reader.onload = e => { this.preview = e.target.result; };
                             reader.readAsDataURL(file);
@@ -235,6 +236,7 @@
                         addFiles(list) {
                             Array.from(list).forEach(f => {
                                 if (!f.type.startsWith('image/')) return;
+                                if (f.size > 10 * 1024 * 1024) { alert(f.name + ' is over 10 MB and was skipped.'); this.sync(); return; }
                                 const reader = new FileReader();
                                 reader.onload = e => {
                                     this.files.push({ name: f.name, size: this.fmt(f.size), preview: e.target.result, id: Date.now() + Math.random(), file: f });
@@ -324,6 +326,7 @@
                         file: null,
                         addFile(f) {
                             if (!f || !f.type.startsWith('video/')) return;
+                            if (f.size > 100 * 1024 * 1024) { alert('Video must be 100 MB or smaller.'); document.getElementById('vidFileInput').value = ''; return; }
                             this.file = { name: f.name, size: f.size > 1048576 ? (f.size/1048576).toFixed(1)+' MB' : (f.size/1024).toFixed(0)+' KB', preview: URL.createObjectURL(f) };
                             const dt = new DataTransfer(); dt.items.add(f);
                             document.getElementById('vidFileInput').files = dt.files;

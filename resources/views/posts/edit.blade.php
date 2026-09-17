@@ -148,6 +148,7 @@
                     addFiles(list) {
                         const f = Array.from(list)[0];
                         if (!f) return;
+                        if (f.size > 100 * 1024 * 1024) { alert('Video must be 100 MB or smaller.'); this.sync(); return; }
                         const url = URL.createObjectURL(f);
                         this.files = [{ name: f.name, size: this.fmt(f.size), preview: url, id: Date.now() }];
                         this.sync();
@@ -237,6 +238,7 @@
                     addFiles(list) {
                         Array.from(list).forEach(f => {
                             if (!f.type.startsWith('image/')) return;
+                            if (f.size > 10 * 1024 * 1024) { alert(f.name + ' is over 10 MB and was skipped.'); this.sync(); return; }
                             const reader = new FileReader();
                             reader.onload = e => {
                                 this.files.push({ name: f.name, size: this.fmt(f.size), preview: e.target.result, id: Date.now() + Math.random(), file: f });
