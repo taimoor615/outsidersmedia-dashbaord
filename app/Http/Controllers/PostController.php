@@ -129,7 +129,8 @@ class PostController extends Controller
                 $postType === 'carousel' ? 'max:10' : 'max:1',
             ],
             'media.*'           => [
-                'bail', 'required', 'file', 'max:102400',
+                'bail', 'required', 'file',
+                $postType === 'video' ? 'max:102400' : 'max:10240',
                 $postType === 'video'
                     ? 'mimes:mp4,mov'
                     : 'mimes:jpg,jpeg,png,gif',
@@ -138,6 +139,7 @@ class PostController extends Controller
             'platforms.*.in'  => 'One or more selected platforms are invalid.',
             'media.min'       => $postType === 'carousel' ? 'Carousel posts require at least 2 images.' : 'Please upload a file.',
             'media.max'       => $postType === 'carousel' ? 'Carousel posts allow a maximum of 10 images.' : 'Only one file is allowed for this post type.',
+            'media.*.max'     => $postType === 'video' ? 'Video must be 100 MB or smaller.' : 'Images must be 10 MB or smaller.',
             'media.*.mimes'   => $postType === 'video' ? 'Video must be an MP4 or MOV file.' : 'Images must be JPG, PNG, or GIF.',
             'scheduled_at.after_or_equal' => 'Schedule date cannot be in the past.',
         ]);
@@ -244,13 +246,15 @@ class PostController extends Controller
             'event_end_time'    => 'nullable|string|max:10',
             'media'             => 'nullable|array|max:10',
             'media.*'           => [
-                'bail', 'nullable', 'file', 'max:102400',
+                'bail', 'nullable', 'file',
+                $postType === 'video' ? 'max:102400' : 'max:10240',
                 $postType === 'video'
                     ? 'mimes:mp4,mov'
                     : 'mimes:jpg,jpeg,png,gif',
             ],
         ], [
             'platforms.*.in' => 'One or more selected platforms are invalid.',
+            'media.*.max'    => $postType === 'video' ? 'Video must be 100 MB or smaller.' : 'Images must be 10 MB or smaller.',
             'media.*.mimes'  => $postType === 'video' ? 'Video must be an MP4 or MOV file.' : 'Images must be JPG, PNG, or GIF.',
         ]);
 
